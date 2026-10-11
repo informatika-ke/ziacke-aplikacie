@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kvíz: hlavné mestá</title>
+  <style>
+    body { font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 16px; background: #eef2ff; }
+    h1 { color: #3b5bdb; } /* skús zmeniť farbu nadpisu */
+    button { display: block; width: 100%; margin: 8px 0; padding: 12px; font-size: 1rem; border: 2px solid #3b5bdb; border-radius: 8px; background: #fff; cursor: pointer; }
+    .ok { background: #b2f2bb; }
+    .zle { background: #ffc9c9; }
+  </style>
+</head>
+<body>
+  <h1>Kvíz: hlavné mestá</h1>
+  <p id="otazka"></p>
+  <div id="moznosti"></div>
+  <p id="skore"></p>
+  <script>
+    const otazky = [
+      { q: "Hlavné mesto Slovenska?", o: ["Košice", "Bratislava", "Žilina"], s: 1 },
+      { q: "Hlavné mesto Českej republiky?", o: ["Praha", "Brno", "Ostrava"], s: 0 },
+      { q: "Hlavné mesto Maďarska?", o: ["Debrecín", "Szeged", "Budapešť"], s: 2 }
+    ];
+    let i = 0, body = 0;
+    function zobraz() {
+      if (i >= otazky.length) {
+        document.getElementById("otazka").textContent = "Koniec!";
+        document.getElementById("moznosti").innerHTML = "";
+        document.getElementById("skore").textContent = "Získal si " + body + " z " + otazky.length + " bodov.";
+        return;
+      }
+      const o = otazky[i];
+      document.getElementById("otazka").textContent = o.q;
+      const box = document.getElementById("moznosti");
+      box.innerHTML = "";
+      o.o.forEach((text, n) => {
+        const b = document.createElement("button");
+        b.textContent = text;
+        b.onclick = () => {
+          const spravne = n === o.s;
+          b.className = spravne ? "ok" : "zle";
+          if (spravne) body++;
+          i++;
+          setTimeout(zobraz, 700);
+        };
+        box.appendChild(b);
+      });
+    }
+    zobraz();
+  </script>
+</body>
+</html>

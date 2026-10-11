@@ -1,0 +1,22 @@
+{
+  "titul": "Žiacke aplikácie",
+  "podtitul": "Malé webové aplikácie, ktoré vytvorili žiaci na hodinách informatiky.",
+  "aplikacie": [
+    {
+      "rok": "2026-27",
+      "trieda": "Ukážka",
+      "priecinok": "2026-27/ukazka/kviz-hlavne-mesta",
+      "nazov": "Kvíz: hlavné mestá",
+      "autor": "Učiteľka (ukážka)",
+      "typ": "kvíz"
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "Ukážka",
+      "priecinok": "2026-27/ukazka/klikacka-bodky",
+      "nazov": "Klikačka: chyť bodku",
+      "autor": "Učiteľka (ukážka)",
+      "typ": "klikačka"
+    }
+  ]
+}

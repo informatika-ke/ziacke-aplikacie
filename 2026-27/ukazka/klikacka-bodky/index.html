@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Klikačka: chyť bodku</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; background: #fff3bf; margin: 0; padding: 16px; }
+    h1 { color: #e8590c; } /* skús zmeniť farbu nadpisu */
+    #pole { position: relative; width: 100%; max-width: 480px; height: 320px; margin: 0 auto; background: #fff; border: 3px solid #e8590c; border-radius: 12px; overflow: hidden; }
+    #bodka { position: absolute; width: 48px; height: 48px; border-radius: 50%; background: #e8590c; border: 0; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Chyť bodku!</h1>
+  <p>Body: <strong id="body">0</strong></p>
+  <div id="pole"><button id="bodka" aria-label="bodka"></button></div>
+  <script>
+    const pole = document.getElementById("pole");
+    const bodka = document.getElementById("bodka");
+    let body = 0;
+    function presun() {
+      bodka.style.left = Math.random() * (pole.clientWidth - 48) + "px";
+      bodka.style.top = Math.random() * (pole.clientHeight - 48) + "px";
+    }
+    bodka.onclick = () => {
+      body++;
+      document.getElementById("body").textContent = body;
+      presun();
+    };
+    presun();
+  </script>
+</body>
+</html>

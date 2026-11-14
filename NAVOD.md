@@ -1,25 +1,41 @@
 # Návod: galéria žiackych aplikácií
 
-## Pridanie aplikácie (každý týždeň / po odovzdaní)
-1. Skontrolujte, že máte **súhlas zákonného zástupcu** (`SUHLAS-vzor.md`). Bez súhlasu nezverejňujte.
-2. Žiak odovzdá ZIP (EduPage/Classroom). Rozbaľte ho do `ROK/TRIEDA/nazov-aplikacie-iniciali/`,
-   napr. `2026-27/1A/pexeso-auta-mk/`. V priečinku musí byť `index.html`.
-   Názvy priečinkov: malé písmená, bez diakritiky a medzier.
+## Začiatok roka: placeholdery pre všetkých žiakov
+1. Zoznam žiakov uložte ako `ziaci/ziaci.csv` (priečinok `ziaci/` je v `.gitignore`, na GitHub sa
+   nedostane). Hlavička: `Trieda;Priezvisko;Meno;Pseudonym`. Excel: Uložiť ako → CSV (stačí aj
+   „CSV UTF-8“). Ak máte zoznam v PDF, otvorte ho vo Worde alebo skopírujte tabuľku do Excelu.
+2. Spustite `node tools/placeholdery.mjs`. Pre každého žiaka vznikne priečinok
+   `2026-27/<trieda>/<pseudonym>/` s dočasnou stránkou „Pripravuje sa“ a záznam v `apps.json`.
+   Výpis v konzole ukáže, kto má ktorý priečinok. **Do repozitára sa nezapisuje meno ani priezvisko, len pseudonym.**
+3. Skript môžete spustiť opakovane (nový žiak v CSV). Existujúce súbory neprepíše.
+4. `node tools/build.mjs`, `git add .`, `git commit`, `git push`. V galérii sú hneď karty všetkých žiakov
+   so stálou adresou.
+
+## Pridanie hotovej aplikácie (každý týždeň / po odovzdaní)
+Súhlasy zákonných zástupcov si evidujete mimo repozitára (`SUHLAS-vzor.md`). Nezverejňujte bez súhlasu.
+1. Do priečinka žiaka (`2026-27/2a/<pseudonym>/`) nakopírujte jeho `index.html` (prepíše placeholder)
+   a všetky priečinky a súbory, na ktoré odkazuje (obrázky, zvuky, `.js`, `.css`), tak ako ich má žiak.
+2. Spustite `node tools/build.mjs` a prečítajte si UPOZORNENIA:
+   - odkaz na súbor, ktorý neexistuje (zabudnutý priečinok s obrázkami),
+   - rozdiel vo veľkosti písmen (`Pes.png` v kóde, `pes.png` na disku): vo Windows funguje, na webe nie,
+   - cesta na disk žiaka (`C:\Users\...`), `fetch()`, cudzie domény, veľké obrázky, e-mailové adresy.
 3. Aplikáciu si otvorte v prehliadači a pozrite sa, či je obsah slušný a bez osobných údajov
    (celé mená, fotky žiakov, telefóny, e-maily).
-4. Pridajte záznam do `apps.json`:
-   ```json
-   { "rok": "2026-27", "trieda": "1.A", "priecinok": "2026-27/1A/pexeso-auta-mk",
-     "nazov": "Pexeso: autá", "autor": "M. K.", "typ": "pexeso" }
-   ```
-   `autor` = iba iniciály alebo prezývka (podľa súhlasu). `trieda` je text, ktorý sa zobrazí.
-5. Spustite `node tools/build.mjs`. Opravte všetky CHYBY a prečítajte si UPOZORNENIA
-   (napr. `fetch()`, cudzie domény, veľké obrázky).
-6. Odošlite zmeny: `git add .`, `git commit -m "Pridané: pexeso autá"`, `git push`.
+4. Názov karty sa vezme z `<title>` v žiakovom `index.html`. Chcete ho zmeniť, alebo pridať typ,
+   upravte `nazov` a `typ` v zázname v `apps.json`.
+5. Odošlite zmeny: `git add .`, `git commit -m "Pridané aplikácie 2.A"`, `git push`.
    Vercel stránku sám nasadí do minúty.
 
+### Ručné pridanie mimo zoznamu
+Aplikáciu môžete dať aj do vlastného priečinka `ROK/TRIEDA/aplikacia/` a pridať záznam do `apps.json`:
+```json
+{ "rok": "2026-27", "trieda": "1.A", "priecinok": "2026-27/1a/pexeso-auta",
+  "nazov": "Pexeso: autá", "autor": "M. K.", "typ": "pexeso" }
+```
+Povinné polia: `rok`, `trieda`, `priecinok`, `autor`.
+
 ## Nový školský rok
-Vytvorte priečinky `2027-28/...` a pridávajte záznamy s `"rok": "2027-28"`.
+Pripravte nové `ziaci/ziaci.csv` a spustite `node tools/placeholdery.mjs --rok 2027-28`.
 Staré roky ponechajte alebo (po uplynutí doby uvedenej v súhlase) zmažte priečinok aj záznam
 a znova spustite build.
 

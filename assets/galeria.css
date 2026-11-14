@@ -51,6 +51,12 @@ h2 { font-size: 1.2rem; margin: 24px 0 8px; }
 .card:hover, .card:focus-visible { border-color: var(--accent); outline: none; }
 .card strong { display: block; font-size: 1.05rem; margin-bottom: 4px; }
 .card span { color: var(--muted); font-size: .9rem; }
+.card.placeholder {
+  background: transparent;
+  border-style: dashed;
+  opacity: .75;
+}
+.card.placeholder:hover, .card.placeholder:focus-visible { opacity: 1; }
 .tag {
   display: inline-block;
   margin-top: 8px;

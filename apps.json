@@ -17,6 +17,862 @@
       "nazov": "Klikačka: chyť bodku",
       "autor": "Učiteľka (ukážka)",
       "typ": "klikačka"
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.A",
+      "priecinok": "2026-27/2a/veno",
+      "nazov": "",
+      "autor": "Veno",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.A",
+      "priecinok": "2026-27/2a/kovo",
+      "nazov": "",
+      "autor": "Kovo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.A",
+      "priecinok": "2026-27/2a/nexo",
+      "nazov": "",
+      "autor": "Nexo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.A",
+      "priecinok": "2026-27/2a/iro",
+      "nazov": "",
+      "autor": "Iro",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.A",
+      "priecinok": "2026-27/2a/trix",
+      "nazov": "",
+      "autor": "Trix",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.A",
+      "priecinok": "2026-27/2a/baxo",
+      "nazov": "",
+      "autor": "Baxo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.A",
+      "priecinok": "2026-27/2a/jino",
+      "nazov": "",
+      "autor": "Jino",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.A",
+      "priecinok": "2026-27/2a/ziro",
+      "nazov": "",
+      "autor": "Ziro",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.A",
+      "priecinok": "2026-27/2a/vix",
+      "nazov": "",
+      "autor": "Vix",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.A",
+      "priecinok": "2026-27/2a/six",
+      "nazov": "",
+      "autor": "Six",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.A",
+      "priecinok": "2026-27/2a/grix",
+      "nazov": "",
+      "autor": "Grix",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.A",
+      "priecinok": "2026-27/2a/meron",
+      "nazov": "",
+      "autor": "Meron",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.A",
+      "priecinok": "2026-27/2a/peron",
+      "nazov": "",
+      "autor": "Peron",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.A",
+      "priecinok": "2026-27/2a/laro",
+      "nazov": "",
+      "autor": "Laro",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.A",
+      "priecinok": "2026-27/2a/kexo",
+      "nazov": "",
+      "autor": "Kexo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.A",
+      "priecinok": "2026-27/2a/jaro",
+      "nazov": "",
+      "autor": "Jaro",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.A",
+      "priecinok": "2026-27/2a/bero",
+      "nazov": "",
+      "autor": "Bero",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.A",
+      "priecinok": "2026-27/2a/nix",
+      "nazov": "",
+      "autor": "Nix",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.A",
+      "priecinok": "2026-27/2a/teron",
+      "nazov": "",
+      "autor": "Teron",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.A",
+      "priecinok": "2026-27/2a/jexo",
+      "nazov": "",
+      "autor": "Jexo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.A",
+      "priecinok": "2026-27/2a/miro",
+      "nazov": "",
+      "autor": "Miro",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.A",
+      "priecinok": "2026-27/2a/krix",
+      "nazov": "",
+      "autor": "Krix",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.A",
+      "priecinok": "2026-27/2a/navo",
+      "nazov": "",
+      "autor": "Navo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.B",
+      "priecinok": "2026-27/2b/rexo",
+      "nazov": "",
+      "autor": "Rexo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.B",
+      "priecinok": "2026-27/2b/reno",
+      "nazov": "",
+      "autor": "Reno",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.B",
+      "priecinok": "2026-27/2b/boro",
+      "nazov": "",
+      "autor": "Boro",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.B",
+      "priecinok": "2026-27/2b/aero",
+      "nazov": "",
+      "autor": "Aero",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.B",
+      "priecinok": "2026-27/2b/peno",
+      "nazov": "",
+      "autor": "Peno",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.B",
+      "priecinok": "2026-27/2b/orin",
+      "nazov": "",
+      "autor": "Orin",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.B",
+      "priecinok": "2026-27/2b/zeron",
+      "nazov": "",
+      "autor": "Zeron",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.B",
+      "priecinok": "2026-27/2b/milo",
+      "nazov": "",
+      "autor": "Milo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.B",
+      "priecinok": "2026-27/2b/zavo",
+      "nazov": "",
+      "autor": "Zavo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.B",
+      "priecinok": "2026-27/2b/keron",
+      "nazov": "",
+      "autor": "Keron",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.B",
+      "priecinok": "2026-27/2b/taro",
+      "nazov": "",
+      "autor": "Taro",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.B",
+      "priecinok": "2026-27/2b/jrix",
+      "nazov": "",
+      "autor": "Jrix",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.B",
+      "priecinok": "2026-27/2b/neron",
+      "nazov": "",
+      "autor": "Neron",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.B",
+      "priecinok": "2026-27/2b/niro",
+      "nazov": "",
+      "autor": "Niro",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.B",
+      "priecinok": "2026-27/2b/rix",
+      "nazov": "",
+      "autor": "Rix",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.B",
+      "priecinok": "2026-27/2b/texo",
+      "nazov": "",
+      "autor": "Texo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.B",
+      "priecinok": "2026-27/2b/lix",
+      "nazov": "",
+      "autor": "Lix",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.B",
+      "priecinok": "2026-27/2b/fexo",
+      "nazov": "",
+      "autor": "Fexo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.B",
+      "priecinok": "2026-27/2b/meno",
+      "nazov": "",
+      "autor": "Meno",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.B",
+      "priecinok": "2026-27/2b/jeron",
+      "nazov": "",
+      "autor": "Jeron",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.B",
+      "priecinok": "2026-27/2b/mexo",
+      "nazov": "",
+      "autor": "Mexo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.B",
+      "priecinok": "2026-27/2b/reron",
+      "nazov": "",
+      "autor": "Reron",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/viro",
+      "nazov": "",
+      "autor": "Viro",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/karo",
+      "nazov": "",
+      "autor": "Karo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/zino",
+      "nazov": "",
+      "autor": "Zino",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/rino",
+      "nazov": "",
+      "autor": "Rino",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/ravo",
+      "nazov": "",
+      "autor": "Ravo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/brix",
+      "nazov": "",
+      "autor": "Brix",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/leno",
+      "nazov": "",
+      "autor": "Leno",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/frix",
+      "nazov": "",
+      "autor": "Frix",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/cano",
+      "nazov": "",
+      "autor": "Cano",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/vexo",
+      "nazov": "",
+      "autor": "Vexo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/hiro",
+      "nazov": "",
+      "autor": "Hiro",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/maro",
+      "nazov": "",
+      "autor": "Maro",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/heron",
+      "nazov": "",
+      "autor": "Heron",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/mix",
+      "nazov": "",
+      "autor": "Mix",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/vano",
+      "nazov": "",
+      "autor": "Vano",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/rivo",
+      "nazov": "",
+      "autor": "Rivo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/piko",
+      "nazov": "",
+      "autor": "Piko",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/fino",
+      "nazov": "",
+      "autor": "Fino",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/faro",
+      "nazov": "",
+      "autor": "Faro",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/gino",
+      "nazov": "",
+      "autor": "Gino",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/kiro",
+      "nazov": "",
+      "autor": "Kiro",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/seno",
+      "nazov": "",
+      "autor": "Seno",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/timo",
+      "nazov": "",
+      "autor": "Timo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.C",
+      "priecinok": "2026-27/2c/vino",
+      "nazov": "",
+      "autor": "Vino",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.D",
+      "priecinok": "2026-27/2d/pix",
+      "nazov": "",
+      "autor": "Pix",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.D",
+      "priecinok": "2026-27/2d/pavo",
+      "nazov": "",
+      "autor": "Pavo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.D",
+      "priecinok": "2026-27/2d/lexo",
+      "nazov": "",
+      "autor": "Lexo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.D",
+      "priecinok": "2026-27/2d/leron",
+      "nazov": "",
+      "autor": "Leron",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.D",
+      "priecinok": "2026-27/2d/roko",
+      "nazov": "",
+      "autor": "Roko",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.D",
+      "priecinok": "2026-27/2d/beno",
+      "nazov": "",
+      "autor": "Beno",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.D",
+      "priecinok": "2026-27/2d/zeno",
+      "nazov": "",
+      "autor": "Zeno",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.D",
+      "priecinok": "2026-27/2d/seron",
+      "nazov": "",
+      "autor": "Seron",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.D",
+      "priecinok": "2026-27/2d/haro",
+      "nazov": "",
+      "autor": "Haro",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.D",
+      "priecinok": "2026-27/2d/dexo",
+      "nazov": "",
+      "autor": "Dexo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.D",
+      "priecinok": "2026-27/2d/ciro",
+      "nazov": "",
+      "autor": "Ciro",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.D",
+      "priecinok": "2026-27/2d/juno",
+      "nazov": "",
+      "autor": "Juno",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.D",
+      "priecinok": "2026-27/2d/keno",
+      "nazov": "",
+      "autor": "Keno",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.D",
+      "priecinok": "2026-27/2d/saro",
+      "nazov": "",
+      "autor": "Saro",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.D",
+      "priecinok": "2026-27/2d/veron",
+      "nazov": "",
+      "autor": "Veron",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.D",
+      "priecinok": "2026-27/2d/dero",
+      "nazov": "",
+      "autor": "Dero",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.D",
+      "priecinok": "2026-27/2d/zoro",
+      "nazov": "",
+      "autor": "Zoro",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.D",
+      "priecinok": "2026-27/2d/tino",
+      "nazov": "",
+      "autor": "Tino",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.D",
+      "priecinok": "2026-27/2d/sivo",
+      "nazov": "",
+      "autor": "Sivo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.D",
+      "priecinok": "2026-27/2d/naro",
+      "nazov": "",
+      "autor": "Naro",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.D",
+      "priecinok": "2026-27/2d/daro",
+      "nazov": "",
+      "autor": "Daro",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.D",
+      "priecinok": "2026-27/2d/fero",
+      "nazov": "",
+      "autor": "Fero",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.G",
+      "priecinok": "2026-27/2g/crix",
+      "nazov": "",
+      "autor": "Crix",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.G",
+      "priecinok": "2026-27/2g/luno",
+      "nazov": "",
+      "autor": "Luno",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.G",
+      "priecinok": "2026-27/2g/goro",
+      "nazov": "",
+      "autor": "Goro",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.G",
+      "priecinok": "2026-27/2g/sino",
+      "nazov": "",
+      "autor": "Sino",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.G",
+      "priecinok": "2026-27/2g/vaxo",
+      "nazov": "",
+      "autor": "Vaxo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.G",
+      "priecinok": "2026-27/2g/cero",
+      "nazov": "",
+      "autor": "Cero",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.G",
+      "priecinok": "2026-27/2g/dano",
+      "nazov": "",
+      "autor": "Dano",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.G",
+      "priecinok": "2026-27/2g/eron",
+      "nazov": "",
+      "autor": "Eron",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.G",
+      "priecinok": "2026-27/2g/feron",
+      "nazov": "",
+      "autor": "Feron",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.G",
+      "priecinok": "2026-27/2g/zix",
+      "nazov": "",
+      "autor": "Zix",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.G",
+      "priecinok": "2026-27/2g/naxo",
+      "nazov": "",
+      "autor": "Naxo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.G",
+      "priecinok": "2026-27/2g/saxo",
+      "nazov": "",
+      "autor": "Saxo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.G",
+      "priecinok": "2026-27/2g/gero",
+      "nazov": "",
+      "autor": "Gero",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.G",
+      "priecinok": "2026-27/2g/neno",
+      "nazov": "",
+      "autor": "Neno",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.G",
+      "priecinok": "2026-27/2g/paxo",
+      "nazov": "",
+      "autor": "Paxo",
+      "typ": ""
+    },
+    {
+      "rok": "2026-27",
+      "trieda": "2.G",
+      "priecinok": "2026-27/2g/drix",
+      "nazov": "",
+      "autor": "Drix",
+      "typ": ""
     }
   ]
 }

@@ -1,0 +1,6 @@
+/ziaci/
+*.csv
+*.xlsx
+.env
+.env.local
+.env*.local

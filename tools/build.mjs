@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const MAX_APP_BYTES = 5 * 1024 * 1024;
 const MAX_IMAGE_BYTES = 1024 * 1024;
-const REQUIRED = ['rok', 'trieda', 'priecinok', 'nazov', 'autor', 'typ'];
+const REQUIRED = ['rok', 'trieda', 'priecinok', 'autor'];
 const TEXT_EXT = new Set(['.html', '.htm', '.js', '.css', '.svg']);
 const IMAGE_EXT = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg']);
 const ALLOWED_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com', 'www.w3.org'];
@@ -57,7 +57,18 @@ apps.forEach((a, i) => {
   const abs = join(ROOT, ...parts);
   if (!existsSync(abs) || !statSync(abs).isDirectory()) return errors.push(`${kde}: priečinok „${folder}“ neexistuje`);
   if (!existsSync(join(abs, 'index.html'))) return errors.push(`${kde}: v priečinku „${folder}“ chýba index.html`);
-  valid.push({ ...a, priecinok: folder, parts, abs });
+  // placeholder = stránka s <meta name="galeria-placeholder">; inak hotová aplikácia
+  const html = readFileSync(join(abs, 'index.html'), 'utf8');
+  const placeholder = /<meta[^>]+name=["']galeria-placeholder["']/i.test(html);
+  let nazov = typeof a.nazov === 'string' ? a.nazov.trim() : '';
+  if (!nazov && !placeholder) {
+    const m = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+    nazov = m
+      ? m[1].replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim()
+      : '';
+  }
+  if (!nazov) nazov = placeholder ? 'Pripravuje sa' : 'Aplikácia';
+  valid.push({ ...a, nazov, typ: typeof a.typ === 'string' ? a.typ.trim() : '', priecinok: folder, parts, abs, placeholder });
 });
 
 // ---------- kontrola obsahu aplikácií ----------
@@ -72,7 +83,35 @@ function walk(dir) {
   return out;
 }
 
+// Overí lokálnu cestu s ohľadom na veľkosť písmen (Vercel beží na Linuxe).
+// Vráti 'ok', 'missing' alebo 'case:<skutočný názov>'.
+function checkPath(baseDir, appRoot, rel) {
+  let cur = baseDir;
+  let caseIssue = null;
+  for (const seg of rel.split('/')) {
+    if (seg === '' || seg === '.') continue;
+    if (seg === '..') { cur = dirname(cur); if (!cur.startsWith(appRoot)) return 'ok'; continue; }
+    if (!existsSync(cur) || !statSync(cur).isDirectory()) return 'missing';
+    const names = readdirSync(cur);
+    if (names.includes(seg)) { cur = join(cur, seg); continue; }
+    const alt = names.find((n) => n.toLowerCase() === seg.toLowerCase());
+    if (!alt) return 'missing';
+    caseIssue = caseIssue || alt;
+    cur = join(cur, alt);
+  }
+  return caseIssue ? `case:${caseIssue}` : 'ok';
+}
+
+const SKIP_REF = /^(?:[a-z][a-z0-9+.-]*:|\/\/|#)/i;
+function refsOf(text, ext) {
+  const refs = [];
+  if (ext !== '.css') for (const m of text.matchAll(/\b(?:src|href)\s*=\s*["']([^"']+)["']/gi)) refs.push(m[1]);
+  for (const m of text.matchAll(/url\(\s*["']?([^"')]+?)["']?\s*\)/gi)) refs.push(m[1]);
+  return refs;
+}
+
 for (const a of valid) {
+  if (a.placeholder) continue;
   const files = walk(a.abs);
   const total = files.reduce((s, f) => s + f.size, 0);
   if (total > MAX_APP_BYTES)
@@ -85,6 +124,24 @@ for (const a of valid) {
     if (!TEXT_EXT.has(ext)) continue;
     const text = readFileSync(f.path, 'utf8');
     for (const [re, label] of RISKY) if (re.test(text)) warnings.push(`${rel}: obsahuje ${label}`);
+    if (/\b[A-Za-z]:[\\/](?:Users|Documents|Desktop|Downloads)\b|file:\/\/\//i.test(text))
+      warnings.push(`${rel}: obsahuje cestu na disk počítača (C:\\... alebo file:///) – na webe nebude fungovať`);
+    if (ext !== '.js' && ext !== '.svg') {
+      const reported = new Set();
+      for (let ref of refsOf(text, ext)) {
+        ref = ref.trim();
+        if (!ref || SKIP_REF.test(ref) || reported.has(ref)) continue;
+        reported.add(ref);
+        if (ref.startsWith('/')) { warnings.push(`${rel}: cesta „${ref}“ začína lomkou – použite relatívnu cestu`); continue; }
+        let clean;
+        try { clean = decodeURIComponent(ref.split('#')[0].split('?')[0]); } catch { clean = ref.split('#')[0].split('?')[0]; }
+        if (!clean) continue;
+        const r = checkPath(dirname(f.path), a.abs, clean.replace(/\\/g, '/'));
+        if (r === 'missing') warnings.push(`${rel}: odkazuje na „${ref}“, ale súbor neexistuje (nenakopírovali ste ho?)`);
+        else if (r.startsWith('case:'))
+          warnings.push(`${rel}: „${ref}“ sa líši veľkosťou písmen od súboru „${r.slice(5)}“ – na Verceli by sa nenačítal`);
+      }
+    }
     for (const m of text.matchAll(/https?:\/\/([^\/\s"'<>)]+)/gi)) {
       const host = m[1].toLowerCase();
       if (!ALLOWED_HOSTS.includes(host)) warnings.push(`${rel}: odkaz/zdroj na cudziu doménu ${host}`);
@@ -142,8 +199,14 @@ ${body}
 `;
 }
 
-const card = (href, title, sub, tag) =>
-  `      <li><a class="card" href="${href}"><strong>${esc(title)}</strong>${sub ? `<span>${esc(sub)}</span>` : ''}${tag ? `<br><span class="tag">${esc(tag)}</span>` : ''}</a></li>`;
+const card = (href, title, sub, tag, cls = '') =>
+  `      <li><a class="card${cls ? ' ' + cls : ''}" href="${href}"><strong>${esc(title)}</strong>${sub ? `<span>${esc(sub)}</span>` : ''}${tag ? `<br><span class="tag">${esc(tag)}</span>` : ''}</a></li>`;
+const appCard = (a) =>
+  a.placeholder
+    ? card(`${a.parts[2]}/`, a.autor, 'Pripravuje sa', '', 'placeholder')
+    : card(`${a.parts[2]}/`, a.nazov, a.autor, a.typ);
+const hotove = (list) => list.filter((a) => !a.placeholder).length;
+const countText = (list) => `${hotove(list)} hotových z ${list.length}`;
 
 const byYear = new Map();
 for (const a of valid) {
@@ -192,14 +255,15 @@ for (const y of years) {
       heading: `Školský rok ${y}`,
       lead: '',
       body: `    <h2>Triedy</h2>\n    <ul class="grid">\n${keys
-        .map((k) => card(`${k}/`, classes.get(k).label, `${classes.get(k).apps.length} aplikácií`, ''))
+        .map((k) => card(`${k}/`, classes.get(k).label, countText(classes.get(k).apps), ''))
         .join('\n')}\n    </ul>`,
     })
   );
   // triedy
   for (const k of keys) {
     const { label, apps: list } = classes.get(k);
-    list.sort((a, b) => sk(a.nazov, b.nazov));
+    // hotové aplikácie prvé (podľa názvu), placeholdery za nimi (podľa pseudonymu)
+    list.sort((a, b) => a.placeholder - b.placeholder || (a.placeholder ? sk(a.autor, b.autor) : sk(a.nazov, b.nazov)));
     write(
       `${y}/${k}/index.html`,
       page({
@@ -210,17 +274,15 @@ for (const y of years) {
           { href: '../', text: y },
         ],
         heading: `Trieda ${label}`,
-        lead: `Školský rok ${y}`,
-        body: `    <ul class="grid">\n${list
-          .map((a) => card(`${a.parts[2]}/`, a.nazov, a.autor, a.typ))
-          .join('\n')}\n    </ul>`,
+        lead: `Školský rok ${y} · ${countText(list)}`,
+        body: `    <ul class="grid">\n${list.map(appCard).join('\n')}\n    </ul>`,
       })
     );
   }
 }
 
 // ---------- súhrn ----------
-console.log(`Hotovo: ${valid.length} aplikácií, ${years.length} rokov, ${written.length} vygenerovaných stránok.`);
+console.log(`Hotovo: ${hotove(valid)} hotových aplikácií z ${valid.length} záznamov, ${years.length} rokov, ${written.length} vygenerovaných stránok.`);
 if (warnings.length) {
   console.log(`\nUpozornenia (${warnings.length}) – skontrolujte pred zverejnením:`);
   warnings.forEach((w) => console.log('  ! ' + w));

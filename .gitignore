@@ -6,3 +6,6 @@
 .env*.local
 node_modules/
 .vercel/
+
+# do repozitára len zmenšené obrázky (WebP), nie veľké originály
+advent/2026/obrazky/*.png

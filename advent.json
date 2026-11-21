@@ -3,6 +3,7 @@
   "rok": 2026,
   "nazov": "Adventné kalendáre 2026",
   "placeholder": "Prekvapenie pre tento deň ešte pripravujeme.",
+  "obrazok": "advent/2026/obrazky/adventna_zimna_krajinka_2400x1500.webp",
   "triedy": [
     { "kluc": "1a", "nazov": "1.A", "motiv": "polarna-noc" },
     { "kluc": "1b", "nazov": "1.B", "motiv": "brusnicova" },
@@ -12,11 +13,77 @@
     { "kluc": "1r", "nazov": "1.R", "motiv": "ladova-strieborna" }
   ],
   "motivy": {
-    "polarna-noc":       { "nazov": "Polárna noc",       "obloha1": "#0b1d3a", "obloha2": "#1d4e89", "kopec": "#2b5f8f", "sneh": "#e8f4ff", "dom": "#274a78", "strecha": "#1b2f52", "strom": "#0f4c5c", "akcent": "#22c1c3", "akcent2": "#0e7490" },
-    "brusnicova":        { "nazov": "Brusnicová",        "obloha1": "#2a0a1c", "obloha2": "#7a1f3d", "kopec": "#5c1a35", "sneh": "#fff1f3", "dom": "#7b2d45", "strecha": "#4a1428", "strom": "#1f4d36", "akcent": "#ff6b81", "akcent2": "#b4233f" },
-    "ihlicnaty-les":     { "nazov": "Ihličnatý les",     "obloha1": "#062018", "obloha2": "#14532d", "kopec": "#1d6b45", "sneh": "#effcf3", "dom": "#2f5d44", "strecha": "#1a3a2a", "strom": "#0d3b24", "akcent": "#4ade80", "akcent2": "#15803d" },
-    "zlate-svetielka":   { "nazov": "Zlaté svetielká",   "obloha1": "#1f1304", "obloha2": "#7c4a03", "kopec": "#6b4410", "sneh": "#fff8e6", "dom": "#7a5230", "strecha": "#4a2f14", "strom": "#284d2c", "akcent": "#fbbf24", "akcent2": "#a85308" },
-    "polarna-ziara":     { "nazov": "Polárna žiara",     "obloha1": "#150a33", "obloha2": "#4c1d95", "kopec": "#3b2a78", "sneh": "#f3eeff", "dom": "#4a3a8a", "strecha": "#2a1f5a", "strom": "#14455a", "akcent": "#b79bff", "akcent2": "#7c3aed" },
-    "ladova-strieborna": { "nazov": "Ľadová strieborná", "obloha1": "#1b2433", "obloha2": "#5f7690", "kopec": "#7f93a8", "sneh": "#f5f9fc", "dom": "#6c7f94", "strecha": "#3d4c5e", "strom": "#2d5b63", "akcent": "#b6dcf2", "akcent2": "#3f6f93" }
+    "polarna-noc": {
+      "nazov": "Polárna noc",
+      "obloha1": "#0b1d3a",
+      "obloha2": "#1d4e89",
+      "kopec": "#2b5f8f",
+      "sneh": "#e8f4ff",
+      "dom": "#274a78",
+      "strecha": "#1b2f52",
+      "strom": "#0f4c5c",
+      "akcent": "#22c1c3",
+      "akcent2": "#0e7490"
+    },
+    "brusnicova": {
+      "nazov": "Brusnicová",
+      "obloha1": "#2a0a1c",
+      "obloha2": "#7a1f3d",
+      "kopec": "#5c1a35",
+      "sneh": "#fff1f3",
+      "dom": "#7b2d45",
+      "strecha": "#4a1428",
+      "strom": "#1f4d36",
+      "akcent": "#ff6b81",
+      "akcent2": "#b4233f"
+    },
+    "ihlicnaty-les": {
+      "nazov": "Ihličnatý les",
+      "obloha1": "#062018",
+      "obloha2": "#14532d",
+      "kopec": "#1d6b45",
+      "sneh": "#effcf3",
+      "dom": "#2f5d44",
+      "strecha": "#1a3a2a",
+      "strom": "#0d3b24",
+      "akcent": "#4ade80",
+      "akcent2": "#15803d"
+    },
+    "zlate-svetielka": {
+      "nazov": "Zlaté svetielká",
+      "obloha1": "#1f1304",
+      "obloha2": "#7c4a03",
+      "kopec": "#6b4410",
+      "sneh": "#fff8e6",
+      "dom": "#7a5230",
+      "strecha": "#4a2f14",
+      "strom": "#284d2c",
+      "akcent": "#fbbf24",
+      "akcent2": "#a85308"
+    },
+    "polarna-ziara": {
+      "nazov": "Polárna žiara",
+      "obloha1": "#150a33",
+      "obloha2": "#4c1d95",
+      "kopec": "#3b2a78",
+      "sneh": "#f3eeff",
+      "dom": "#4a3a8a",
+      "strecha": "#2a1f5a",
+      "strom": "#14455a",
+      "akcent": "#b79bff",
+      "akcent2": "#7c3aed"
+    },
+    "ladova-strieborna": {
+      "nazov": "Ľadová strieborná",
+      "obloha1": "#1b2433",
+      "obloha2": "#5f7690",
+      "kopec": "#7f93a8",
+      "sneh": "#f5f9fc",
+      "dom": "#6c7f94",
+      "strecha": "#3d4c5e",
+      "strom": "#2d5b63",
+      "akcent": "#b6dcf2",
+      "akcent2": "#3f6f93"
+    }
   }
 }

@@ -47,7 +47,16 @@ h1 .trieda { color: var(--akcent); }
 
 /* ----- okienka ----- */
 .dvierka { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; z-index: 2; }
-.dvierka li { position: absolute; left: var(--x); top: var(--y); width: 5%; aspect-ratio: 1; }
+.dvierka li { position: absolute; left: var(--x); top: var(--y); width: var(--dv, 5%); aspect-ratio: 1; }
+.scena-obraz { --dv: 4.4%; }
+/* ilustrácia ako podklad; odtieň v farbe triedy sa prelieva len cez oblohu (hore) */
+.pozadie { position: absolute; inset: 0; }
+.pozadie .obrazok { display: block; width: 100%; height: 100%; object-fit: cover; }
+.odtien {
+  position: absolute; inset: 0; pointer-events: none; mix-blend-mode: color; opacity: .6;
+  background: linear-gradient(180deg, var(--obloha2) 0%, var(--obloha2) 18%, transparent 46%);
+}
+.scena-obraz .dv-listy { box-shadow: 0 0 14px 3px color-mix(in srgb, var(--akcent) 55%, transparent), 0 2px 8px rgba(0,0,0,.45); }
 .dvierka li.kula .dv, .dvierka li.kula .dv-listy, .dvierka li.kula .dv-vnutro { border-radius: 50%; }
 .dv {
   all: unset; box-sizing: border-box; position: relative; display: block; width: 100%; height: 100%;
@@ -91,6 +100,7 @@ dialog#okno::backdrop { background: rgba(3,8,20,.8); }
 @media (max-width: 900px) {
   .scena { aspect-ratio: auto; display: flex; flex-direction: column; border-radius: 14px; }
   .krajina { position: static; height: auto; aspect-ratio: 16 / 10; }
+  .pozadie { position: relative; inset: auto; aspect-ratio: 16 / 10; }
   .dvierka { position: static; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 16px; }
   .dvierka li { position: static; width: auto; }
   .dv { font-size: min(8cqw, 2.1rem); border-radius: 12px; }

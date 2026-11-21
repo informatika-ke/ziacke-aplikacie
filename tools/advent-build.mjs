@@ -251,7 +251,7 @@ function stranaRozcestnik(cfg) {
     <ul class="grid advent-grid">
 ${karty}
     </ul>
-    <p class="advent-lead">Robíš vlastnú aktivitu? <a href="odovzdat/">Odovzdať aktivitu</a></p>
+    <p class="advent-lead">Robíš vlastnú aktivitu? <a href="dielna/">Adventná AI dielňa (generátor promptov)</a> · <a href="odovzdat/">Odovzdať aktivitu</a></p>
   </main>
   <footer>Automaticky vygenerované – neupravujte ručne (zdroj: advent.json).</footer>
 </body>
@@ -327,7 +327,7 @@ function stranaOdovzdat(cfg) {
   <header>
     <nav class="crumbs"><a href="../../../">Žiacke aplikácie</a> › <a href="../">Adventné kalendáre</a></nav>
     <h1>📤 Odovzdať aktivitu</h1>
-    <p>Nahraj svoju hotovú aktivitu a zavolaj učiteľku, ktorá ju skontroluje a zverejní.</p>
+    <p>Nahraj svoju hotovú aktivitu a zavolaj učiteľku, ktorá ju skontroluje a zverejní. Ešte ju nemáš? Vymysli ju v <a href="../dielna/">Adventnej AI dielni</a>.</p>
   </header>
   <main class="odovzdat">
     <form method="post" action="/api/advent-odovzdat/" enctype="multipart/form-data">

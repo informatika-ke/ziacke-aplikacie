@@ -72,6 +72,15 @@
           "value": "default-src 'self'; img-src 'self' data:; script-src 'none'; style-src 'self' 'unsafe-inline'; connect-src 'none'; form-action 'self'; frame-src 'none'; base-uri 'self'"
         }
       ]
+    },
+    {
+      "source": "/advent/2026/dielna/:path*",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; form-action 'none'; frame-src 'none'; base-uri 'self'"
+        }
+      ]
     }
   ]
 }

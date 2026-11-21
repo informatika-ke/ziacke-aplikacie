@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Adventná AI dielňa – generátor promptov</title>
+<style>
+:root{color-scheme:dark;--bg:#091e2a;--panel:#123443;--light:#eaf8f7;--muted:#bdd4d6;--gold:#ffd782;--green:#77dfb4;--red:#ff9b9b}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;font:16px/1.55 system-ui,Segoe UI,sans-serif;color:var(--light);background:radial-gradient(circle at 15% 0%,#1c5360,transparent 45%),linear-gradient(160deg,#091e2a,#102d3b 65%,#09212d);min-height:100vh}
+a{color:var(--gold)}
+.wrap{max-width:1060px;margin:auto;padding:30px 18px 70px}
+header{text-align:center;padding:28px 0 22px}
+.crumbs{font-size:.9rem;color:var(--muted);text-align:left}
+h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.1;margin:10px 0}
+h2{font-size:1.45rem;margin:0 0 14px}
+h3{font-size:1.1rem;margin:22px 0 4px;color:var(--gold)}
+p{margin:9px 0}
+header p{color:var(--muted);max-width:720px;margin:12px auto}
+.eyebrow{letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-size:.8rem;font-weight:800}
+.pill{display:inline-block;border:1px solid #6da99e;border-radius:99px;padding:5px 13px;color:#c5f4e4;font-size:.85rem}
+.panel{background:#123443e8;border:1px solid #356272;border-radius:22px;padding:24px;margin:20px 0;box-shadow:0 15px 40px #0002}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.choice{border:1px solid #4d7782;background:#183f4d;color:var(--light);border-radius:15px;text-align:left;padding:16px;cursor:pointer;min-height:110px;font:inherit;transition:transform .15s,border .15s}
+.choice:hover,.choice:focus-visible{transform:translateY(-2px);border-color:var(--gold);outline:none}
+.choice[aria-pressed=true]{border:2px solid var(--gold);background:#285362}
+.choice strong{display:block;font-size:1.03rem}
+.choice small{display:block;color:var(--muted);margin-top:6px}
+.emoji{font-size:1.8rem;display:block;margin-bottom:6px}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px}
+.fields .wide{grid-column:1/-1}
+label.f{display:grid;gap:5px;font-weight:700;color:var(--gold);font-size:.95rem}
+label.f small{color:var(--muted);font-weight:400;line-height:1.4}
+select,input[type=text],textarea{font:inherit;color:var(--light);background:#0b2733;border:1px solid #47707b;border-radius:10px;padding:10px 12px;width:100%}
+textarea{min-height:92px;resize:vertical}
+select:focus-visible,input:focus-visible,textarea:focus-visible,.btn:focus-visible,.tab:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.meter{margin-top:18px;padding:12px 16px;border-radius:12px;background:#1b4350;border-left:4px solid var(--green);font-weight:700}
+.prompt{white-space:pre-wrap;background:#08222e;border:1px solid #47707b;border-radius:14px;padding:18px;color:#f0faf8;font-size:.92rem;max-height:480px;overflow:auto}
+.actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:15px}
+.btn{border:0;border-radius:12px;background:var(--gold);color:#18303a;padding:13px 20px;font-weight:800;font-size:1rem;cursor:pointer}
+.btn:hover{background:#ffe6a8}
+.status{color:var(--green);font-weight:700;min-height:1.5em}
+.rules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.rule{background:#173e4d;border-radius:13px;padding:14px 16px}
+.rule b{color:var(--gold)}
+.note{border-left:4px solid var(--gold);padding:12px 16px;background:#1b4350;border-radius:8px}
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.step{background:#173e4d;border-radius:13px;padding:15px}
+.num{color:var(--gold);font-weight:800}
+code{background:#092531;border-radius:5px;padding:2px 5px;color:#fff2b4}
+.checklist label{display:block;margin:11px 0;cursor:pointer}
+.checklist input{width:18px;height:18px;accent-color:#80dfbb;vertical-align:middle;margin-right:8px}
+.tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.tab{border:1px solid #4d7782;background:#183f4d;color:var(--light);border-radius:99px;padding:8px 16px;font:inherit;cursor:pointer}
+.tab[aria-selected=true]{background:var(--gold);color:#18303a;font-weight:800;border-color:var(--gold)}
+footer{text-align:center;color:var(--muted);padding-top:16px;font-size:.88rem}
+@media(max-width:760px){.grid,.fields{grid-template-columns:repeat(2,minmax(0,1fr))}.rules,.steps{grid-template-columns:1fr}.panel{padding:17px}}
+@media(max-width:520px){.grid,.fields{grid-template-columns:1fr}.choice{min-height:auto}}
+@media(prefers-reduced-motion:reduce){.choice{transition:none}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header>
+  <nav class="crumbs"><a href="../../../">Žiacke aplikácie</a> › <a href="../">Adventné kalendáre</a></nav>
+  <span class="eyebrow">🎄 Informatika · Adventné kalendáre 2026</span>
+  <h1>Adventná AI dielňa</h1>
+  <p>Vymysli vlastnú hru a nechaj AI, nech ti ju naprogramuje. Čím viac vlastných nápadov doplníš (otázky, príbeh, postavu, obrázky), tým viac bude hra <strong>tvoja</strong>. Generátor z toho zostaví presný prompt aj s technickými pravidlami.</p>
+  <span class="pill">1 aktivita = 1 HTML súbor · bez internetu · bez ukladania</span>
+</header>
+
+<section class="panel" aria-labelledby="h1s">
+  <h2 id="h1s">1. Kam patrí tvoja aktivita?</h2>
+  <div class="fields" style="margin-top:0">
+    <label class="f">Trieda<select id="trieda"></select></label>
+    <label class="f">Deň v kalendári<select id="den"></select></label>
+  </div>
+</section>
+
+<section class="panel" aria-labelledby="h2s">
+  <h2 id="h2s">2. Vyber typ aktivity</h2>
+  <p>Typ určuje, ako sa hra hrá. Všetko ostatné (obsah, príbeh, vzhľad) vymyslíš ty v ďalšom kroku.</p>
+  <div id="typy" class="grid"></div>
+  <div class="fields">
+    <label class="f">Náročnosť<select id="narocnost"><option value="0">Ľahká</option><option value="1" selected>Stredná</option><option value="2">Ťažšia</option></select></label>
+    <label class="f">Názov hry <small>(nepovinné, inak ho vymyslí AI)</small><input type="text" id="nazov" maxlength="60" placeholder="napr. Hľadanie stratených darčekov"></label>
+  </div>
+</section>
+
+<section class="panel" aria-labelledby="h3s">
+  <h2 id="h3s">3. Pridaj svoju tvorivosť 🎨</h2>
+  <p>Toto je najdôležitejšia časť. Napíš čo najkonkrétnejšie. Čo nevyplníš, to si AI vymyslí sama, ale hra potom nebude celkom tvoja.</p>
+  <h3>Špeciálne pre tvoju aktivitu</h3>
+  <div id="poliaTyp" class="fields" style="margin-top:8px"></div>
+  <h3>Príbeh a vzhľad</h3>
+  <div id="poliaSpolu" class="fields" style="margin-top:8px"></div>
+  <div class="meter" id="tvorivost" role="status" aria-live="polite"></div>
+</section>
+
+<section class="panel" aria-labelledby="h4s">
+  <h2 id="h4s">4. Skopíruj prompt pre AI</h2>
+  <p>Vlož ho do ChatGPT, Claude, Gemini alebo iného AI asistenta. Technické pravidlá na konci nemaž, bez nich hra v kalendári nemusí fungovať.</p>
+  <div class="tabs" role="tablist" aria-label="Druh promptu">
+    <button class="tab" role="tab" id="tab-tvorba" aria-selected="true" type="button">① Vytvor hru</button>
+    <button class="tab" role="tab" id="tab-kontrola" aria-selected="false" type="button">② Skontroluj a oprav môj kód</button>
+  </div>
+  <div id="prompt" class="prompt" role="region" aria-live="polite" tabindex="0"></div>
+  <div class="actions"><button id="copy" class="btn" type="button">📋 Skopírovať prompt</button><span id="status" class="status" role="status" aria-live="polite"></span></div>
+  <p id="tabHint" style="color:var(--muted);font-size:.9rem"></p>
+</section>
+
+<section class="panel" aria-labelledby="h5s">
+  <h2 id="h5s">5. Prečo také pravidlá?</h2>
+  <p>Tvoja hra beží v kalendári v <strong>izolovanom okne</strong> (kvôli bezpečnosti). Preto platia tieto pravidlá. Prompt ich už obsahuje:</p>
+  <div class="rules" id="rules"></div>
+</section>
+
+<section class="panel" aria-labelledby="h6s">
+  <h2 id="h6s">6. Ulož a otestuj</h2>
+  <div class="steps">
+    <div class="step"><span class="num">01 · Vygeneruj</span><p>Pošli prompt AI. Chceš kompletný kód, ktorý začína <code>&lt;!doctype html&gt;</code> a končí <code>&lt;/html&gt;</code>.</p></div>
+    <div class="step"><span class="num">02 · Ulož</span><p>Skopíruj kód do Poznámkového bloku alebo VS Code a ulož ho ako <code>index.html</code> v kódovaní UTF-8. V Poznámkovom bloku zvoľ typ „Všetky súbory“.</p></div>
+    <div class="step"><span class="num">03 · Otestuj</span><p>Otvor súbor dvojklikom v prehliadači. Vyskúšaj správne aj nesprávne odpovede, výhru, prehru a tlačidlo „Hrať znova“. Stlač <code>F12</code> a vyskúšaj aj mobilné zobrazenie.</p></div>
+    <div class="step"><span class="num">04 · Vylepši</span><p>Nepáči sa ti niečo? Napíš AI: „Toto zmeň: [opíš, čo chceš inak]. Pošli celý súbor.“ Ak niečo nefunguje, použi záložku <strong>② Skontroluj a oprav môj kód</strong>.</p></div>
+  </div>
+</section>
+
+<section class="panel" aria-labelledby="h7s">
+  <h2 id="h7s">7. Odovzdaj a zavolaj učiteľku</h2>
+  <ol>
+    <li>Otvor stránku <strong><a href="../odovzdat/">Odovzdať aktivitu</a></strong>.</li>
+    <li>Vyber svoju triedu a deň, zadaj <strong>kód triedy</strong> (povie ti ho učiteľka), svoju prezývku a nahraj <strong>jeden súbor <code>index.html</code></strong> (najviac 300 kB).</li>
+    <li>Dostaneš <strong>kontrolný kód</strong> a prípadné upozornenia. Oprav ich a nahraj súbor znova.</li>
+    <li><strong>Zavolaj učiteľku</strong> a povedz jej kontrolný kód. Aktivitu skontroluje a zverejní.</li>
+  </ol>
+  <div class="note" id="umiestnenie"></div>
+  <p>Pred odovzdaním skontroluj:</p>
+  <div class="checklist">
+    <label><input type="checkbox"> Súbor je jeden a volá sa presne <code>index.html</code>, nie <code>index.html.txt</code>.</label>
+    <label><input type="checkbox"> Hra sa otvorí a funguje aj bez internetu a bez ďalších súborov.</label>
+    <label><input type="checkbox"> V kóde nie je <code>localStorage</code>, <code>fetch</code>, <code>&lt;form&gt;</code> ani odkaz na iný súbor alebo web.</label>
+    <label><input type="checkbox"> Hra má jasný výsledok a tlačidlo „Hrať znova“ obnoví pôvodný stav.</label>
+    <label><input type="checkbox"> Funguje na mobile (úzke okno) aj na počítači.</label>
+    <label><input type="checkbox"> Všetky texty sú po slovensky, slušné a nie sú v nich osobné údaje (celé mená, fotky, e-maily, telefóny).</label>
+    <label><input type="checkbox"> Súbor som nahral/-a cez stránku Odovzdať aktivitu a mám kontrolný kód.</label>
+  </div>
+</section>
+<footer>Školský projekt · Adventné kalendáre 2026 · Jedna aktivita = jeden HTML súbor</footer>
+</main>
+
+<script>
+'use strict';
+
+// ---------- Pravidlá: jediné miesto, odkiaľ sa berú do promptu aj do vysvetlenia pre žiakov ----------
+const RULES = [
+  { t: 'Jeden súbor', p: 'Vráť kompletný HTML dokument od <!DOCTYPE html> po </html>. Všetko (HTML, CSS aj JavaScript) musí byť v JEDNOM súbore. Nepoužívaj žiadne ďalšie súbory (.css, .js, obrázky, zvuky, fonty).', w: 'Kalendár zobrazí iba tento jediný súbor. Odkaz na ďalší súbor nenájde.' },
+  { t: 'Bez internetu', p: 'Aplikácia musí fungovať offline. Nepoužívaj externé knižnice (CDN), API, externé písma ani žiadne odkazy na internetové adresy (https://…). Použi systémové písmo (font-family: system-ui, sans-serif).', w: 'Kalendár blokuje všetko, čo sa sťahuje z internetu.' },
+  { t: 'Obrázky len vlastné', p: 'Obrázky a postavy tvor iba pomocou emoji, CSS alebo inline SVG (prípadne data: URI) podľa môjho popisu grafiky. Nepoužívaj fotografie ľudí.', w: 'Samostatný obrázok je ďalší súbor. Fotky ľudí nepatria na web. Preto AI obrázky „nakreslí“ kódom (SVG, CSS, emoji).' },
+  { t: 'Bez ukladania', p: 'Nepoužívaj localStorage, sessionStorage, IndexedDB ani cookies. Všetky hodnoty (skóre, stav hry) drž len v premenných JavaScriptu.', w: 'V izolovanom okne ukladanie do prehliadača nefunguje a hra by spadla.' },
+  { t: 'Nič neodosielaj', p: 'Nepoužívaj fetch, XMLHttpRequest, WebSocket, <form>, <iframe>, window.open ani window.top/parent. Nepýtaj osobné údaje (meno, e-mail, telefón). Správy ukazuj priamo na stránke, nie cez alert().', w: 'Hra nesmie nič posielať von ani ovládať okno kalendára.' },
+  { t: 'Mobil aj počítač', p: 'Do <head> daj <meta name="viewport" content="width=device-width, initial-scale=1">. Rozloženie musí byť responzívne, tlačidlá aspoň 44 px veľké, ovládanie dotykom aj myšou.', w: 'Veľa spolužiakov bude hrať na telefóne.' },
+  { t: 'Po slovensky a pekne', p: 'Všetky texty sú po slovensky. Použi prehľadný vianočný/zimný dizajn s dobrým kontrastom (text musí byť dobre čitateľný).', w: '' },
+  { t: 'Slušný obsah', p: 'Všetky texty musia byť slušné a vhodné pre školu (žiadne vulgarizmy, urážky, posmech). Nepoužívaj skutočné mená ľudí ani osobné údaje.', w: 'Aktivity uvidia spolužiaci aj učitelia.' },
+  { t: 'Jasný priebeh', p: 'Hra má jasný cieľ, jasný výsledok (výhra, skóre alebo hodnotenie) a funkčné tlačidlo „Hrať znova“, ktoré obnoví pôvodný stav. Ošetri nesprávne vstupy. Hra trvá približne 1 až 3 minúty.', w: 'Kto dohrá, má vedieť, že vyhral, a môže skúsiť znova.' },
+  { t: 'Malá veľkosť', p: 'Celý súbor má mať menej ako 200 kB (nikdy viac ako 300 kB). Nevkladaj veľké obrázky ani dlhé zoznamy dát.', w: 'Odovzdať sa dá súbor najviac 300 kB; menší sa rýchlejšie načíta aj na pomalom telefóne.' },
+  { t: 'Úplný kód', p: 'Pošli celý kód v jednom bloku, od začiatku do konca. Nevynechávaj časti a nepíš „…zvyšok kódu“. Pred odpoveďou si skontroluj, či kód spĺňa všetky tieto požiadavky.', w: '' },
+];
+
+const TRIEDY = ['1.A', '1.B', '1.C', '1.D', '1.G', '1.R'];
+const $ = (id) => document.getElementById(id);
+const nar = (a) => a[+$('narocnost').value];
+
+// ---------- Tvorivé polia ----------
+// Spoločné pre všetky typy (príbeh a vzhľad).
+const SPOLU = [
+  { id: 'tema', l: 'Téma alebo príbeh', h: 'O čom hra je? Kto je v nej hlavná postava? Čo sa stalo?', t: 'area', p: 'napr. Mikuláš stratil päť darčekov a hráč mu ich pomáha nájsť.' },
+  { id: 'postava', l: 'Maskot alebo hlavná postava', h: 'Emoji a krátky popis povahy.', t: 'text', p: 'napr. ⛄ snehuliak Bruno, ktorý rád žartuje' },
+  { id: 'grafika', l: 'Popis obrázkov a grafiky', h: 'AI ich nakreslí kódom (emoji, CSS, SVG). Opíš čo najpresnejšie, čo kde má byť.', t: 'area', p: 'napr. v rohu stojí snehuliak s červeným šálom, z oblohy padá sneh, tlačidlá majú tvar hviezd' },
+  { id: 'farby', l: 'Farby a nálada', h: 'Aké majú byť farby a akú náladu má hra mať?', t: 'text', p: 'napr. tmavomodré pozadie, zlaté hviezdy, pokojná nálada', list: ['modro-strieborná, pokojná', 'červeno-zlatá, tradičná', 'zelená a biela, lesná', 'fialová a ružová, čarovná', 'humorná a pestrofarebná'] },
+  { id: 'zaver', l: 'Záverečná správa', h: 'Čo hráč uvidí, keď vyhrá alebo skončí?', t: 'text', p: 'napr. Si záchranca Vianoc! Veselé Vianoce od 1.C!' },
+  { id: 'prekvapenie', l: 'Tajné prekvapenie', h: 'Skrytý detail, ktorý hráč nájde (nepovinné).', t: 'text', p: 'napr. keď 5× klikneš na hviezdu, objaví sa tancujúci snehuliak' },
+  { id: 'priania', l: 'Ďalšie priania', h: 'Čokoľvek, čo sa nezmestilo inam.', t: 'area', p: 'napr. nech sú tlačidlá veľké a animácie plynulé' },
+];
+
+// Typy aktivít. `polia` sú špeciálne pre typ; `t()` vráti základné zadanie podľa náročnosti.
+const TYPY = [
+  { i: '🧠', n: 'Vianočný kvíz', h: 'Otázky s tromi možnosťami',
+    polia: [{ id: 'otazky', l: 'Tvoje vlastné otázky', h: 'Každá na nový riadok v tvare: otázka | správna odpoveď | zlá odpoveď 1 | zlá odpoveď 2', t: 'area', p: 'Kto vozí darčeky na Slovensku? | Ježiško | Veľká Mama | Snehuliak', inst: 'Použi presne tieto otázky a odpovede (rovnaké znenie). Formát riadku: otázka | správna odpoveď | zlé odpovede. Ak ich je menej, než treba, doplň ďalšie v rovnakom duchu.' }],
+    t: () => `Vytvor vianočný kvíz s ${nar([5, 7, 10])} otázkami o Vianociach a zime. Každá otázka má 3 možnosti a presne jednu správnu odpoveď. Po kliknutí ukáž, či bola odpoveď správna (a ktorá je správna), a posuň hráča na ďalšiu otázku. Na konci zobraz skóre a krátke hodnotenie.` },
+  { i: '🎯', n: 'Hádaj číslo', h: 'Tipuj a získavaj nápovedy',
+    polia: [{ id: 'hlasky', l: 'Tvoje vlastné hlášky', h: 'Čo hra povie, keď hráč tipne priveľa, primálo alebo trafí? Každá hláška na nový riadok.', t: 'area', p: 'Priveľa: To je vyššie ako Mount Everest!\nPrimálo: Aj trpaslík by skočil vyššie.\nTrafil si: Hurá, číslo je tvoje!', inst: 'Použi presne tieto hlášky pre príslušné situácie (môžeš ich striedať s vlastnými v rovnakom duchu).' }],
+    t: () => { const [max, poks] = nar([[20, 0], [50, 7], [100, 8]]); return `Vytvor hru Hádaj číslo so zimnou tematikou. Počítač si na začiatku náhodne vyberie celé číslo od 1 do ${max}. Hráč zadáva tipy a po každom dostane nápovedu, či má skúsiť väčšie alebo menšie číslo.${poks ? ` Hráč má najviac ${poks} pokusov.` : ''} Po uhádnutí zobraz počet pokusov a gratuláciu. Nesprávne vstupy (prázdne, text, mimo rozsahu) ošetri.`; } },
+  { i: '🃏', n: 'Vianočné pexeso', h: 'Nájdi dvojice symbolov',
+    polia: [
+      { id: 'symboly', l: 'Tvoje symboly (emoji)', h: 'Napíš emoji oddelené medzerou. Ak ich je menej, než treba, AI doplní.', t: 'text', p: 'napr. 🎅 🦌 ⛄ 🎁 🔔 ⭐', inst: 'Použi práve tieto symboly pre kartičky.' },
+      { id: 'rub', l: 'Ako vyzerá zadná strana kartičiek', h: '', t: 'text', p: 'napr. tmavomodrá so zlatou snehovou vločkou' },
+    ],
+    t: () => { const p = nar([6, 8, 10]); return `Vytvor vianočné pexeso s ${p} dvojicami rôznych symbolov (spolu ${2 * p} kartičiek). Pri každej novej hre kartičky zamiešaj. Hráč otočí dve kartičky; rovnaké zostanú odkryté, rozdielne sa po krátkej pauze zakryjú. Počas pauzy nedovoľ otočiť ďalšiu kartičku. Po nájdení všetkých dvojíc zobraz počet pokusov a gratuláciu.`; } },
+  { i: '🔎', n: 'Vianočné hádanky', h: 'Vyrieš úlohy a odhaľ heslo',
+    polia: [
+      { id: 'hadanky', l: 'Tvoje vlastné hádanky', h: 'Každá na nový riadok v tvare: hádanka | správna odpoveď | zlá odpoveď 1 | zlá odpoveď 2 | nápoveda', t: 'area', p: 'Má bradu, no nie je dedo, nosí dary, kto je to? | Mikuláš | Kominár | Kuchár | Má červený plášť', inst: 'Použi presne tieto hádanky (rovnaké znenie). Formát riadku: hádanka | správna odpoveď | zlé odpovede | nápoveda. Ak ich je menej, než treba, doplň ďalšie.' },
+      { id: 'heslo', l: 'Tajné heslo na konci', h: 'Slovo, ktoré hráč odomkne po vyriešení všetkých hádaniek.', t: 'text', p: 'napr. SNEHULIAK', inst: 'Tajné heslo na konci má byť presne toto (namiesto „VIANOCE“).' },
+    ],
+    t: () => `Vytvor hru s ${nar([3, 4, 5])} jednoduchými a jednoznačnými vianočnými hádankami v slovenčine. Pri každej ponúkni 3 možnosti odpovede a iba jednu správnu. Nesprávna odpoveď zobrazí nápovedu a umožní skúsiť to znova; správna posunie na ďalšiu hádanku. Po vyriešení všetkých zobraz tajné heslo „VIANOCE“ a gratuláciu.` },
+  { i: '🎄', n: 'Rozsvieť stromček', h: 'Rozsvieť všetky svetielka',
+    polia: [
+      { id: 'ozdoby', l: 'Aké ozdoby a svetielka', h: '', t: 'text', p: 'napr. zlaté hviezdy, červené gule, modré cukrovinky' },
+      { id: 'prianie', l: 'Prianie, ktoré sa ukáže na konci', h: '', t: 'text', p: 'napr. Nech sú Vianoce plné smiechu!', inst: 'Zobraz presne toto prianie, keď všetky svetielka svietia.' },
+    ],
+    t: () => { const n = nar([10, 15, 20]); return `Vytvor interaktívny vianočný stromček pomocou HTML, CSS, emoji alebo SVG. Na stromčeku je ${n} samostatných zhasnutých svetielok alebo ozdôb. Každé sa dá kliknutím rozsvietiť iba raz. Zobraz počítadlo rozsvietených svetielok. Keď svieti všetkých ${n}, zobraz vianočné prianie a úspešné dokončenie.`; } },
+  { i: '🎁', n: 'Vianočný postreh', h: 'Chytaj predmety na čas',
+    polia: [
+      { id: 'objekt', l: 'Čo hráč chytá', h: 'Emoji alebo popis.', t: 'text', p: 'napr. 🎁 darčeky' },
+      { id: 'zly', l: 'Zlý predmet, ktorému sa treba vyhnúť (nepovinné)', h: 'Ak naň hráč klikne, stratí body.', t: 'text', p: 'napr. 🪨 uhlie' },
+    ],
+    t: () => { const [n, s] = nar([[10, 30], [15, 30], [20, 25]]); return `Vytvor jednoduchú vianočnú postrehovú hru s hracou plochou. Na nej sa vždy objaví jeden klikateľný predmet na náhodnom mieste. Po kliknutí sa presunie na nové miesto a skóre sa zvýši o 1. Cieľ je získať ${n} bodov do ${s} sekúnd. Zobraz zostávajúci čas, skóre a na konci jasný výsledok (výhra alebo prehra). Predmet musí zostať celý v hracej ploche.`; } },
+  { i: '🔔', n: 'Zvončekové opakovanie', h: 'Zapamätaj si poradie farieb',
+    polia: [{ id: 'zvonceky', l: 'Mená alebo vlastnosti 4 zvončekov', h: 'Farba a meno každého zvončeka.', t: 'text', p: 'napr. Rubín (červený), Smaragd (zelený), Zafír (modrý), Zlatý (žltý)' }],
+    t: () => `Vytvor pamäťovú hru v štýle „Simon hovorí“ so 4 farebnými tlačidlami (zvončeky). Počítač ukáže poradie rozsvietenia a hráč ho musí zopakovať kliknutím. S každým kolom sa poradie predĺži o jedno. Hráč vyhrá, keď zvládne ${nar([5, 7, 9])} kôl, pri chybe hra skončí. Počas ukazovania poradia nedovoľ klikať. Zobraz číslo kola a výsledok.` },
+  { i: '🔤', n: 'Premiešané slová', h: 'Poskladaj vianočné slová',
+    polia: [{ id: 'slova', l: 'Tvoje slová (oddelené čiarkou)', h: 'Vianočné alebo zimné slová. Ak ich je menej, AI doplní.', t: 'text', p: 'napr. sánky, medovníky, korčuľovanie, ozdoby', inst: 'Použi presne tieto slová.' }],
+    t: () => `Vytvor hru, v ktorej je ${nar([5, 6, 8])} vianočných slov v slovenčine s premiešanými písmenami. Hráč slovo poskladá klikaním na písmená alebo písaním. Po každom slove ukáž, či je správne; pridaj tlačidlo „Nápoveda“ (odkryje jedno písmeno). Po poskladaní všetkých slov zobraz skóre a gratuláciu.` },
+  { i: '💡', n: 'Vlastný nápad', h: 'Opíš vlastnú hru',
+    polia: [{ id: 'vlastny', l: 'Opíš svoj nápad', h: 'Čo hráč robí? Ako vyhrá? Čo je cieľ? Čím viac detailov, tým lepšie.', t: 'area', p: 'Môj nápad: …' }],
+    t: () => { const v = (hodnoty.vlastny || '').trim(); return v ? `Vytvor tento typ aktivity podľa môjho opisu:\n${v}` : 'Vytvor vianočnú minihru podľa môjho nápadu (opis dopíšem nižšie).'; } },
+];
+
+// ---------- Stav ----------
+let typ = 0, mod = 'tvorba';
+const hodnoty = {}; // id poľa -> text (zachová sa pri zmene typu)
+
+const hodnota = (id) => String(hodnoty[id] || '').trim();
+const odsad = (s) => s.split('\n').map((r, i) => (i ? '  ' : '') + r).join('\n');
+
+function pravidlaText() {
+  return RULES.map((r, i) => `${i + 1}. ${r.t}: ${r.p}`).join('\n');
+}
+
+function poliaPrePrompt() {
+  const vsetky = [...TYPY[typ].polia, ...SPOLU];
+  return vsetky.filter((f) => hodnota(f.id));
+}
+
+function zostavPrompt() {
+  if (mod === 'kontrola') {
+    return `Skontroluj nižšie vložený HTML súbor podľa požiadaviek a oprav ho.\n\nNAJPRV: po slovensky vypíš zoznam všetkého, čo požiadavky porušuje (alebo napíš „všetko je v poriadku“).\nPOTOM: pošli celý opravený súbor od <!DOCTYPE html> po </html>, vo funkčnom stave, bez vynechania častí.\n\nPOŽIADAVKY:\n${pravidlaText()}\n\nMOJ KÓD:\n(sem vlož celý svoj kód)`;
+  }
+  const nazov = $('nazov').value.trim();
+  let s = 'Vytvor interaktívnu webovú miniaplikáciu (hru) do adventného kalendára pre stredoškolákov (1. ročník).\n';
+  s += `\nNÁZOV: ${nazov || '(vymysli pekný krátky názov)'}`;
+  s += `\n\nZADANIE:\n${TYPY[typ].t()}`;
+  const vyplnene = poliaPrePrompt();
+  if (vyplnene.length) {
+    s += '\n\nTVORIVÁ ČASŤ (toto som vymyslel/-a ja. Použi to presne tak, ako je napísané, a len to, čo som nevyplnil/-a, dotvor sám v rovnakom duchu):';
+    for (const f of vyplnene) {
+      s += `\n- ${f.l}: ${odsad(hodnota(f.id))}`;
+      if (f.inst) s += `\n  (${f.inst})`;
+    }
+  }
+  s += `\n\nTECHNICKÉ POŽIADAVKY (povinné, hra sa bude zobrazovať v izolovanom okne bez prístupu na internet):\n${pravidlaText()}`;
+  return s;
+}
+
+// ---------- Vykresľovanie ----------
+function pole(f) {
+  const lab = document.createElement('label');
+  lab.className = 'f' + (f.t === 'area' ? ' wide' : '');
+  lab.append(document.createTextNode(f.l));
+  if (f.h) {
+    const sm = document.createElement('small');
+    sm.textContent = f.h;
+    lab.append(sm);
+  }
+  const inp = document.createElement(f.t === 'area' ? 'textarea' : 'input');
+  if (f.t !== 'area') inp.type = 'text';
+  inp.maxLength = f.t === 'area' ? 900 : 160;
+  inp.placeholder = f.p || '';
+  inp.value = hodnoty[f.id] || '';
+  inp.id = 'pole-' + f.id;
+  if (f.list) {
+    const dl = document.createElement('datalist');
+    dl.id = 'dl-' + f.id;
+    f.list.forEach((x) => { const o = document.createElement('option'); o.value = x; dl.append(o); });
+    inp.setAttribute('list', dl.id);
+    lab.append(dl);
+  }
+  inp.addEventListener('input', () => { hodnoty[f.id] = inp.value; $('status').textContent = ''; vykresli(); });
+  lab.append(inp);
+  return lab;
+}
+
+function vykresliPolia() {
+  const a = $('poliaTyp'), b = $('poliaSpolu');
+  a.innerHTML = '';
+  b.innerHTML = '';
+  TYPY[typ].polia.forEach((f) => a.append(pole(f)));
+  SPOLU.forEach((f) => b.append(pole(f)));
+}
+
+function tvorivost() {
+  const vsetky = [...TYPY[typ].polia, ...SPOLU];
+  const x = vsetky.filter((f) => hodnota(f.id)).length;
+  const sprava = x === 0 ? 'Skús vyplniť aspoň tri polia. AI potom vytvorí hru presne podľa teba.'
+    : x < 3 ? 'Dobrý začiatok! Pridaj ešte nejaký nápad, nech je hra naozaj tvoja.'
+    : 'Super, tvoja hra bude originál! 🌟';
+  $('tvorivost').textContent = `🎨 Vyplnené tvorivé polia: ${x} z ${vsetky.length}. ${sprava}`;
+}
+
+function vykresli() {
+  $('prompt').textContent = zostavPrompt();
+  tvorivost();
+  $('umiestnenie').textContent = `Pri odovzdávaní vyber triedu ${$('trieda').value} a deň ${$('den').value}. Kód triedy ti povie učiteľka.`;
+  $('tabHint').textContent = mod === 'tvorba'
+    ? 'Tip: keď AI vráti kód, otestuj ho. Nepáči sa ti niečo? Napíš AI, čo zmeniť. Nefunguje niečo alebo si nie si istý/á pravidlami? Prepni sa na záložku ② a pošli AI svoj kód na kontrolu.'
+    : 'Tip: za text „MOJ KÓD“ vlož celý svoj súbor a pošli AI. Dostaneš zoznam problémov a opravený súbor.';
+}
+
+function vykresliTypy() {
+  const box = $('typy');
+  box.innerHTML = '';
+  TYPY.forEach((t, i) => {
+    const b = document.createElement('button');
+    b.className = 'choice'; b.type = 'button'; b.setAttribute('aria-pressed', String(i === typ));
+    const e = document.createElement('span'); e.className = 'emoji'; e.setAttribute('aria-hidden', 'true'); e.textContent = t.i;
+    const st = document.createElement('strong'); st.textContent = t.n;
+    const sm = document.createElement('small'); sm.textContent = t.h;
+    b.append(e, st, sm);
+    b.addEventListener('click', () => { typ = i; $('status').textContent = ''; vykresliTypy(); vykresliPolia(); vykresli(); });
+    box.appendChild(b);
+  });
+}
+
+function nastav() {
+  TRIEDY.forEach((t) => $('trieda').add(new Option(t, t)));
+  for (let i = 1; i <= 24; i++) $('den').add(new Option(`${i}. december`, String(i)));
+  RULES.forEach((r, i) => {
+    const d = document.createElement('div'); d.className = 'rule';
+    const b = document.createElement('b'); b.textContent = `${i + 1}. ${r.t}`;
+    d.append(b, document.createElement('br'), document.createTextNode(r.w || r.p));
+    $('rules').appendChild(d);
+  });
+  ['trieda', 'den', 'narocnost', 'nazov'].forEach((id) => $(id).addEventListener('input', () => { $('status').textContent = ''; vykresli(); }));
+  [['tab-tvorba', 'tvorba'], ['tab-kontrola', 'kontrola']].forEach(([id, m]) => $(id).addEventListener('click', () => {
+    mod = m;
+    $('tab-tvorba').setAttribute('aria-selected', String(m === 'tvorba'));
+    $('tab-kontrola').setAttribute('aria-selected', String(m === 'kontrola'));
+    $('status').textContent = '';
+    vykresli();
+  }));
+  vykresliTypy();
+  vykresliPolia();
+  vykresli();
+}
+
+$('copy').addEventListener('click', async () => {
+  const t = zostavPrompt(), status = $('status');
+  try {
+    if (navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(t);
+    else {
+      const ta = document.createElement('textarea');
+      ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      const ok = document.execCommand('copy'); ta.remove();
+      if (!ok) throw new Error('copy');
+    }
+    status.textContent = '✓ Prompt je skopírovaný.';
+  } catch (e) {
+    status.textContent = 'Kopírovanie sa nepodarilo. Označ text promptu a skopíruj ho ručne.';
+  }
+});
+
+nastav();
+</script>
+</body>
+</html>

@@ -4,7 +4,6 @@ import { odomknutyDen, odomknuteProCislo, cisloDna, cisloZTextu, faza, okamihOdo
 const main = document.querySelector('[data-kalendar]');
 const trieda = main.dataset.trieda;
 const nazov = main.dataset.nazov;
-const dniSoSuborom = new Set(main.dataset.dni.split(',').filter(Boolean).map(Number));
 const tlacidla = [...main.querySelectorAll('.dv')];
 const odpocet = document.getElementById('odpocet');
 const hlaska = document.getElementById('hlaska');
@@ -69,10 +68,11 @@ function otvor(den) {
     return;
   }
   hlaska.textContent = '';
-  const query = simCislo !== null ? `?datum=${simText}` : '';
-  const src = dniSoSuborom.has(den)
-    ? new URL(`../aktivity/${trieda}/${dd(den)}/${query}`, location.href)
-    : new URL('../zatial-nic/', location.href);
+  // Server vydá aktivitu (alebo placeholder, ak ešte nie je zverejnená) a sám kontroluje čas.
+  const src = new URL('/api/advent-aktivita/', location.origin);
+  src.searchParams.set('trieda', trieda);
+  src.searchParams.set('den', String(den));
+  if (simCislo !== null) src.searchParams.set('datum', simText);
   document.getElementById('okno-nadpis').textContent = `${nazov} · okienko ${den}`;
   iframe.src = src.href;
   okno.showModal();

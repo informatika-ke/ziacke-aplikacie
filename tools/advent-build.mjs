@@ -1,13 +1,9 @@
-// Adventné kalendáre: z advent.json vygeneruje 6 stránok tried, učiteľskú stránku a spoločný
-// placeholder, a skontroluje žiacke aktivity v advent/2026/aktivity/<trieda>/NN.html.
-// Žiacke súbory nikdy nemení. Volá sa z tools/build.mjs.
-import { readFileSync, existsSync, readdirSync, statSync, mkdirSync, writeFileSync } from 'node:fs';
+// Adventné kalendáre: z advent.json vygeneruje 6 stránok tried, rozcestník, stránku na odovzdávanie
+// a učiteľskú stránku. Žiacke aktivity sa neukladajú v repozitári, ale v úložisku (api/*, lib/uloziste.js).
+// Volá sa z tools/build.mjs.
+import { readFileSync, existsSync, statSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { RISKY, DISK_PATH, cudzieDomeny } from './kontroly.mjs';
 
-const MAX_AKTIVITA_BYTES = 3 * 1024 * 1024;
-const NAZOV_SUBORU = /^(0[1-9]|1\d|2[0-4])\.html$/;
-const MIESTNY_ODKAZ = /^(?:data:|#|[a-z][a-z0-9+.-]*:|\/\/)/i;
 const BASE = 'advent/2026';
 const POSUN_ZNACKY = { x: 16, y: 10 }; // viewBox 1600×1000 -> percentá
 
@@ -16,7 +12,7 @@ const esc = (s) =>
 
 // ---------- načítanie a kontrola ----------
 export function nacitajAdvent(ROOT) {
-  const out = { cfg: null, errors: [], warnings: [], sekciaUvod: '', dni: {}, pocetAktivit: 0 };
+  const out = { cfg: null, errors: [], warnings: [], sekciaUvod: '' };
   const cesta = join(ROOT, 'advent.json');
   if (!existsSync(cesta)) return out;
   let cfg;
@@ -72,65 +68,8 @@ export function nacitajAdvent(ROOT) {
   if (out.errors.length) return out;
   out.cfg = cfg;
 
-  const aktivityRoot = join(ROOT, ...BASE.split('/'), 'aktivity');
-  for (const t of cfg.triedy) {
-    const dir = join(aktivityRoot, t.kluc);
-    const dni = [];
-    if (existsSync(dir)) {
-      for (const meno of readdirSync(dir).sort()) {
-        const rel = `${BASE}/aktivity/${t.kluc}/${meno}`;
-        const p = join(dir, meno);
-        if (meno === '.gitkeep') continue;
-        if (statSync(p).isDirectory()) { out.warnings.push(`${rel}: priečinok sa ignoruje – aktivita musí byť jeden súbor NN.html`); continue; }
-        if (!NAZOV_SUBORU.test(meno)) {
-          const m = /^(\d{1,2})\.html?$/i.exec(meno);
-          out.warnings.push(
-            m && +m[1] >= 1 && +m[1] <= 24
-              ? `${rel}: názov musí byť dvojčíslie a „.html“, napr. ${String(+m[1]).padStart(2, '0')}.html – tento súbor sa ignoruje`
-              : `${rel}: nepovolený názov (povolené 01.html až 24.html) – súbor sa ignoruje`
-          );
-          continue;
-        }
-        dni.push(Number(meno.slice(0, 2)));
-        kontrolaAktivity(rel, p, out.warnings);
-      }
-    }
-    out.dni[t.kluc] = dni;
-    out.pocetAktivit += dni.length;
-  }
-  if (existsSync(aktivityRoot))
-    for (const meno of readdirSync(aktivityRoot))
-      if (statSync(join(aktivityRoot, meno)).isDirectory() && !videne.has(meno))
-        out.warnings.push(`${BASE}/aktivity/${meno}: trieda nie je v advent.json – súbory sa nezobrazia`);
-
   out.sekciaUvod = sekciaUvod(cfg);
   return out;
-}
-
-function kontrolaAktivity(rel, p, warnings) {
-  const size = statSync(p).size;
-  if (size > MAX_AKTIVITA_BYTES) warnings.push(`${rel}: súbor má ${(size / 1048576).toFixed(1)} MB (limit ${MAX_AKTIVITA_BYTES / 1048576} MB) – zmenšite obrázky`);
-  const text = readFileSync(p, 'utf8');
-  const w = (s) => warnings.push(`${rel}: ${s}`);
-  if (!/<!doctype|<html/i.test(text)) w('nevyzerá ako HTML stránka (chýba <!DOCTYPE html>)');
-  if (!/<meta[^>]+name=["']viewport["']/i.test(text)) w('chýba <meta name="viewport" …> – na telefóne bude stránka drobná');
-  for (const [re, label] of RISKY) if (re.test(text)) w(`obsahuje ${label}` + (label === '<iframe>' || label === 'formulár <form>' || /fetch|XML|Web/.test(label) ? ' – v kalendári je zablokované' : ''));
-  if (/\blocalStorage\b|\bsessionStorage\b|\bindexedDB\b|document\.cookie/.test(text))
-    w('používa localStorage/cookies/IndexedDB – v izolovanom okne kalendára NEFUNGUJE (ukladajte len do premenných v JavaScripte)');
-  if (/\b(?:window\.)?top\.location|parent\.location|window\.open\s*\(/.test(text)) w('mení/otvára iné okno (top/parent/window.open) – v izolovanom okne nefunguje');
-  if (DISK_PATH.test(text)) w('obsahuje cestu na disk počítača (C:\\... alebo file:///)');
-  for (const d of cudzieDomeny(text)) w(`odkazuje na cudziu doménu ${d} – v kalendári sa nenačíta (aktivita musí byť samostatná)`);
-  const hlasene = new Set();
-  const refs = [
-    ...[...text.matchAll(/\b(?:src|href)\s*=\s*["']([^"']+)["']/gi)].map((m) => m[1]),
-    ...[...text.matchAll(/url\(\s*["']?([^"')]+?)["']?\s*\)/gi)].map((m) => m[1]),
-  ];
-  for (const r of refs) {
-    const ref = r.trim();
-    if (!ref || MIESTNY_ODKAZ.test(ref) || hlasene.has(ref)) continue;
-    hlasene.add(ref);
-    w(`odkazuje na samostatný súbor „${ref}“ – aktivita musí byť jeden HTML súbor (obrázky vložte priamo ako data: URI, CSS a JS dovnútra súboru)`);
-  }
 }
 
 // ---------- pomocné: náhodné čísla, geometria ----------
@@ -312,6 +251,7 @@ function stranaRozcestnik(cfg) {
     <ul class="grid advent-grid">
 ${karty}
     </ul>
+    <p class="advent-lead">Robíš vlastnú aktivitu? <a href="odovzdat/">Odovzdať aktivitu</a></p>
   </main>
   <footer>Automaticky vygenerované – neupravujte ručne (zdroj: advent.json).</footer>
 </body>
@@ -324,7 +264,7 @@ function pozadieObrazok(t) {
   return `<div class="pozadie"><img class="obrazok" src="${esc(src)}" width="2400" height="1500" alt="" fetchpriority="high" decoding="async"></div>`;
 }
 
-function stranaKalendara(cfg, t, dni) {
+function stranaKalendara(cfg, t) {
   const m = cfg.motivy[t.motiv];
   const obraz = !!t.obrazok;
   const sloty = obraz ? slotyObrazka(t) : SLOTY;
@@ -346,7 +286,7 @@ function stranaKalendara(cfg, t, dni) {
     <p id="hlaska" class="adv-hlaska" role="status" aria-live="polite"></p>
     <p id="ucitel-pas" class="adv-ucitel" hidden></p>
   </header>
-  <main data-kalendar data-trieda="${t.kluc}" data-nazov="${esc(t.nazov)}" data-dni="${dni.map((d) => String(d).padStart(2, '0')).join(',')}">
+  <main data-kalendar data-trieda="${t.kluc}" data-nazov="${esc(t.nazov)}">
     <div class="scena${obraz ? ' scena-obraz' : ''}">
 ${obraz ? pozadieObrazok(t) : krajina(cfg.triedy, t.kluc)}
 ${sneh(38, hashText(t.kluc) + 5)}
@@ -370,20 +310,51 @@ ${dvierka}      </ol>
 `;
 }
 
-function stranaPlaceholder(cfg) {
-  return `${hlavicka('Okienko – ' + cfg.nazov, 3)}
-<body class="strana-zatial">
-  <main class="zatial"><p class="zatial-vlocka" aria-hidden="true">❄️</p><p>${esc(cfg.placeholder || 'Prekvapenie pre tento deň ešte pripravujeme.')}</p></main>
+// Stránka, cez ktorú žiaci odovzdávajú aktivity: /advent/2026/odovzdat/
+function stranaOdovzdat(cfg) {
+  const triedy = cfg.triedy.map((t) => `<option value="${t.kluc}">${esc(t.nazov)}</option>`).join('');
+  const dni = Array.from({ length: 24 }, (_, i) => `<option value="${i + 1}">${i + 1}. december</option>`).join('');
+  return `<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Odovzdať aktivitu – ${esc(cfg.nazov || 'Adventné kalendáre')}</title>
+  <link rel="stylesheet" href="../../../assets/galeria.css">
+</head>
+<body>
+  <header>
+    <nav class="crumbs"><a href="../../../">Žiacke aplikácie</a> › <a href="../">Adventné kalendáre</a></nav>
+    <h1>📤 Odovzdať aktivitu</h1>
+    <p>Nahraj svoju hotovú aktivitu a zavolaj učiteľku, ktorá ju skontroluje a zverejní.</p>
+  </header>
+  <main class="odovzdat">
+    <form method="post" action="/api/advent-odovzdat/" enctype="multipart/form-data">
+      <label>Trieda <select name="trieda" required>${triedy}</select></label>
+      <label>Deň v kalendári <select name="den" required>${dni}</select></label>
+      <label>Kód triedy <small>(dostaneš ho od učiteľky)</small><input type="text" name="kod" required autocomplete="off" maxlength="40"></label>
+      <label>Tvoja prezývka <small>(nie celé meno)</small><input type="text" name="autor" maxlength="30" autocomplete="off"></label>
+      <label>Súbor <small>(jeden hotový súbor, najviac 300 kB)</small><input type="file" name="subor" accept=".html,.htm,text/html" required></label>
+      <button type="submit">Nahrať</button>
+    </form>
+    <h2>Pravidlá</h2>
+    <ul>
+      <li>Aktivita je <strong>jeden HTML súbor</strong> (HTML, CSS aj JavaScript v ňom). Žiadne ďalšie súbory.</li>
+      <li>Bez internetu, bez <code>localStorage</code>/cookies, bez <code>fetch</code>, <code>&lt;form&gt;</code> a <code>&lt;iframe&gt;</code>.</li>
+      <li>Obrázky len ako emoji, CSS, SVG alebo <code>data:</code>. Žiadne fotky ľudí, žiadne osobné údaje.</li>
+      <li>Texty po slovensky, funguje na mobile aj na počítači, má tlačidlo „Hrať znova“.</li>
+    </ul>
+    <p>Po nahratí dostaneš <strong>kontrolný kód</strong>. Povedz ho učiteľke, aktivitu zverejní až ona.</p>
+  </main>
+  <footer>Automaticky vygenerované – neupravujte ručne (zdroj: advent.json).</footer>
 </body>
 </html>
 `;
 }
 
-function stranaUcitel(cfg, dni) {
-  const dniHlavicka = Array.from({ length: 24 }, (_, i) => `<th scope="col">${i + 1}</th>`).join('');
-  const riadky = cfg.triedy
-    .map((t) => `<tr><th scope="row">${esc(t.nazov)}</th>${Array.from({ length: 24 }, (_, i) => (dni[t.kluc].includes(i + 1) ? '<td class="ano" title="súbor existuje">✓</td>' : '<td title="placeholder">·</td>')).join('')}</tr>`)
-    .join('\n');
+function stranaUcitel(cfg) {
+  const tabulkaTried = cfg.triedy.map((t) => `${t.kluc}:${t.nazov}`).join(',');
   const moznostiTried = cfg.triedy.map((t) => `<option value="${t.kluc}">${esc(t.nazov)}</option>`).join('');
   const datumy = [['', 'Skutočný čas (bez simulácie)'], ['2026-11-30', 'Pred adventom (30. 11.)'],
     ...Array.from({ length: 24 }, (_, i) => [`2026-12-${String(i + 1).padStart(2, '0')}`, `${i + 1}. decembra`]),
@@ -407,14 +378,21 @@ function stranaUcitel(cfg, dni) {
         <label>Simulovaný dátum <select id="uc-datum">${datumy}</select></label>
         <button type="submit">Otvoriť kalendár</button>
       </form>
-      <h2>Hotové aktivity (súbor existuje)</h2>
-      <div class="tabulka"><table><thead><tr><th></th>${dniHlavicka}</tr></thead><tbody>
-${riadky}
-      </tbody></table></div>
-      <p class="poznamka">✓ = v advent/2026/aktivity/&lt;trieda&gt;/ je súbor pre daný deň; · = zobrazí sa spoločný placeholder.</p>
+      <h2>Čakajúce na schválenie <span id="uc-pocet"></span></h2>
+      <p class="poznamka">Žiak vám povie kontrolný kód. Aktivitu si pozrite (náhľad beží v izolovanom okne) a schváľte alebo zamietnite. Heslo nezadávajte na počítači žiaka.</p>
+      <div id="uc-cakajuce" class="tabulka">Načítavam…</div>
+      <h2>Zverejnené aktivity</h2>
+      <div class="tabulka"><table id="uc-matica" data-triedy="${esc(tabulkaTried)}"></table></div>
+      <p class="poznamka">✓ = zverejnené, · = zobrazí sa „Prekvapenie pre tento deň ešte pripravujeme.“ Okienko sa žiakom otvorí až v deň odomknutia.</p>
+      <div id="uc-vydane" class="tabulka"></div>
+      <p><a class="tlacidlo" href="/api/ucitel-zaloha/">⬇ Stiahnuť zálohu všetkých aktivít (ZIP)</a></p>
       <form method="post" action="/api/ucitel-odhlasenie"><button type="submit">Odhlásiť</button></form>
     </section>
   </main>
+  <dialog id="uc-nahlad" aria-label="Náhľad aktivity">
+    <div class="okno-hlava"><h2 id="uc-nahlad-nadpis"></h2><button type="button" id="uc-nahlad-zavriet">✕ Zavrieť</button></div>
+    <iframe id="uc-nahlad-iframe" title="Náhľad aktivity" sandbox="allow-scripts allow-modals allow-pointer-lock" referrerpolicy="no-referrer"></iframe>
+  </dialog>
   <script src="../../../assets/advent-ucitel.js"></script>
 </body>
 </html>
@@ -430,13 +408,10 @@ export function zapisAdvent(ROOT, adv) {
     written.push(rel);
   };
   for (const t of adv.cfg.triedy) {
-    zapis(`${BASE}/${t.kluc}/index.html`, stranaKalendara(adv.cfg, t, adv.dni[t.kluc]));
-    const dir = join(ROOT, ...BASE.split('/'), 'aktivity', t.kluc);
-    mkdirSync(dir, { recursive: true });
-    if (!existsSync(join(dir, '.gitkeep'))) writeFileSync(join(dir, '.gitkeep'), '');
+    zapis(`${BASE}/${t.kluc}/index.html`, stranaKalendara(adv.cfg, t));
   }
   zapis(`${BASE}/index.html`, stranaRozcestnik(adv.cfg));
-  zapis(`${BASE}/zatial-nic/index.html`, stranaPlaceholder(adv.cfg));
-  zapis(`${BASE}/ucitel/index.html`, stranaUcitel(adv.cfg, adv.dni));
+  zapis(`${BASE}/odovzdat/index.html`, stranaOdovzdat(adv.cfg));
+  zapis(`${BASE}/ucitel/index.html`, stranaUcitel(adv.cfg));
   return written;
 }

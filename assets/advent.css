@@ -126,3 +126,14 @@ dialog#okno::backdrop { background: rgba(3,8,20,.8); }
 .tabulka th, .tabulka td { padding: 4px 6px; border: 1px solid rgba(255,255,255,.18); text-align: center; }
 .tabulka td.ano { background: #1f6b3a; font-weight: 700; }
 .poznamka { color: var(--muted); font-size: .85rem; }
+.tlacidlo { display: inline-block; padding: 10px 16px; border-radius: 10px; background: var(--akcent2, #0e7490); color: #fff; text-decoration: none; font-weight: 700; }
+.tlacidlo:hover, .tlacidlo:focus-visible { filter: brightness(1.15); outline: 2px solid #fff; outline-offset: 2px; }
+.akcie { display: flex; flex-wrap: wrap; gap: 6px; }
+form.riadkova { display: inline; margin: 0; }
+.uc table button { padding: 4px 10px; }
+.tabulka details summary { cursor: pointer; }
+.tabulka details ul { margin: 6px 0 0; padding-left: 18px; max-width: 420px; text-align: left; font-size: .8rem; }
+dialog#uc-nahlad { width: min(1000px, 96vw); height: min(760px, 90vh); max-width: none; padding: 0; border: 0; border-radius: 14px; background: #0f1626; color: var(--text); overflow: hidden; }
+dialog#uc-nahlad[open] { display: flex; flex-direction: column; }
+dialog#uc-nahlad::backdrop { background: rgba(3,8,20,.8); }
+#uc-nahlad-iframe { flex: 1; width: 100%; border: 0; background: #fff; }

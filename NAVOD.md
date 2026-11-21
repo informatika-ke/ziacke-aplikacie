@@ -63,38 +63,47 @@ aplikácií nič, čo by sa nemalo ukázať (mená, fotky ľudí).
 
 # Adventné kalendáre 2026 (1.A, 1.B, 1.C, 1.D, 1.G, 1.R)
 
-Kalendáre sú na adrese `/advent/2026/<trieda>/` (napr. `/advent/2026/1a/`), odkazy sú na úvodnej stránke.
-Okienko N sa odomkne N. decembra o polnoci (čas Europe/Bratislava), po 24. 12. ostanú všetky otvorené.
-Zamknuté dni stráži server: otvoriť ich cez priamu adresu nejde, ani keď žiak zmení hodiny v počítači.
+Úvodná stránka má tlačidlo „🎄 Adventné kalendáre“, výber triedy je na `/advent/2026/`, kalendáre na
+`/advent/2026/<trieda>/`. Okienko N sa odomkne N. decembra o polnoci (čas Europe/Bratislava), po 24. 12.
+ostanú všetky otvorené. Zamknuté dni stráži server: otvoriť ich cez priamu adresu nejde, ani keď žiak zmení hodiny.
 
-## Pridanie hotovej aktivity (bez programovania)
-1. Žiakov súbor musí byť **jeden HTML súbor** (HTML + CSS + JavaScript v ňom; obrázky vložené ako `data:`).
-2. Premenujte ho na **číslo dňa s nulou**: `07.html` (nie `7.html`, nie `moja-hra.html`).
-3. Vložte ho do `advent/2026/aktivity/<trieda>/`, napr. `advent/2026/aktivity/1c/07.html`.
-4. `node tools/build.mjs` a prečítajte si UPOZORNENIA (zlý názov, odkazy na ďalšie súbory, `localStorage`,
-   `fetch`, cudzie domény, e-maily, veľkosť nad 3 MB). Upozornenie na `localStorage` je dôležité:
-   aktivita beží v izolovanom okne a tam ukladanie do prehliadača nefunguje.
-5. `git add .`, `git commit`, `git push`. Vercel nasadí do minúty.
+## Ako sa dostane aktivita do kalendára (bez Gitu)
+1. **Žiak** otvorí `/advent/2026/odovzdat/`, vyberie triedu a deň, zadá **kód triedy**, prezývku a nahrá svoj `index.html`.
+   Dostane **kontrolný kód** (napr. `K7M2`) a automatické upozornenia (`localStorage`, `fetch`, odkazy na súbory…).
+2. **Žiak vás zavolá** a povie kontrolný kód. Aktivita je zatiaľ len „čakajúca“, verejne sa nikde nezobrazí.
+3. **Vy** na vlastnom zariadení otvoríte `/advent/2026/ucitel/` (prihlásite sa heslom), v časti „Čakajúce na schválenie“
+   nájdete kód, kliknete **Náhľad** (aktivita beží v izolovanom okne), a potom **Schváliť a zverejniť** alebo **Zamietnuť**.
+4. Schválená aktivita sa zverejní hneď (bez deployu). Žiakom sa otvorí až v deň odomknutia okienka.
+   Chybnú zverejnenú aktivitu môžete **Zmazať** a žiak nahrá novú.
 
-Okienko bez súboru ukazuje spoločné „Prekvapenie pre tento deň ešte pripravujeme.“ (text sa mení v `advent.json`, pole `placeholder`).
-Výmena aktivity = prepísanie súboru. Odstránenie = zmazanie súboru a build.
-Pozor: repozitár je verejný, súbor je teda vidieť na GitHube aj pred odomknutím. Hotové aktivity preto
-radšej pushnite až krátko pred dňom odomknutia.
+**Heslo nezadávajte na počítači žiaka** (cookie sa ukladá na 30 dní).
+
+Pravidlá pre žiakov (v prompte aj na odovzdávacej stránke): jeden HTML súbor do 300 kB, bez internetu, bez
+`localStorage`/cookies, `fetch`, `<form>`, `<iframe>`, obrázky len ako emoji/CSS/SVG/`data:`, texty po slovensky, mobil aj počítač.
+
+## Jednorazové nastavenie vo Verceli
+1. **Úložisko:** Project → **Storage** → **Create Database/Store** → **Blob** → pripojte k projektu (ponechajte **Private**).
+   Vercel sám pridá premennú `BLOB_READ_WRITE_TOKEN`.
+2. **Environment Variables** (zaškrtnite Production aj Preview):
+   - `ADVENT_UCITEL_HESLO` – vaše heslo,
+   - `ADVENT_TAJNY_KLUC` – náhodný reťazec aspoň 16 znakov (podpisuje cookie, nikdy ho nezadávate),
+   - `ADVENT_KODY` – kódy tried vo tvare `1a=slovo1,1b=slovo2,1c=slovo3,1d=slovo4,1g=slovo5,1r=slovo6`
+     (kód povedzte žiakom v škole; veľkosť písmen sa neráta).
+3. **Redeploy**, aby sa premenné dostali do nasadenia.
+
+## Záloha
+Na učiteľskej stránke tlačidlo **Stiahnuť zálohu všetkých aktivít (ZIP)** (súbory `<trieda>/<NN>.html`). Aktivity
+nie sú v Gite, odporúčam zálohu stiahnuť po každom väčšom schvaľovaní a pred koncom projektu.
 
 ## Učiteľský testovací režim
-Adresa: `/advent/2026/ucitel/`. Heslo a tajný kľúč sa nastavia raz vo Verceli
-(Project → Settings → Environment Variables), v repozitári nie sú:
-- `ADVENT_UCITEL_HESLO` – vaše heslo,
-- `ADVENT_TAJNY_KLUC` – náhodný reťazec aspoň 16 znakov (podpisuje prihlasovaciu cookie).
-
-Po zmene premenných treba vo Verceli spraviť nové nasadenie (Redeploy).
-Po prihlásení vyberiete triedu a simulovaný dátum a otvorí sa kalendár s `?datum=RRRR-MM-DD`.
-Simulácia funguje len s vašou prihlasovacou cookie (30 dní); bez nej server `?datum` ignoruje.
+Na `/advent/2026/ucitel/` vyberiete triedu a simulovaný dátum a otvorí sa kalendár s `?datum=RRRR-MM-DD`.
+Simulácia funguje len s vašou prihlasovacou cookie; bez nej server `?datum` ignoruje.
 
 ## Nastavenia a vzhľad
-`advent.json`: zoznam tried, farebné motívy, text placeholderu, `"zobrazit": false` skryje sekciu z úvodnej stránky.
-Po každej zmene spustite `node tools/build.mjs`. Test odomykania a servera: `node tools/test-advent.mjs`.
+`advent.json`: zoznam tried, farebné motívy, obrázky a polohy okienok. Po zmene spustite `node tools/build.mjs`.
+Testy: `node tools/test-advent.mjs`.
 
-## Prvé nasadenie adventu
-Pred prvým pushom raz spustite `npm install` (stiahne `@vercel/functions` pre `middleware.js`) a súbor
-`package-lock.json` commitnite. Najprv skontrolujte Preview nasadenie (vetva/PR), až potom produkciu.
+## Obmedzenia
+- Pre každú dvojicu trieda + deň je najviac jedna čakajúca a jedna zverejnená aktivita (nové nahratie čakajúcu prepíše).
+- Kód triedy pozná celá trieda; kto ho má, môže nahrať súbor (nič sa ale nezverejní bez vášho schválenia).
+- Odovzdať sa dá súbor do 300 kB (ak by to bolo málo, upraví sa `MAX_AKTIVITA_BAJTOV` v `lib/kontrola.js`).

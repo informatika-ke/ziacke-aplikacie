@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Odovzdať aktivitu – Adventné kalendáre 2026</title>
+  <link rel="stylesheet" href="../../../assets/galeria.css">
+</head>
+<body>
+  <header>
+    <nav class="crumbs"><a href="../../../">Žiacke aplikácie</a> › <a href="../">Adventné kalendáre</a></nav>
+    <h1>📤 Odovzdať aktivitu</h1>
+    <p>Nahraj svoju hotovú aktivitu a zavolaj učiteľku, ktorá ju skontroluje a zverejní.</p>
+  </header>
+  <main class="odovzdat">
+    <form method="post" action="/api/advent-odovzdat/" enctype="multipart/form-data">
+      <label>Trieda <select name="trieda" required><option value="1a">1.A</option><option value="1b">1.B</option><option value="1c">1.C</option><option value="1d">1.D</option><option value="1g">1.G</option><option value="1r">1.R</option></select></label>
+      <label>Deň v kalendári <select name="den" required><option value="1">1. december</option><option value="2">2. december</option><option value="3">3. december</option><option value="4">4. december</option><option value="5">5. december</option><option value="6">6. december</option><option value="7">7. december</option><option value="8">8. december</option><option value="9">9. december</option><option value="10">10. december</option><option value="11">11. december</option><option value="12">12. december</option><option value="13">13. december</option><option value="14">14. december</option><option value="15">15. december</option><option value="16">16. december</option><option value="17">17. december</option><option value="18">18. december</option><option value="19">19. december</option><option value="20">20. december</option><option value="21">21. december</option><option value="22">22. december</option><option value="23">23. december</option><option value="24">24. december</option></select></label>
+      <label>Kód triedy <small>(dostaneš ho od učiteľky)</small><input type="text" name="kod" required autocomplete="off" maxlength="40"></label>
+      <label>Tvoja prezývka <small>(nie celé meno)</small><input type="text" name="autor" maxlength="30" autocomplete="off"></label>
+      <label>Súbor <small>(jeden hotový súbor, najviac 300 kB)</small><input type="file" name="subor" accept=".html,.htm,text/html" required></label>
+      <button type="submit">Nahrať</button>
+    </form>
+    <h2>Pravidlá</h2>
+    <ul>
+      <li>Aktivita je <strong>jeden HTML súbor</strong> (HTML, CSS aj JavaScript v ňom). Žiadne ďalšie súbory.</li>
+      <li>Bez internetu, bez <code>localStorage</code>/cookies, bez <code>fetch</code>, <code>&lt;form&gt;</code> a <code>&lt;iframe&gt;</code>.</li>
+      <li>Obrázky len ako emoji, CSS, SVG alebo <code>data:</code>. Žiadne fotky ľudí, žiadne osobné údaje.</li>
+      <li>Texty po slovensky, funguje na mobile aj na počítači, má tlačidlo „Hrať znova“.</li>
+    </ul>
+    <p>Po nahratí dostaneš <strong>kontrolný kód</strong>. Povedz ho učiteľke, aktivitu zverejní až ona.</p>
+  </main>
+  <footer>Automaticky vygenerované – neupravujte ručne (zdroj: advent.json).</footer>
+</body>
+</html>

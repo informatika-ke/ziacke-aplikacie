@@ -284,7 +284,7 @@ for (const y of years) {
 
 // ---------- súhrn ----------
 console.log(`Hotovo: ${hotove(valid)} hotových aplikácií z ${valid.length} záznamov, ${years.length} rokov, ${written.length} vygenerovaných stránok.`);
-if (advent.cfg) console.log(`Adventné kalendáre: ${advent.cfg.triedy.length} tried, aktivít so súborom: ${advent.pocetAktivit} z ${advent.cfg.triedy.length * 24}.`);
+if (advent.cfg) console.log(`Adventné kalendáre: ${advent.cfg.triedy.length} tried (aktivity sú v úložisku, nie v repozitári).`);
 if (warnings.length) {
   console.log(`\nUpozornenia (${warnings.length}) – skontrolujte pred zverejnením:`);
   warnings.forEach((w) => console.log('  ! ' + w));

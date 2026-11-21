@@ -12,10 +12,15 @@ function presmeruj(kam, cookies = []) {
 export async function POST(request) {
   const heslo = process.env.ADVENT_UCITEL_HESLO;
   const kluc = process.env.ADVENT_TAJNY_KLUC;
-  if (!heslo || !kluc || kluc.length < 16) {
-    return new Response('Učiteľský režim nie je nastavený (chýbajú premenné ADVENT_UCITEL_HESLO a ADVENT_TAJNY_KLUC, kľúč min. 16 znakov).', {
+  const chyba = [];
+  if (!heslo) chyba.push('ADVENT_UCITEL_HESLO chýba alebo je prázdna');
+  if (!kluc) chyba.push('ADVENT_TAJNY_KLUC chýba alebo je prázdna');
+  else if (kluc.length < 16) chyba.push(`ADVENT_TAJNY_KLUC má ${kluc.length} znakov, treba aspoň 16`);
+  if (chyba.length) {
+    // hodnoty sa nikdy nevypisujú; ukáže sa len, čo je zle, a pre ktoré prostredie funkcia beží
+    return new Response(`Učiteľský režim nie je nastavený: ${chyba.join('; ')}. (prostredie nasadenia: ${process.env.VERCEL_ENV || 'neznáme'})`, {
       status: 503,
-      headers: { 'content-type': 'text/plain; charset=utf-8' },
+      headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'no-store' },
     });
   }
   let zadane = '';

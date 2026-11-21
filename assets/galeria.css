@@ -81,3 +81,6 @@ footer { color: var(--muted); font-size: .85rem; }
 .advent-karta strong, .advent-karta span { padding: 0 14px; }
 .advent-karta span { display: block; padding-bottom: 12px; }
 .advent-karta:hover img, .advent-karta:focus-visible img { filter: brightness(1.08); }
+.advent-banner { background: linear-gradient(135deg, #1d4e89, #6d2b8f); color: #fff; border-color: transparent; }
+.advent-banner span { color: #e4e9ff; }
+.advent-banner:hover, .advent-banner:focus-visible { box-shadow: 0 0 0 2px #fff inset; }

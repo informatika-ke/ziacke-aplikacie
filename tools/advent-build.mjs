@@ -269,20 +269,47 @@ const hlavicka = (title, depth) => `<!DOCTYPE html>
   <link rel="stylesheet" href="${'../'.repeat(depth)}assets/advent.css">
 </head>`;
 
+// Úvodná stránka: iba jedno kompaktné tlačidlo (žiacke aplikácie ostávajú hore a na očiach).
 function sekciaUvod(cfg) {
+  return `    <h2>🎄 Špeciálne</h2>
+    <ul class="grid">
+      <li><a class="card advent-banner" href="${BASE}/"><strong>🎄 ${esc(cfg.nazov || 'Adventné kalendáre 2026')}</strong><span>Okienko každý deň od 1. do 24. decembra · ${cfg.triedy.length} tried</span></a></li>
+    </ul>
+`;
+}
+
+// Samostatná stránka s výberom triedy: /advent/2026/
+function stranaRozcestnik(cfg) {
   const karty = cfg.triedy
     .map((t) => {
       const m = cfg.motivy[t.motiv];
-      return `      <li><a class="card advent-karta" style="--a:${m.akcent};--b:${m.obloha2}" href="${BASE}/${t.kluc}/">${t.nahlad ? `<img src="${esc(t.nahlad)}" width="560" height="350" alt="" loading="lazy" decoding="async">` : ''}<strong>${esc(t.nazov)}</strong><span>${esc(m.nazov)}</span></a></li>`;
+      const img = t.nahlad ? `<img src="${esc(t.nahlad.slice(BASE.length + 1))}" width="560" height="350" alt="" loading="lazy" decoding="async">` : '';
+      return `      <li><a class="card advent-karta" style="--a:${m.akcent};--b:${m.obloha2}" href="${t.kluc}/">${img}<strong>${esc(t.nazov)}</strong><span>${esc(m.nazov)}</span></a></li>`;
     })
     .join('\n');
-  return `    <section id="advent" class="advent-sekcia" aria-labelledby="advent-nadpis">
-    <h2 id="advent-nadpis">🎄 ${esc(cfg.nazov || 'Adventné kalendáre 2026')}</h2>
-    <p class="advent-lead">Každú polnoc od 1. do 24. decembra sa otvorí ďalšie okienko. Vyberte si svoju triedu.</p>
+  return `<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>${esc(cfg.nazov || 'Adventné kalendáre 2026')} – Žiacke aplikácie</title>
+  <link rel="stylesheet" href="../../assets/galeria.css">
+</head>
+<body>
+  <header>
+    <nav class="crumbs"><a href="../../">Žiacke aplikácie</a></nav>
+    <h1>🎄 ${esc(cfg.nazov || 'Adventné kalendáre 2026')}</h1>
+    <p>Každú polnoc od 1. do 24. decembra sa otvorí ďalšie okienko. Vyberte si svoju triedu.</p>
+  </header>
+  <main>
     <ul class="grid advent-grid">
 ${karty}
     </ul>
-    </section>
+  </main>
+  <footer>Automaticky vygenerované – neupravujte ručne (zdroj: advent.json).</footer>
+</body>
+</html>
 `;
 }
 
@@ -307,7 +334,7 @@ function stranaKalendara(cfg, t, dni) {
   return `${hlavicka(`Adventný kalendár ${t.nazov} – ${cfg.nazov}`, 3)}
 <body style="${stylMotivu(m)}">
   <header class="adv-hlava">
-    <nav class="crumbs"><a href="../../../">Žiacke aplikácie</a> › <a href="../../../#advent">Adventné kalendáre</a></nav>
+    <nav class="crumbs"><a href="../../../">Žiacke aplikácie</a> › <a href="../">Adventné kalendáre</a></nav>
     <h1>🎄 Adventný kalendár <span class="trieda">${esc(t.nazov)}</span></h1>
     <p id="odpocet" class="adv-odpocet">Načítavam…</p>
     <p id="hlaska" class="adv-hlaska" role="status" aria-live="polite"></p>
@@ -402,6 +429,7 @@ export function zapisAdvent(ROOT, adv) {
     mkdirSync(dir, { recursive: true });
     if (!existsSync(join(dir, '.gitkeep'))) writeFileSync(join(dir, '.gitkeep'), '');
   }
+  zapis(`${BASE}/index.html`, stranaRozcestnik(adv.cfg));
   zapis(`${BASE}/zatial-nic/index.html`, stranaPlaceholder(adv.cfg));
   zapis(`${BASE}/ucitel/index.html`, stranaUcitel(adv.cfg, adv.dni));
   return written;

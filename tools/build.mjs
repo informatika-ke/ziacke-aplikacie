@@ -232,11 +232,12 @@ write(
     crumbs: [],
     heading: titul,
     lead: podtitul,
-    body: advent.sekciaUvod + (valid.length
+    body: (valid.length
       ? `    <h2>Školské roky</h2>\n    <ul class="grid">\n${years
           .map((y) => card(`${y}/`, y, `${[...byYear.get(y).keys()].length} tried`, ''))
           .join('\n')}\n    </ul>`
-      : '    <p>Zatiaľ tu nie sú žiadne aplikácie.</p>'),
+      : '    <p>Zatiaľ tu nie sú žiadne aplikácie.</p>') + '
+' + advent.sekciaUvod,
   })
 );
 

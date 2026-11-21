@@ -4,7 +4,6 @@
   "type": "module",
   "description": "Galéria žiackych aplikácií a adventné kalendáre",
   "scripts": {
-    "build": "node tools/build.mjs",
     "test": "node tools/test-advent.mjs"
   },
   "dependencies": {

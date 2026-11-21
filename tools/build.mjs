@@ -236,8 +236,7 @@ write(
       ? `    <h2>Školské roky</h2>\n    <ul class="grid">\n${years
           .map((y) => card(`${y}/`, y, `${[...byYear.get(y).keys()].length} tried`, ''))
           .join('\n')}\n    </ul>`
-      : '    <p>Zatiaľ tu nie sú žiadne aplikácie.</p>') + '
-' + advent.sekciaUvod,
+      : '    <p>Zatiaľ tu nie sú žiadne aplikácie.</p>') + '\n' + advent.sekciaUvod,
   })
 );
 

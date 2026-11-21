@@ -76,3 +76,8 @@ footer { color: var(--muted); font-size: .85rem; }
   background: linear-gradient(135deg, color-mix(in srgb, var(--b) 18%, var(--card)), var(--card));
 }
 .advent-karta:hover, .advent-karta:focus-visible { border-color: var(--a); box-shadow: 0 0 0 2px var(--a) inset; }
+.advent-karta { padding: 0; overflow: hidden; border-left-width: 1px; border-bottom: 5px solid var(--a); }
+.advent-karta img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; margin-bottom: 8px; }
+.advent-karta strong, .advent-karta span { padding: 0 14px; }
+.advent-karta span { display: block; padding-bottom: 12px; }
+.advent-karta:hover img, .advent-karta:focus-visible img { filter: brightness(1.08); }

@@ -40,16 +40,30 @@ export function nacitajAdvent(ROOT) {
     if (t && (!t.nazov || !cfg.motivy?.[t.motiv])) out.errors.push(`advent.json: trieda „${t.kluc}“ potrebuje „nazov“ a existujúci „motiv“`);
   }
   if (out.errors.length) return out;
-  if (cfg.obrazok !== undefined) {
-    const p = String(cfg.obrazok);
-    if (!p.startsWith(BASE + '/') || /\.\.|[\\"<>]/.test(p)) out.errors.push(`advent.json: „obrazok“ musí byť cesta v ${BASE}/ (napr. ${BASE}/obrazky/krajinka.webp)`);
-    else if (!existsSync(join(ROOT, ...p.split('/')))) out.errors.push(`advent.json: obrázok „${p}“ neexistuje`);
-    else {
-      const kb = statSync(join(ROOT, ...p.split('/'))).size / 1024;
-      if (kb > 700) out.warnings.push(`${p}: obrázok má ${Math.round(kb)} kB – na telefóne sa bude dlho načítavať, zmenšite ho (WebP do 500 kB)`);
+  for (const t of cfg.triedy) {
+    const cestaOk = (p) => typeof p === 'string' && p.startsWith(BASE + '/') && !/\.\.|[\\"<>]/.test(p);
+    for (const [pole, limitKb] of [['obrazok', 700], ['nahlad', 200]]) {
+      if (t[pole] === undefined) continue;
+      const p = t[pole];
+      if (!cestaOk(p)) out.errors.push(`advent.json: trieda ${t.kluc}: „${pole}“ musí byť cesta v ${BASE}/ (napr. ${BASE}/obrazky/krajinka.webp)`);
+      else if (!existsSync(join(ROOT, ...p.split('/')))) out.errors.push(`advent.json: trieda ${t.kluc}: súbor „${p}“ neexistuje`);
+      else {
+        const kb = statSync(join(ROOT, ...p.split('/'))).size / 1024;
+        if (kb > limitKb) out.warnings.push(`${p}: má ${Math.round(kb)} kB (odporúčané do ${limitKb} kB) – na telefóne sa bude dlho načítavať`);
+      }
     }
-    if (out.errors.length) return out;
+    if (t.obrazok !== undefined) {
+      const ok = Array.isArray(t.okienka) && t.okienka.length === 24 &&
+        t.okienka.every((p) => Array.isArray(p) && p.length === 2 && p[0] >= 60 && p[0] <= 2340 && p[1] >= 60 && p[1] <= 1440);
+      if (!ok) out.errors.push(`advent.json: trieda ${t.kluc}: „okienka“ musí obsahovať presne 24 dvojíc [x, y] (stred okienka v pixeloch obrázka 2400×1500, vnútri obrázka)`);
+      else
+        for (let i = 0; i < 24; i++)
+          for (let k = i + 1; k < 24; k++)
+            if (Math.hypot(t.okienka[i][0] - t.okienka[k][0], t.okienka[i][1] - t.okienka[k][1]) < 115)
+              out.warnings.push(`advent.json: trieda ${t.kluc}: okienka na pozíciách #${i + 1} a #${k + 1} sa prekrývajú`);
+    }
   }
+  if (out.errors.length) return out;
   out.cfg = cfg;
 
   const aktivityRoot = join(ROOT, ...BASE.split('/'), 'aktivity');
@@ -128,17 +142,9 @@ const OKNA = [
   ...[475, 575, 675].flatMap((y) => [1025, 1155].map((x) => [x, y])),
 ];
 const KULE = [[1390, 380], [1340, 510], [1440, 510], [1320, 640], [1460, 640]];
-// Okienka na ilustrácii 2400×1500 (stredy v pixeloch): hviezdy na strome, okná domčekov, kostol, lampáš, konáre, plot.
-const STREDY_OBRAZKA = [
-  [415, 405], [630, 265], [800, 325], [975, 190], [1175, 265], // hviezdy na strome
-  [348, 775], [195, 890], [360, 910], [600, 830], [715, 905], // domčeky vľavo
-  [1185, 640], [1030, 805], [860, 800], // kostol, domček v údolí, stromček
-  [1520, 775], [1560, 890], [1850, 655], [1790, 840], [1935, 835], // domčeky vpravo
-  [265, 1170], [460, 1110], [700, 1235], // lampáš a konáre s bobuľami
-  [1700, 1130], [2080, 1100], [2300, 1020], // plot so svetielkami a stromček
-];
+// Okienka na ilustrácii 2400×1500: stredy v pixeloch berie z advent.json (trieda.okienka).
 const SIRKA_OBRAZKA = 4.4; // šírka okienka v % šírky scény
-const SLOTY_OBRAZKA = STREDY_OBRAZKA.map(([x, y]) => ({
+const slotyObrazka = (t) => t.okienka.map(([x, y]) => ({
   lx: r1(x / 24 - SIRKA_OBRAZKA / 2), ty: r1(y / 15 - SIRKA_OBRAZKA * 0.8), kula: true,
 }));
 const SLOTY = [...OKNA.map(([x, y]) => ({ x, y, kula: false })), ...KULE.map(([x, y]) => ({ x, y, kula: true }))];
@@ -267,7 +273,7 @@ function sekciaUvod(cfg) {
   const karty = cfg.triedy
     .map((t) => {
       const m = cfg.motivy[t.motiv];
-      return `      <li><a class="card advent-karta" style="--a:${m.akcent};--b:${m.obloha2}" href="${BASE}/${t.kluc}/"><strong>${esc(t.nazov)}</strong><span>${esc(m.nazov)}</span></a></li>`;
+      return `      <li><a class="card advent-karta" style="--a:${m.akcent};--b:${m.obloha2}" href="${BASE}/${t.kluc}/">${t.nahlad ? `<img src="${esc(t.nahlad)}" width="560" height="350" alt="" loading="lazy" decoding="async">` : ''}<strong>${esc(t.nazov)}</strong><span>${esc(m.nazov)}</span></a></li>`;
     })
     .join('\n');
   return `    <section id="advent" class="advent-sekcia" aria-labelledby="advent-nadpis">
@@ -280,18 +286,19 @@ ${karty}
 `;
 }
 
-function pozadieObrazok(cfg) {
-  const src = '../' + cfg.obrazok.slice('advent/2026/'.length);
-  return `<div class="pozadie"><img class="obrazok" src="${esc(src)}" width="2400" height="1500" alt="" fetchpriority="high" decoding="async"><div class="odtien" aria-hidden="true"></div></div>`;
+function pozadieObrazok(t) {
+  const src = '../' + t.obrazok.slice('advent/2026/'.length);
+  return `<div class="pozadie"><img class="obrazok" src="${esc(src)}" width="2400" height="1500" alt="" fetchpriority="high" decoding="async"></div>`;
 }
 
 function stranaKalendara(cfg, t, dni) {
   const m = cfg.motivy[t.motiv];
-  const obraz = !!cfg.obrazok;
+  const obraz = !!t.obrazok;
+  const sloty = obraz ? slotyObrazka(t) : SLOTY;
   const poz = poradie(t.kluc);
   let dvierka = '';
   for (let n = 1; n <= 24; n++) {
-    const sl = obraz ? SLOTY_OBRAZKA[poz[n - 1]] : SLOTY[poz[n - 1]];
+    const sl = sloty[poz[n - 1]];
     const x = obraz ? sl.lx : r1((sl.x / 1600) * 100), y = obraz ? sl.ty : r1((sl.y / 1000) * 100);
     dvierka += `      <li class="${sl.kula ? 'kula' : ''}" style="--x:${x}%;--y:${y}%">` +
       `<button type="button" class="dv" data-den="${n}" data-stav="zamknute" aria-label="Okienko ${n}">` +
@@ -308,7 +315,7 @@ function stranaKalendara(cfg, t, dni) {
   </header>
   <main data-kalendar data-trieda="${t.kluc}" data-nazov="${esc(t.nazov)}" data-dni="${dni.map((d) => String(d).padStart(2, '0')).join(',')}">
     <div class="scena${obraz ? ' scena-obraz' : ''}">
-${obraz ? pozadieObrazok(cfg) : krajina(cfg.triedy, t.kluc)}
+${obraz ? pozadieObrazok(t) : krajina(cfg.triedy, t.kluc)}
 ${sneh(38, hashText(t.kluc) + 5)}
       <ol class="dvierka">
 ${dvierka}      </ol>

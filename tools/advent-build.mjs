@@ -40,8 +40,14 @@ export function nacitajAdvent(ROOT) {
     if (t && (!t.nazov || !cfg.motivy?.[t.motiv])) out.errors.push(`advent.json: trieda „${t.kluc}“ potrebuje „nazov“ a existujúci „motiv“`);
   }
   if (out.errors.length) return out;
+  if (cfg.uvodny_obrazok !== undefined) {
+    const p = cfg.uvodny_obrazok;
+    if (typeof p !== 'string' || !p.startsWith(BASE + '/') || /\.\.|[\\"<>]/.test(p)) out.errors.push(`advent.json: „uvodny_obrazok“ musí byť cesta v ${BASE}/`);
+    else if (!existsSync(join(ROOT, ...p.split('/')))) out.errors.push(`advent.json: súbor „${p}“ neexistuje`);
+    else if (statSync(join(ROOT, ...p.split('/'))).size > 200 * 1024) out.warnings.push(`${p}: má viac ako 200 kB – úvodná stránka sa bude pomalšie načítavať`);
+  }
   for (const t of cfg.triedy) {
-    const cestaOk = (p) => typeof p === 'string' && p.startsWith(BASE + '/') && !/\.\.|[\\"<>]/.test(p);
+    const cestaOk =(p) => typeof p === 'string' && p.startsWith(BASE + '/') && !/\.\.|[\\"<>]/.test(p);
     for (const [pole, limitKb] of [['obrazok', 700], ['nahlad', 200]]) {
       if (t[pole] === undefined) continue;
       const p = t[pole];
@@ -273,7 +279,7 @@ const hlavicka = (title, depth) => `<!DOCTYPE html>
 function sekciaUvod(cfg) {
   return `    <h2>🎄 Špeciálne</h2>
     <ul class="grid">
-      <li><a class="card advent-banner" href="${BASE}/"><strong>🎄 ${esc(cfg.nazov || 'Adventné kalendáre 2026')}</strong><span>Okienko každý deň od 1. do 24. decembra · ${cfg.triedy.length} tried</span></a></li>
+      <li class="advent-banner-li"><a class="card advent-banner" href="${BASE}/">${cfg.uvodny_obrazok ? `<img src="${esc(cfg.uvodny_obrazok)}" width="960" height="600" alt="" loading="lazy" decoding="async">` : ''}<span class="advent-banner-text"><strong>🎄 ${esc(cfg.nazov || 'Adventné kalendáre 2026')}</strong><span>Okienko každý deň od 1. do 24. decembra · ${cfg.triedy.length} tried</span></span></a></li>
     </ul>
 `;
 }

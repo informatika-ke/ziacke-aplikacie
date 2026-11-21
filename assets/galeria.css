@@ -67,3 +67,12 @@ h2 { font-size: 1.2rem; margin: 24px 0 8px; }
   font-size: .8rem;
 }
 footer { color: var(--muted); font-size: .85rem; }
+
+/* Adventné kalendáre na úvodnej stránke */
+.advent-sekcia { margin-bottom: 8px; }
+.advent-lead { margin: 0 0 12px; color: var(--muted); }
+.advent-karta {
+  border-left: 6px solid var(--a);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--b) 18%, var(--card)), var(--card));
+}
+.advent-karta:hover, .advent-karta:focus-visible { border-color: var(--a); box-shadow: 0 0 0 2px var(--a) inset; }

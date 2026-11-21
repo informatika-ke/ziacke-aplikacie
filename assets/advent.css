@@ -1,0 +1,122 @@
+/* Adventné kalendáre – spoločný vzhľad. Farby motívu prichádzajú ako CSS premenné z <body style>. */
+:root { --text: #f4f8ff; --muted: #b9c8e0; }
+* { box-sizing: border-box; }
+html { background: #0b1220; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--text);
+  line-height: 1.5;
+  background: linear-gradient(180deg, var(--obloha1, #0b1d3a), #070b14 90%) fixed;
+}
+a { color: var(--akcent, #8ec9ff); }
+.adv-hlava, main, .adv-pata { max-width: 1400px; margin: 0 auto; padding: 16px; }
+.adv-hlava { text-align: center; padding-bottom: 8px; }
+.crumbs { font-size: .9rem; color: var(--muted); text-align: left; }
+h1 { margin: 8px 0 4px; font-size: clamp(1.5rem, 4vw, 2.4rem); }
+h1 .trieda { color: var(--akcent); }
+.adv-odpocet {
+  display: inline-block; margin: 6px 0; padding: 6px 18px; border-radius: 999px;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+  font-variant-numeric: tabular-nums; font-weight: 600;
+}
+.adv-hlaska { min-height: 1.5em; margin: 4px 0; color: #ffe9a8; }
+.adv-ucitel { margin: 6px auto; padding: 8px 14px; max-width: 760px; border-radius: 10px; background: #5b3a00; border: 1px solid #ffb347; color: #fff3d6; }
+.adv-ucitel a { color: #ffd98a; }
+.adv-pata { font-size: .85rem; color: var(--muted); text-align: center; }
+
+/* ----- scéna ----- */
+.scena {
+  position: relative; container-type: inline-size; aspect-ratio: 16 / 10; overflow: hidden;
+  border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.12);
+  background: linear-gradient(var(--obloha1), var(--obloha2));
+}
+.krajina { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hviezda { animation: blik 3.5s ease-in-out infinite; }
+.zar { animation: zar 2.4s ease-in-out infinite; }
+@keyframes blik { 0%, 100% { opacity: .95; } 50% { opacity: .25; } }
+@keyframes zar { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+
+.snezenie { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 3; }
+.snezenie i {
+  position: absolute; top: -5%; width: var(--v); height: var(--v); border-radius: 50%;
+  background: #fff; opacity: .85; animation: padaj var(--t) linear var(--d) infinite;
+}
+@keyframes padaj { to { transform: translate(var(--dx), 110cqh); } }
+
+/* ----- okienka ----- */
+.dvierka { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; z-index: 2; }
+.dvierka li { position: absolute; left: var(--x); top: var(--y); width: 5%; aspect-ratio: 1; }
+.dvierka li.kula .dv, .dvierka li.kula .dv-listy, .dvierka li.kula .dv-vnutro { border-radius: 50%; }
+.dv {
+  all: unset; box-sizing: border-box; position: relative; display: block; width: 100%; height: 100%;
+  cursor: pointer; perspective: 360px; border-radius: 8px; font-size: 2.3cqw; font-weight: 800;
+}
+.dv:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.dv-vnutro, .dv-listy { position: absolute; inset: 0; border-radius: 8px; display: grid; place-items: center; }
+.dv-vnutro { background: radial-gradient(circle at 50% 60%, #fff3c4, #ffb347 75%); box-shadow: inset 0 0 14px rgba(120,60,0,.5); color: #5a2d00; }
+.dv-vnutro::after { content: attr(data-den); font-size: .55em; opacity: 0; }
+.dv-listy {
+  transform-origin: left center; transition: transform .6s cubic-bezier(.3,.7,.2,1);
+  background: linear-gradient(160deg, var(--akcent2), color-mix(in srgb, var(--akcent2) 55%, #000));
+  border: 2px solid var(--akcent); color: #fff; backface-visibility: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,.4);
+}
+.dv-listy b { text-shadow: 0 1px 3px rgba(0,0,0,.5); }
+.dv-zamok { position: absolute; right: -4%; bottom: -4%; font-size: .5em; display: none; filter: drop-shadow(0 1px 2px rgba(0,0,0,.6)); }
+
+.dv[data-stav="zamknute"] .dv-listy { background: rgba(10,20,40,.55); border-color: rgba(255,255,255,.35); color: rgba(255,255,255,.7); backdrop-filter: blur(3px); }
+.dv[data-stav="zamknute"] .dv-zamok { display: block; }
+.dv[data-stav="zamknute"] { cursor: not-allowed; }
+.dv[data-stav="odomknute"]:hover .dv-listy, .dv[data-stav="dnes"]:hover .dv-listy { transform: perspective(360px) rotateY(-22deg); }
+.dv[data-stav="dnes"] .dv-listy { box-shadow: 0 0 0 3px #ffe9a8, 0 0 22px 6px var(--akcent); animation: dnes 1.8s ease-in-out infinite; }
+@keyframes dnes { 50% { box-shadow: 0 0 0 3px #fff, 0 0 34px 12px var(--akcent); } }
+.dv[data-stav="otvorene"] .dv-listy { transform: perspective(360px) rotateY(-105deg); }
+.dv[data-stav="otvorene"] .dv-vnutro::after { opacity: .75; }
+.dv.zaklepat { animation: zaklepat .4s; }
+@keyframes zaklepat { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+
+/* ----- okno s aktivitou ----- */
+dialog#okno { width: min(1100px, 96vw); height: min(820px, 92vh); max-width: none; padding: 0; border: 0; border-radius: 16px; background: #0f1626; color: var(--text); overflow: hidden; }
+dialog#okno[open] { display: flex; flex-direction: column; }
+dialog#okno::backdrop { background: rgba(3,8,20,.8); }
+.okno-hlava { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: #18213a; }
+.okno-hlava h2 { flex: 1; margin: 0; font-size: 1.05rem; }
+.okno-hlava button { font: inherit; padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,.3); background: transparent; color: inherit; cursor: pointer; }
+.okno-hlava button:hover, .okno-hlava button:focus-visible { background: rgba(255,255,255,.15); outline: none; }
+#okno-iframe { flex: 1; width: 100%; border: 0; background: #fff; }
+
+/* ----- telefón / úzke okno: krajinka ako baner, okienka v mriežke 4×6 ----- */
+@media (max-width: 900px) {
+  .scena { aspect-ratio: auto; display: flex; flex-direction: column; border-radius: 14px; }
+  .krajina { position: static; height: auto; aspect-ratio: 16 / 10; }
+  .dvierka { position: static; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 16px; }
+  .dvierka li { position: static; width: auto; }
+  .dv { font-size: min(8cqw, 2.1rem); border-radius: 12px; }
+  .dv-listy, .dv-vnutro { border-radius: 12px; }
+  .dvierka li.kula .dv, .dvierka li.kula .dv-listy, .dvierka li.kula .dv-vnutro { border-radius: 12px; }
+  dialog#okno { width: 100vw; height: 100dvh; max-height: none; border-radius: 0; }
+  .okno-hlava #okno-cela { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hviezda, .zar, .snezenie i, .dv[data-stav="dnes"] .dv-listy, .dv.zaklepat { animation: none; }
+  .snezenie { display: none; }
+  .dv-listy { transition: none; }
+}
+
+/* ----- placeholder a učiteľská stránka ----- */
+.strana-zatial { display: grid; place-items: center; background: #0b1d3a; }
+.zatial { text-align: center; padding: 24px; font-size: 1.2rem; }
+.zatial-vlocka { font-size: 3rem; margin: 0; }
+.uc { max-width: 960px; }
+.uc form { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; margin: 12px 0; }
+.uc label { display: grid; gap: 4px; font-weight: 600; }
+.uc input, .uc select, .uc button { font: inherit; padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,.35); background: #18213a; color: inherit; }
+.uc button { cursor: pointer; background: var(--akcent2, #0e7490); }
+.uc .chyba { color: #ff9b9b; font-weight: 600; }
+.tabulka { overflow-x: auto; }
+.tabulka table { border-collapse: collapse; font-size: .85rem; }
+.tabulka th, .tabulka td { padding: 4px 6px; border: 1px solid rgba(255,255,255,.18); text-align: center; }
+.tabulka td.ano { background: #1f6b3a; font-weight: 700; }
+.poznamka { color: var(--muted); font-size: .85rem; }

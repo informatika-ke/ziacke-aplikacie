@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Učiteľský režim – Adventné kalendáre 2026</title>
+  <link rel="stylesheet" href="../../../assets/advent.css">
+</head>
+<body class="strana-ucitel">
+  <header class="adv-hlava"><nav class="crumbs"><a href="../../../">Žiacke aplikácie</a></nav><h1>🧑‍🏫 Učiteľský testovací režim</h1></header>
+  <main class="uc">
+    <section id="uc-prihlasenie" hidden>
+      <p>Po prihlásení si môžete vybrať triedu a simulovať dátum. Simulácia funguje len vo vašom prehliadači a bez hesla ju nikto nevyvolá.</p>
+      <form method="post" action="/api/ucitel-prihlasenie">
+        <label>Heslo <input type="password" name="heslo" autocomplete="current-password" required></label>
+        <button type="submit">Prihlásiť</button>
+      </form>
+      <p id="uc-chyba" class="chyba" hidden>Nesprávne heslo.</p>
+    </section>
+    <section id="uc-nastroje" hidden>
+      <form id="uc-vyber">
+        <label>Trieda <select id="uc-trieda"><option value="1a">1.A</option><option value="1b">1.B</option><option value="1c">1.C</option><option value="1d">1.D</option><option value="1g">1.G</option><option value="1r">1.R</option></select></label>
+        <label>Simulovaný dátum <select id="uc-datum"><option value="">Skutočný čas (bez simulácie)</option><option value="2026-11-30">Pred adventom (30. 11.)</option><option value="2026-12-01">1. decembra</option><option value="2026-12-02">2. decembra</option><option value="2026-12-03">3. decembra</option><option value="2026-12-04">4. decembra</option><option value="2026-12-05">5. decembra</option><option value="2026-12-06">6. decembra</option><option value="2026-12-07">7. decembra</option><option value="2026-12-08">8. decembra</option><option value="2026-12-09">9. decembra</option><option value="2026-12-10">10. decembra</option><option value="2026-12-11">11. decembra</option><option value="2026-12-12">12. decembra</option><option value="2026-12-13">13. decembra</option><option value="2026-12-14">14. decembra</option><option value="2026-12-15">15. decembra</option><option value="2026-12-16">16. decembra</option><option value="2026-12-17">17. decembra</option><option value="2026-12-18">18. decembra</option><option value="2026-12-19">19. decembra</option><option value="2026-12-20">20. decembra</option><option value="2026-12-21">21. decembra</option><option value="2026-12-22">22. decembra</option><option value="2026-12-23">23. decembra</option><option value="2026-12-24">24. decembra</option><option value="2026-12-27">Po Vianociach (27. 12.)</option></select></label>
+        <button type="submit">Otvoriť kalendár</button>
+      </form>
+      <h2>Hotové aktivity (súbor existuje)</h2>
+      <div class="tabulka"><table><thead><tr><th></th><th scope="col">1</th><th scope="col">2</th><th scope="col">3</th><th scope="col">4</th><th scope="col">5</th><th scope="col">6</th><th scope="col">7</th><th scope="col">8</th><th scope="col">9</th><th scope="col">10</th><th scope="col">11</th><th scope="col">12</th><th scope="col">13</th><th scope="col">14</th><th scope="col">15</th><th scope="col">16</th><th scope="col">17</th><th scope="col">18</th><th scope="col">19</th><th scope="col">20</th><th scope="col">21</th><th scope="col">22</th><th scope="col">23</th><th scope="col">24</th></tr></thead><tbody>
+<tr><th scope="row">1.A</th><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td></tr>
+<tr><th scope="row">1.B</th><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td></tr>
+<tr><th scope="row">1.C</th><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td></tr>
+<tr><th scope="row">1.D</th><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td></tr>
+<tr><th scope="row">1.G</th><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td></tr>
+<tr><th scope="row">1.R</th><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td><td title="placeholder">·</td></tr>
+      </tbody></table></div>
+      <p class="poznamka">✓ = v advent/2026/aktivity/&lt;trieda&gt;/ je súbor pre daný deň; · = zobrazí sa spoločný placeholder.</p>
+      <form method="post" action="/api/ucitel-odhlasenie"><button type="submit">Odhlásiť</button></form>
+    </section>
+  </main>
+  <script src="../../../assets/advent-ucitel.js"></script>
+</body>
+</html>

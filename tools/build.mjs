@@ -4,6 +4,8 @@
 import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname, relative, extname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { ALLOWED_HOSTS, RISKY } from './kontroly.mjs';
+import { nacitajAdvent, zapisAdvent } from './advent-build.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const MAX_APP_BYTES = 5 * 1024 * 1024;
@@ -11,15 +13,6 @@ const MAX_IMAGE_BYTES = 1024 * 1024;
 const REQUIRED = ['rok', 'trieda', 'priecinok', 'autor'];
 const TEXT_EXT = new Set(['.html', '.htm', '.js', '.css', '.svg']);
 const IMAGE_EXT = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg']);
-const ALLOWED_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com', 'www.w3.org'];
-const RISKY = [
-  [/<form[\s>]/i, 'formulár <form>'],
-  [/\bfetch\s*\(/, 'volanie fetch()'],
-  [/XMLHttpRequest/, 'XMLHttpRequest'],
-  [/\bWebSocket\b/, 'WebSocket'],
-  [/<iframe[\s>]/i, '<iframe>'],
-  [/[\w.+-]+@[\w-]+\.[\w.-]+/, 'e-mailová adresa'],
-];
 
 const errors = [];
 const warnings = [];
@@ -163,6 +156,11 @@ for (const rok of readdirSync(ROOT)) {
   }
 }
 
+// ---------- adventné kalendáre (advent.json) ----------
+const advent = nacitajAdvent(ROOT);
+errors.push(...advent.errors);
+warnings.push(...advent.warnings);
+
 if (errors.length) {
   console.error('Build zastavený – opravte chyby:');
   errors.forEach((e) => console.error('  CHYBA: ' + e));
@@ -234,13 +232,16 @@ write(
     crumbs: [],
     heading: titul,
     lead: podtitul,
-    body: valid.length
+    body: advent.sekciaUvod + (valid.length
       ? `    <h2>Školské roky</h2>\n    <ul class="grid">\n${years
           .map((y) => card(`${y}/`, y, `${[...byYear.get(y).keys()].length} tried`, ''))
           .join('\n')}\n    </ul>`
-      : '    <p>Zatiaľ tu nie sú žiadne aplikácie.</p>',
+      : '    <p>Zatiaľ tu nie sú žiadne aplikácie.</p>'),
   })
 );
+
+// adventné kalendáre: 6 tried, učiteľská stránka, spoločný placeholder
+written.push(...zapisAdvent(ROOT, advent));
 
 for (const y of years) {
   const classes = byYear.get(y);
@@ -283,6 +284,7 @@ for (const y of years) {
 
 // ---------- súhrn ----------
 console.log(`Hotovo: ${hotove(valid)} hotových aplikácií z ${valid.length} záznamov, ${years.length} rokov, ${written.length} vygenerovaných stránok.`);
+if (advent.cfg) console.log(`Adventné kalendáre: ${advent.cfg.triedy.length} tried, aktivít so súborom: ${advent.pocetAktivit} z ${advent.cfg.triedy.length * 24}.`);
 if (warnings.length) {
   console.log(`\nUpozornenia (${warnings.length}) – skontrolujte pred zverejnením:`);
   warnings.forEach((w) => console.log('  ! ' + w));

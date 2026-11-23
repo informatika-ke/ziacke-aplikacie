@@ -1,4 +1,5 @@
 /ziaci/
+/pisomky/
 *.csv
 *.xlsx
 .env

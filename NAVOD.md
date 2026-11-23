@@ -68,7 +68,7 @@ aplikácií nič, čo by sa nemalo ukázať (mená, fotky ľudí).
 ostanú všetky otvorené. Zamknuté dni stráži server: otvoriť ich cez priamu adresu nejde, ani keď žiak zmení hodiny.
 
 ## Ako sa dostane aktivita do kalendára (bez Gitu)
-1. **Žiak** otvorí `/advent/2026/odovzdat/`, vyberie triedu a deň, zadá **kód triedy**, prezývku a nahrá svoj `index.html`.
+1. **Žiak** otvorí `/advent/2026/odovzdat/`, vyberie triedu a deň, zadá **kód triedy**, meno a priezvisko a nahrá svoj `index.html`.
    Dostane **kontrolný kód** (napr. `K7M2`) a automatické upozornenia (`localStorage`, `fetch`, odkazy na súbory…).
 2. **Žiak vás zavolá** a povie kontrolný kód. Aktivita je zatiaľ len „čakajúca“, verejne sa nikde nezobrazí.
 3. **Vy** na vlastnom zariadení otvoríte `/advent/2026/ucitel/` (prihlásite sa heslom), v časti „Čakajúce na schválenie“

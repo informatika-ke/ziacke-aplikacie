@@ -334,7 +334,7 @@ function stranaOdovzdat(cfg) {
       <label>Trieda <select name="trieda" required>${triedy}</select></label>
       <label>Deň v kalendári <select name="den" required>${dni}</select></label>
       <label>Kód triedy <small>(dostaneš ho od učiteľky)</small><input type="text" name="kod" required autocomplete="off" maxlength="40"></label>
-      <label>Tvoja prezývka <small>(nie celé meno)</small><input type="text" name="autor" maxlength="30" autocomplete="off"></label>
+      <label>Meno a Priezvisko<input type="text" name="autor" maxlength="50" autocomplete="off"></label>
       <label>Súbor <small>(jeden hotový súbor, najviac 300 kB)</small><input type="file" name="subor" accept=".html,.htm,text/html" required></label>
       <button type="submit">Nahrať</button>
     </form>

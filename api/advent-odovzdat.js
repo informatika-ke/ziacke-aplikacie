@@ -13,7 +13,7 @@ export const kontrolnyKod = () => {
   return [...b].map((x) => ABECEDA[x % ABECEDA.length]).join('');
 };
 
-const cistiAutora = (s) => String(s ?? '').replace(/[\u0000-\u001f<>"&]/g, '').trim().slice(0, 30);
+const cistiAutora = (s) => String(s ?? '').replace(/[\u0000-\u001f<>"&]/g, '').trim().slice(0, 50);
 
 export async function POST(request) {
   const kluc = process.env.ADVENT_TAJNY_KLUC;

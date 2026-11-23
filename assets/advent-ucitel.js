@@ -89,7 +89,7 @@ async function nacitaj() {
   kc.replaceChildren();
   if (!data.cakajuce.length) kc.textContent = 'Nič nečaká na schválenie.';
   else {
-    kc.append(tabulka(['Kód', 'Trieda', 'Deň', 'Prezývka', 'Odovzdané', 'Veľkosť', 'Kontrola', ''],
+    kc.append(tabulka(['Kód', 'Trieda', 'Deň', 'Meno a Priezvisko', 'Odovzdané', 'Veľkosť', 'Kontrola', ''],
       data.cakajuce.map((c) => riadok(
         el('strong', c.kod),
         nazovTriedy(c.trieda), String(c.den), c.autor || '–', cas(c.cas), kb(c.velkost),
@@ -121,7 +121,7 @@ async function nacitaj() {
   const kv = document.getElementById('uc-vydane');
   kv.replaceChildren();
   if (data.vydane.length)
-    kv.append(tabulka(['Trieda', 'Deň', 'Prezývka', 'Zverejnené', 'Veľkosť', ''],
+    kv.append(tabulka(['Trieda', 'Deň', 'Meno a Priezvisko', 'Zverejnené', 'Veľkosť', ''],
       data.vydane.map((v) => riadok(nazovTriedy(v.trieda), String(v.den), v.autor || '–', cas(v.cas), kb(v.velkost),
         akcie(nahladTlacidlo('vydane', v.trieda, v.den, `${nazovTriedy(v.trieda)} · deň ${v.den}`), akcia('zmazat', '🗑 Zmazať', v.trieda, v.den, true))))));
 }

@@ -38,7 +38,8 @@ Pravidlá:
 - Bod uber len za to, čo sa dá z písomky preukázať. Pri pochybnostiach v prospech žiaka a označ ⚠.
 
 ## 4. Oprava
-- PDF čítaj po stranách (najviac 20 strán naraz). Pri každej úlohe zapíš body, čo bolo správne a kde je chyba.
+- PDF čítaj po stranách (najviac 20 strán naraz). Ak nie je nainštalovaný `pdftoppm` (Read vráti chybu), vytiahni obrázky strán skriptom: `node .claude/skills/oprav-pisomky/extract-jpg.mjs pisomky pisomky/_strany` a čítaj `pisomky/_strany/<pdf>_s1.jpg`, `_s2.jpg`... (funguje pre skeny s JPEG). Priečinky začínajúce `_` pri hľadaní súborov ignoruj.
+- Pri každej úlohe zapíš body, čo bolo správne a kde je chyba.
 - Nečitateľné alebo neisto prečítané miesta označ ⚠ a uveď ich v stĺpci „Na kontrolu“.
 - Skupinu žiaka urč podľa hlavičky strany.
 

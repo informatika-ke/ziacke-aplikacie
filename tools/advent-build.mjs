@@ -313,7 +313,6 @@ ${dvierka}      </ol>
 // Stránka, cez ktorú žiaci odovzdávajú aktivity: /advent/2026/odovzdat/
 function stranaOdovzdat(cfg) {
   const triedy = cfg.triedy.map((t) => `<option value="${t.kluc}">${esc(t.nazov)}</option>`).join('');
-  const dni = Array.from({ length: 24 }, (_, i) => `<option value="${i + 1}">${i + 1}. december</option>`).join('');
   return `<!DOCTYPE html>
 <html lang="sk">
 <head>
@@ -332,7 +331,6 @@ function stranaOdovzdat(cfg) {
   <main class="odovzdat">
     <form method="post" action="/api/advent-odovzdat/" enctype="multipart/form-data">
       <label>Trieda <select name="trieda" required>${triedy}</select></label>
-      <label>Deň v kalendári <select name="den" required>${dni}</select></label>
       <label>Kód triedy <small>(dostaneš ho od učiteľky)</small><input type="text" name="kod" required autocomplete="off" maxlength="40"></label>
       <label>Meno a Priezvisko<input type="text" name="autor" maxlength="50" autocomplete="off"></label>
       <label>Súbor <small>(jeden hotový súbor, najviac 300 kB)</small><input type="file" name="subor" accept=".html,.htm,text/html" required></label>
@@ -345,7 +343,7 @@ function stranaOdovzdat(cfg) {
       <li>Obrázky len ako emoji, CSS, SVG alebo <code>data:</code>. Žiadne fotky ľudí, žiadne osobné údaje.</li>
       <li>Texty po slovensky, funguje na mobile aj na počítači, má tlačidlo „Hrať znova“.</li>
     </ul>
-    <p>Po nahratí dostaneš <strong>kontrolný kód</strong>. Povedz ho učiteľke, aktivitu zverejní až ona.</p>
+    <p>Po nahratí dostaneš <strong>kontrolný kód</strong>. Povedz ho učiteľke – ona aktivitu skontroluje, vyberie jej deň v kalendári a zverejní ju.</p>
   </main>
   <footer>Automaticky vygenerované – neupravujte ručne (zdroj: advent.json).</footer>
 </body>

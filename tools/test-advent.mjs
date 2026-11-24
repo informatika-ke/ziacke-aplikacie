@@ -97,11 +97,12 @@ process.env.ADVENT_KODY = '1a=sneh,1c=hviezda';
 const { uloziste } = await import('../lib/uloziste.js');
 const cakajuce = new Map(), vydane = new Map();
 const k = (t, d) => `${t}-${d}`;
+const kc = (t, kod) => `${t}-${kod}`;
 Object.assign(uloziste, {
-  ulozCakajuce: async (z) => { cakajuce.set(k(z.trieda, z.den), z); },
-  nacitajCakajuce: async (t, d) => cakajuce.get(k(t, d)) ?? null,
+  ulozCakajuce: async (z) => { cakajuce.set(kc(z.trieda, z.kod), z); },
+  nacitajCakajuce: async (t, kod) => cakajuce.get(kc(t, kod)) ?? null,
   zoznamCakajucich: async () => [...cakajuce.values()].map(({ html, ...m }) => m),
-  zmazCakajuce: async (t, d) => { cakajuce.delete(k(t, d)); },
+  zmazCakajuce: async (t, kod) => { cakajuce.delete(kc(t, kod)); },
   vydaj: async (t, d, html, meta) => { vydane.set(k(t, d), { html, meta }); },
   nacitajVydane: async (t, d) => vydane.get(k(t, d))?.html ?? null,
   zoznamVydanych: async () => [...vydane].map(([id, v]) => ({ trieda: id.split('-')[0], den: Number(id.split('-')[1]), autor: v.meta.autor, cas: v.meta.cas, velkost: v.html.length })),
@@ -123,7 +124,7 @@ const formular = (pole, subor = HRA) => {
   return f;
 };
 const posli = (pole, subor) => odovzdat.POST(new Request('https://x.sk/api/advent-odovzdat/', { method: 'POST', body: formular(pole, subor) }));
-const zakladne = { trieda: '1c', den: '7', kod: 'Hviezda', autor: 'Veno' };
+const zakladne = { trieda: '1c', kod: 'Hviezda', autor: 'Veno' };
 const ucitelCookie = async () => ({ cookie: 'advent_ucitel=' + (await vytvorCookie(KLUC)) });
 const get = (cesta, hlavicky = {}) => new Request('https://x.sk' + cesta, { headers: hlavicky });
 
@@ -134,7 +135,6 @@ await test('zlý kód triedy sa odmietne a nič sa neuloží', async () => {
 });
 await test('trieda bez kódu, neplatný deň, chýbajúci súbor, veľký súbor, nie HTML', async () => {
   assert.equal((await posli({ ...zakladne, trieda: '1b' })).status, 400);
-  assert.equal((await posli({ ...zakladne, den: '25' })).status, 400);
   assert.equal((await posli(zakladne, null)).status, 400);
   assert.equal((await posli(zakladne, 'x'.repeat(301 * 1024))).status, 413);
   assert.equal((await posli(zakladne, 'iba text bez html')).status, 400);
@@ -145,7 +145,8 @@ await test('platné odovzdanie: čaká, vráti kontrolný kód, verejne sa nezob
   const r = await posli(zakladne);
   assert.equal(r.status, 200);
   const text = await r.text();
-  kontrolny = cakajuce.get('1c-7').kod;
+  kontrolny = [...cakajuce.values()][0].kod;
+  assert.ok(![...cakajuce.values()][0].den); // deň určí až učiteľka
   assert.match(kontrolny, /^[A-HJKMNP-Z2-9]{4}$/);
   assert.ok(text.includes(kontrolny));
   // čakajúca aktivita nie je dostupná cez verejnú adresu ani v deň, keď je okienko odomknuté
@@ -157,24 +158,25 @@ await test('platné odovzdanie: čaká, vráti kontrolný kód, verejne sa nezob
   assert.ok(!st.includes('Moja hra') && st.includes('Prekvapenie pre tento deň'));
 });
 await test('autor sa očistí od HTML', async () => {
-  await posli({ ...zakladne, den: '8', autor: '<img src=x onerror=alert(1)>"&Veno' });
-  const a = cakajuce.get('1c-8').autor;
-  assert.ok(!/[<>"&]/.test(a));
-  cakajuce.delete('1c-8');
+  await posli({ ...zakladne, autor: '<img src=x onerror=alert(1)>"&Veno' });
+  const [kl, z] = [...cakajuce].find(([, v]) => v.autor !== 'Veno');
+  assert.ok(!/[<>"&]/.test(z.autor));
+  cakajuce.delete(kl);
 });
 await test('upozornenia sa uložia a zobrazia', async () => {
-  await posli({ ...zakladne, den: '9' }, '<html><body><script>localStorage.a=1</script></body></html>');
-  assert.ok(cakajuce.get('1c-9').upozornenia.some((u) => u.includes('localStorage')));
-  cakajuce.delete('1c-9');
+  await posli(zakladne, '<html><body><script>localStorage.a=1</script></body></html>');
+  const [kl, z] = [...cakajuce].find(([, v]) => v.upozornenia.length);
+  assert.ok(z.upozornenia.some((u) => u.includes('localStorage')));
+  cakajuce.delete(kl);
 });
 
 await test('učiteľské API bez cookie vráti 401', async () => {
   assert.equal((await data.GET(get('/api/ucitel-data/'))).status, 401);
-  assert.equal((await nahlad.GET(get('/api/ucitel-nahlad/?trieda=1c&den=7'))).status, 401);
+  assert.equal((await nahlad.GET(get('/api/ucitel-nahlad/?co=cakajuce&trieda=1c&kod=' + kontrolny))).status, 401);
   assert.equal((await zaloha.GET(get('/api/ucitel-zaloha/'))).status, 401);
-  const f = new FormData(); f.set('akcia', 'schvalit'); f.set('trieda', '1c'); f.set('den', '7');
+  const f = new FormData(); f.set('akcia', 'schvalit'); f.set('trieda', '1c'); f.set('kod', kontrolny); f.set('den', '7');
   assert.equal((await akcia.POST(new Request('https://x.sk/api/ucitel-akcia/', { method: 'POST', body: f }))).status, 401);
-  assert.ok(cakajuce.has('1c-7')); // nič sa nezmenilo
+  assert.equal(cakajuce.size, 1); // nič sa nezmenilo
 });
 await test('učiteľka vidí zoznam a náhľad čakajúcej aktivity (so sandbox hlavičkou)', async () => {
   const h = await ucitelCookie();
@@ -182,7 +184,7 @@ await test('učiteľka vidí zoznam a náhľad čakajúcej aktivity (so sandbox 
   assert.equal(z.cakajuce.length, 1);
   assert.equal(z.cakajuce[0].kod, kontrolny);
   assert.ok(!('html' in z.cakajuce[0]));
-  const n = await nahlad.GET(get('/api/ucitel-nahlad/?co=cakajuce&trieda=1c&den=7', h));
+  const n = await nahlad.GET(get('/api/ucitel-nahlad/?co=cakajuce&trieda=1c&kod=' + kontrolny, h));
   assert.equal(n.status, 200);
   assert.ok((await n.text()).includes('Moja hra'));
   assert.match(n.headers.get('content-security-policy'), /^sandbox allow-scripts allow-modals allow-pointer-lock;/);
@@ -190,13 +192,16 @@ await test('učiteľka vidí zoznam a náhľad čakajúcej aktivity (so sandbox 
 });
 await test('schválenie zverejní aktivitu; zamietnutie ju zmaže', async () => {
   const h = await ucitelCookie();
-  const post = (a, t, d) => { const f = new FormData(); f.set('akcia', a); f.set('trieda', t); f.set('den', d); return akcia.POST(new Request('https://x.sk/api/ucitel-akcia/', { method: 'POST', body: f, headers: h })); };
+  const post = (a, t, d, kod = kontrolny) => { const f = new FormData(); f.set('akcia', a); f.set('trieda', t); if (d) f.set('den', d); if (kod) f.set('kod', kod); return akcia.POST(new Request('https://x.sk/api/ucitel-akcia/', { method: 'POST', body: f, headers: h })); };
+  assert.equal((await post('schvalit', '1c', '')).status, 400); // bez dňa sa schváliť nedá
+  assert.equal(cakajuce.size, 1);
   assert.equal((await post('schvalit', '1c', '7')).status, 303);
   assert.equal(cakajuce.size, 0);
   assert.ok(vydane.has('1c-7'));
   assert.equal((await post('schvalit', '1c', '7')).status, 404); // už nečaká
-  await posli({ ...zakladne, den: '3' });
-  assert.equal((await post('zamietnut', '1c', '3')).status, 303);
+  await posli(zakladne);
+  const druhy = [...cakajuce.values()][0].kod;
+  assert.equal((await post('zamietnut', '1c', '', druhy)).status, 303);
   assert.equal(cakajuce.size, 0);
   assert.equal(vydane.has('1c-3'), false);
   assert.equal((await post('hocico', '1c', '3')).status, 400);

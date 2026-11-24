@@ -2,7 +2,7 @@
 // kým ho učiteľka neschváli. Odovzdať sa dá len so správnym kódom triedy.
 import { uloziste } from '../lib/uloziste.js';
 import { hesloSedi } from '../lib/ucitel.js';
-import { platnyDen, parsujKody, strana, esc } from '../lib/pristup.js';
+import { parsujKody, strana, esc } from '../lib/pristup.js';
 import { skontrolujAktivitu, MAX_AKTIVITA_BAJTOV } from '../lib/kontrola.js';
 
 const ABECEDA = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; // bez I, L, O, 0, 1 (aby sa nepletli)
@@ -24,10 +24,10 @@ export async function POST(request) {
   let f;
   try { f = await request.formData(); } catch { return strana(`Formulár sa nepodarilo prečítať. Skús to znova.${SPAT}`, 400); }
 
-  const id = platnyDen(f.get('trieda'), f.get('den'));
+  const trieda = String(f.get('trieda') ?? '').toLowerCase();
   const kod = String(f.get('kod') ?? '').trim().toLowerCase();
-  if (!id || !kody[id.trieda]) return strana(`Vyber triedu a deň.${SPAT}`, 400);
-  if (!(await hesloSedi(kod, kody[id.trieda], kluc))) {
+  if (!/^[a-z0-9]{2}$/.test(trieda) || !kody[trieda]) return strana(`Vyber triedu.${SPAT}`, 400);
+  if (!(await hesloSedi(kod, kody[trieda], kluc))) {
     await new Promise((r) => setTimeout(r, 1000)); // spomalenie hádania kódu
     return strana(`Kód triedy nesedí. Opýtaj sa učiteľky.${SPAT}`, 403);
   }
@@ -49,8 +49,7 @@ export async function POST(request) {
   const kontrolny = kontrolnyKod();
   try {
     await uloziste.ulozCakajuce({
-      trieda: id.trieda,
-      den: id.den,
+      trieda,
       autor: cistiAutora(f.get('autor')),
       kod: kontrolny,
       cas: new Date().toISOString(),
@@ -66,9 +65,9 @@ export async function POST(request) {
     ? `<p style="text-align:left">Našli sa tieto možné problémy (vyrieš ich, kým príde učiteľka, alebo nahraj súbor znova):</p><ul style="text-align:left">${upozornenia.map((u) => `<li>${esc(u)}</li>`).join('')}</ul>`
     : '<p>Automatická kontrola nenašla žiadny problém. ✅</p>';
   return strana(
-    `<h1>Nahrané ✔</h1><p>Trieda <b>${esc(id.trieda.toUpperCase())}</b>, deň <b>${id.den}</b>.</p>` +
+    `<h1>Nahrané ✔</h1><p>Trieda <b>${esc(trieda.toUpperCase())}</b>.</p>` +
       `<p>Tvoj kontrolný kód:</p><p style="font-size:3rem;letter-spacing:.2em;margin:.2em 0;color:#ffd782"><b>${kontrolny}</b></p>` +
-      `<p>Zavolaj učiteľku a povedz jej tento kód. Aktivitu skontroluje a zverejní.</p>${zoznam}${SPAT}`,
+      `<p>Zavolaj učiteľku a povedz jej tento kód. Aktivitu skontroluje, určí jej deň v kalendári a zverejní ju.</p>${zoznam}${SPAT}`,
     200,
     'Odovzdané'
   );

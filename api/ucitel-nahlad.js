@@ -5,13 +5,15 @@ import { jeUcitel, platnyDen, strana, HLAVICKY_AKTIVITY } from '../lib/pristup.j
 export async function GET(request) {
   if (!(await jeUcitel(request))) return strana('Nie ste prihlásená.', 401);
   const q = new URL(request.url).searchParams;
-  const id = platnyDen(q.get('trieda'), q.get('den'));
-  if (!id) return strana('Neplatná adresa.', 404);
+  const cakajuca = q.get('co') !== 'vydane';
+  const kod = String(q.get('kod') ?? '').toUpperCase();
+  const id = platnyDen(q.get('trieda'), cakajuca ? 1 : q.get('den'));
+  if (!id || (cakajuca && !/^[A-Z0-9]{4}$/.test(kod))) return strana('Neplatná adresa.', 404);
   let html = null;
   try {
-    html = q.get('co') === 'vydane'
-      ? await uloziste.nacitajVydane(id.trieda, id.den)
-      : (await uloziste.nacitajCakajuce(id.trieda, id.den))?.html ?? null;
+    html = cakajuca
+      ? (await uloziste.nacitajCakajuce(id.trieda, kod))?.html ?? null
+      : await uloziste.nacitajVydane(id.trieda, id.den);
   } catch {
     return strana('Úložisko sa nepodarilo načítať.', 503);
   }

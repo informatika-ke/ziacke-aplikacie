@@ -87,7 +87,7 @@ Pravidlá pre žiakov (v prompte aj na odovzdávacej stránke): jeden HTML súbo
 2. **Environment Variables** (zaškrtnite Production aj Preview):
    - `ADVENT_UCITEL_HESLO` – vaše heslo,
    - `ADVENT_TAJNY_KLUC` – náhodný reťazec aspoň 16 znakov (podpisuje cookie, nikdy ho nezadávate),
-   - `ADVENT_KODY` – kódy tried vo tvare `1a=slovo1,1b=slovo2,1c=slovo3,1d=slovo4,1g=slovo5,1r=slovo6`
+   - `ADVENT_KODY` – kódy tried vo tvare `1a=slovo1,1b=slovo2,1c=slovo3,1d=slovo4,1g=slovo5,1r=slovo6,2a=slovo7,2b=slovo8,2c=slovo9,2d=slovo10,2g=slovo11`
      (kód povedzte žiakom v škole; veľkosť písmen sa neráta).
 3. **Redeploy**, aby sa premenné dostali do nasadenia.
 

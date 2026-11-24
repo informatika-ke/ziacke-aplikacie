@@ -97,14 +97,42 @@ async function nacitaj() {
     kc.textContent = `Zoznam sa nepodarilo načítať: ${e.message}`;
     return;
   }
+  dataZoznam = data;
+  vykresli();
+}
+
+// ----- filtre (hodnoty si pamätáme, aby po schválení stránka ostala v tom istom výbere) -----
+let dataZoznam = null;
+const FILTRE = ['f-c-trieda', 'f-c-text', 'f-v-trieda', 'f-v-den'];
+for (const id of FILTRE) {
+  const e = document.getElementById(id);
+  try { const v = sessionStorage.getItem('advent-' + id); if (v !== null) e.value = v; } catch { /* bez ukladania */ }
+  e.addEventListener('input', () => {
+    try { sessionStorage.setItem('advent-' + id, e.value); } catch { /* bez ukladania */ }
+    if (dataZoznam) vykresli();
+  });
+}
+const bezDiakritiky = (s) => String(s ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+function vykresli() {
+  const data = dataZoznam;
+  const kc = document.getElementById('uc-cakajuce');
+  const fT = document.getElementById('f-c-trieda').value;
+  const fText = bezDiakritiky(document.getElementById('f-c-text').value.trim());
+  const cakajuce = data.cakajuce.filter((c) => (!fT || c.trieda === fT) && (!fText || bezDiakritiky(c.autor).includes(fText) || bezDiakritiky(c.kod).includes(fText)));
+  document.getElementById('f-c-info').textContent = cakajuce.length === data.cakajuce.length ? '' : `Zobrazených ${cakajuce.length} z ${data.cakajuce.length}`;
+  const vT = document.getElementById('f-v-trieda').value;
+  const vD = Number(document.getElementById('f-v-den').value) || 0;
+  const vydane = data.vydane.filter((v) => (!vT || v.trieda === vT) && (!vD || v.den === vD));
+  document.getElementById('f-v-info').textContent = vydane.length === data.vydane.length ? '' : `Zobrazených ${vydane.length} z ${data.vydane.length}`;
 
   // čakajúce
   document.getElementById('uc-pocet').textContent = data.cakajuce.length ? `(${data.cakajuce.length})` : '';
   kc.replaceChildren();
-  if (!data.cakajuce.length) kc.textContent = 'Nič nečaká na schválenie.';
+  if (!cakajuce.length) kc.textContent = data.cakajuce.length ? 'Filtru nezodpovedá žiadna aktivita.' : 'Nič nečaká na schválenie.';
   else {
     kc.append(tabulka(['Kód', 'Trieda', 'Meno a Priezvisko', 'Odovzdané', 'Veľkosť', 'Kontrola', 'Deň v kalendári a akcie'],
-      data.cakajuce.map((c) => riadok(
+      cakajuce.map((c) => riadok(
         el('strong', c.kod),
         nazovTriedy(c.trieda), c.autor || '–', cas(c.cas), kb(c.velkost),
         c.upozornenia?.length ? (() => { const d = el('details'); d.append(el('summary', `⚠ ${c.upozornenia.length}`)); const ul = el('ul'); c.upozornenia.forEach((u) => ul.append(el('li', u))); d.append(ul); return d; })() : '✅',
@@ -134,8 +162,8 @@ async function nacitaj() {
 
   const kv = document.getElementById('uc-vydane');
   kv.replaceChildren();
-  if (data.vydane.length)
+  if (vydane.length)
     kv.append(tabulka(['Trieda', 'Deň', 'Meno a Priezvisko', 'Zverejnené', 'Veľkosť', ''],
-      data.vydane.map((v) => riadok(nazovTriedy(v.trieda), String(v.den), v.autor || '–', cas(v.cas), kb(v.velkost),
+      vydane.map((v) => riadok(nazovTriedy(v.trieda), String(v.den), v.autor || '–', cas(v.cas), kb(v.velkost),
         akcie(nahladTlacidlo('vydane', v.trieda, v.den, `${nazovTriedy(v.trieda)} · deň ${v.den}`), akcia('zmazat', '🗑 Zmazať', v.trieda, v.den, true))))));
 }

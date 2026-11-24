@@ -378,10 +378,16 @@ function stranaUcitel(cfg) {
       </form>
       <h2>Čakajúce na schválenie <span id="uc-pocet"></span></h2>
       <p class="poznamka">Žiak vám povie kontrolný kód. Aktivitu si pozrite (náhľad beží v izolovanom okne) a schváľte alebo zamietnite. Heslo nezadávajte na počítači žiaka.</p>
+      <div class="filter"><label>Trieda <select id="f-c-trieda"><option value="">všetky</option>${moznostiTried}</select></label>
+        <label>Hľadať meno alebo kód <input type="search" id="f-c-text" maxlength="50" autocomplete="off"></label>
+        <span id="f-c-info" class="poznamka"></span></div>
       <div id="uc-cakajuce" class="tabulka">Načítavam…</div>
       <h2>Zverejnené aktivity</h2>
       <div class="tabulka"><table id="uc-matica" data-triedy="${esc(tabulkaTried)}"></table></div>
       <p class="poznamka">✓ = zverejnené, · = zobrazí sa „Prekvapenie pre tento deň ešte pripravujeme.“ Okienko sa žiakom otvorí až v deň odomknutia.</p>
+      <div class="filter"><label>Trieda <select id="f-v-trieda"><option value="">všetky</option>${moznostiTried}</select></label>
+        <label>Deň <select id="f-v-den"><option value="">všetky</option>${Array.from({ length: 24 }, (_, i) => `<option value="${i + 1}">${i + 1}. december</option>`).join('')}</select></label>
+        <span id="f-v-info" class="poznamka"></span></div>
       <div id="uc-vydane" class="tabulka"></div>
       <p><a class="tlacidlo" href="/api/ucitel-zaloha/">⬇ Stiahnuť zálohu všetkých aktivít (ZIP)</a></p>
       <form method="post" action="/api/ucitel-odhlasenie"><button type="submit">Odhlásiť</button></form>

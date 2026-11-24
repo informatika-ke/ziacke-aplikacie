@@ -137,3 +137,5 @@ dialog#uc-nahlad { width: min(1000px, 96vw); height: min(760px, 90vh); max-width
 dialog#uc-nahlad[open] { display: flex; flex-direction: column; }
 dialog#uc-nahlad::backdrop { background: rgba(3,8,20,.8); }
 #uc-nahlad-iframe { flex: 1; width: 100%; border: 0; background: #fff; }
+.filter { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin: 8px 0; }
+.filter label { display: flex; gap: 6px; align-items: center; }

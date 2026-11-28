@@ -100,8 +100,12 @@ footer { color: var(--muted); font-size: .85rem; }
 .odovzdat input, .odovzdat select { font: inherit; padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); }
 .odovzdat button { font: inherit; padding: 11px 18px; border: 0; border-radius: 10px; background: var(--accent); color: #fff; font-weight: 700; cursor: pointer; }
 .odovzdat li { margin: 6px 0; }
-/* stránka školského roka: fotografia na pozadí (assets/rok-<rok>.jpg), cez ňu priesvitný závoj kvôli čitateľnosti */
-body.s-pozadie { background: linear-gradient(rgba(246,247,251,.78), rgba(246,247,251,.9)), var(--pozadie) center top / cover fixed no-repeat; min-height: 100vh; }
+/* stránky školského roka a tried: fotka na pozadí (assets/rok-<rok>.jpg alebo pozadie-<odbor>.jpg), cez ňu priesvitný závoj kvôli čitateľnosti.
+   Jas obrázka sa ladí v --pozadie-jas, sila závoja v --zavoj-hore / --zavoj-dole. */
+body.s-pozadie { --pozadie-jas: 1.25; --zavoj-hore: rgba(246,247,251,.48); --zavoj-dole: rgba(246,247,251,.72); position: relative; min-height: 100vh; background: var(--bg); }
+body.s-pozadie::before, body.s-pozadie::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+body.s-pozadie::before { background: var(--pozadie) center top / cover no-repeat; filter: brightness(var(--pozadie-jas)) saturate(1.08); }
+body.s-pozadie::after { background: linear-gradient(var(--zavoj-hore), var(--zavoj-dole)); }
 @media (prefers-color-scheme: dark) {
-  body.s-pozadie { background: linear-gradient(rgba(20,23,31,.82), rgba(20,23,31,.92)), var(--pozadie) center top / cover fixed no-repeat; }
+  body.s-pozadie { --pozadie-jas: 1.2; --zavoj-hore: rgba(20,23,31,.6); --zavoj-dole: rgba(20,23,31,.84); }
 }

@@ -31,6 +31,8 @@ try {
 }
 const titul = data.titul || 'Žiacke aplikácie';
 const podtitul = data.podtitul || '';
+// Pozadie stránky triedy podľa odboru: apps.json -> "pozadia": { "2a": "stavbari" } a súbor assets/pozadie-<odbor>.jpg
+const pozadiaTried = data.pozadia && typeof data.pozadia === 'object' ? data.pozadia : {};
 const apps = Array.isArray(data.aplikacie) ? data.aplikacie : [];
 
 // ---------- kontrola záznamov ----------
@@ -200,6 +202,12 @@ ${body}
 const card = (href, title, sub, tag, cls = '') =>
   `      <li><a class="card${cls ? ' ' + cls : ''}" href="${href}"><strong>${esc(title)}</strong>${sub ? `<span>${esc(sub)}</span>` : ''}${tag ? `<br><span class="tag">${esc(tag)}</span>` : ''}</a></li>`;
 // Ak existuje assets/rok-<rok>.jpg, karta školského roka sa zobrazí ako široký obrázok (rovnako ako advent).
+// Pozadie triedy: najprv podľa odboru (pozadie-<odbor>.jpg), inak spoločné rok-<rok>.jpg, inak nič.
+const pozadieTriedy = (kluc, predpona, y) => {
+  const odbor = pozadiaTried[kluc];
+  if (odbor && /^[a-z0-9-]+$/.test(odbor) && existsSync(join(ROOT, 'assets', `pozadie-${odbor}.jpg`))) return `${predpona}pozadie-${odbor}.jpg`;
+  return existsSync(join(ROOT, 'assets', `rok-${y}.jpg`)) ? `${predpona}rok-${y}.jpg` : '';
+};
 const rokKarta = (y, sub) =>
   existsSync(join(ROOT, 'assets', `rok-${y}.jpg`))
     ? `      <li class="advent-banner-li"><a class="card advent-banner" href="${y}/"><img src="assets/rok-${y}.jpg" width="1200" height="675" alt="" loading="lazy" decoding="async"><span class="advent-banner-text"><strong>${esc(y)}</strong><span>${esc(sub)}</span></span></a></li>`
@@ -282,6 +290,7 @@ for (const y of years) {
         ],
         heading: `Trieda ${label}`,
         lead: `Školský rok ${y} · ${countText(list)}`,
+        pozadie: pozadieTriedy(k, '../../assets/', y),
         body: `    <ul class="grid">\n${list.map(appCard).join('\n')}\n    </ul>`,
       })
     );

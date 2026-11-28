@@ -1,6 +1,13 @@
 {
   "titul": "Žiacke aplikácie",
   "podtitul": "Malé webové aplikácie, ktoré vytvorili žiaci na hodinách informatiky.",
+  "pozadia": {
+    "2a": "stavbari",
+    "2b": "stavbari",
+    "2c": "architekti",
+    "2d": "architekti",
+    "2g": "geodeti"
+  },
   "aplikacie": [
     {
       "rok": "2026-27",

@@ -103,15 +103,14 @@
     .lang-btn:hover { background: #e9ecef; }
     .lang-menu {
       display: none;
-      position: absolute;
-      top: 100%;
+      position: fixed; /* mimo posuvného panela nástrojov, inak sa menu orezáva */
+      top: 0;
       left: 0;
-      margin-top: 4px;
       background: #ffffff;
       border: 1px solid #ced4da;
       border-radius: 6px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      z-index: 200;
+      z-index: 1000;
       min-width: 150px;
       overflow: hidden;
     }
@@ -442,7 +441,11 @@
 
     function toggleLangMenu(e) {
       e.stopPropagation();
-      document.getElementById('langMenu').classList.toggle('show');
+      const menu = document.getElementById('langMenu');
+      const r = document.getElementById('langBtn').getBoundingClientRect();
+      menu.style.top = (r.bottom + 4) + 'px';
+      menu.style.left = Math.max(4, Math.min(r.left, window.innerWidth - 164)) + 'px';
+      menu.classList.toggle('show');
     }
 
     document.addEventListener('click', () => {

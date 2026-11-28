@@ -168,7 +168,7 @@ if (errors.length) {
 }
 
 // ---------- generovanie stránok ----------
-function page({ depth, title, crumbs, heading, lead, body }) {
+function page({ depth, title, crumbs, heading, lead, body, pozadie = '' }) {
   const up = '../'.repeat(depth);
   const nav = crumbs.length
     ? `<nav class="crumbs">${crumbs.map((c) => `<a href="${c.href}">${esc(c.text)}</a>`).join(' › ')}</nav>`
@@ -182,7 +182,7 @@ function page({ depth, title, crumbs, heading, lead, body }) {
   <title>${esc(title)}</title>
   <link rel="stylesheet" href="${up}assets/galeria.css">
 </head>
-<body>
+<body${pozadie ? ` class="s-pozadie" style="--pozadie:url('${pozadie}')"` : ''}>
   <header>
     ${nav}
     <h1>${esc(heading)}</h1>
@@ -260,6 +260,7 @@ for (const y of years) {
       crumbs: [{ href: '../', text: titul }],
       heading: `Školský rok ${y}`,
       lead: '',
+      pozadie: existsSync(join(ROOT, 'assets', `rok-${y}.jpg`)) ? `../assets/rok-${y}.jpg` : '',
       body: `    <h2>Triedy</h2>\n    <ul class="grid">\n${keys
         .map((k) => card(`${k}/`, classes.get(k).label, countText(classes.get(k).apps), ''))
         .join('\n')}\n    </ul>`,

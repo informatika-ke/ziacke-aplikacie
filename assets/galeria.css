@@ -100,3 +100,8 @@ footer { color: var(--muted); font-size: .85rem; }
 .odovzdat input, .odovzdat select { font: inherit; padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--text); }
 .odovzdat button { font: inherit; padding: 11px 18px; border: 0; border-radius: 10px; background: var(--accent); color: #fff; font-weight: 700; cursor: pointer; }
 .odovzdat li { margin: 6px 0; }
+/* stránka školského roka: fotografia na pozadí (assets/rok-<rok>.jpg), cez ňu priesvitný závoj kvôli čitateľnosti */
+body.s-pozadie { background: linear-gradient(rgba(246,247,251,.78), rgba(246,247,251,.9)), var(--pozadie) center top / cover fixed no-repeat; min-height: 100vh; }
+@media (prefers-color-scheme: dark) {
+  body.s-pozadie { background: linear-gradient(rgba(20,23,31,.82), rgba(20,23,31,.92)), var(--pozadie) center top / cover fixed no-repeat; }
+}

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="sk">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>2D Графічний Редактор Креслень</title>
+  <title>2D editor výkresov</title>
   <style>
     * {
       box-sizing: border-box;
@@ -304,7 +304,7 @@
       <!-- LANGUAGE SELECTOR -->
       <div class="lang-dropdown-wrapper">
         <button class="lang-btn" id="langBtn" onclick="toggleLangMenu(event)">
-          <span id="langFlag">🇺🇦</span> <span id="langText">Українська</span> ▼
+          <span id="langFlag">🇸🇰</span> <span id="langText">Slovenčina</span> ▼
         </button>
         <div class="lang-menu" id="langMenu">
           <div class="lang-option" onclick="changeLanguage('uk')">🇺🇦 Українська</div>
@@ -438,7 +438,7 @@
       }
     };
 
-    let currentLang = 'uk';
+    let currentLang = 'sk';
 
     function toggleLangMenu(e) {
       e.stopPropagation();
@@ -498,6 +498,7 @@
       resizeCanvas();
       window.addEventListener('resize', resizeCanvas);
       setupEvents();
+      changeLanguage(currentLang);
       saveState();
       redraw();
     }

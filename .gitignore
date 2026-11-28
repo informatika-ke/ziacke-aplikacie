@@ -10,3 +10,6 @@ node_modules/
 
 # do repozitára len zmenšené obrázky (WebP), nie veľké originály
 advent/2026/obrazky/*.png
+
+# žiacke podklady (mená žiakov) – nikdy nie do Gitu
+/WEB_Aplikacie_2rocnik/

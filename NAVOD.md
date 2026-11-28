@@ -61,7 +61,7 @@ aplikácií nič, čo by sa nemalo ukázať (mená, fotky ľudí).
 
 ---
 
-# Adventné kalendáre 2026 (1.A, 1.B, 1.C, 1.D, 1.G, 1.R)
+# Adventné kalendáre 2026 (1.A, 1.B, 1.C, 1.D, 1.G, 1.R, Druhý ročník)
 
 Úvodná stránka má tlačidlo „🎄 Adventné kalendáre“, výber triedy je na `/advent/2026/`, kalendáre na
 `/advent/2026/<trieda>/`. Okienko N sa odomkne N. decembra o polnoci (čas Europe/Bratislava), po 24. 12.
@@ -87,7 +87,7 @@ Pravidlá pre žiakov (v prompte aj na odovzdávacej stránke): jeden HTML súbo
 2. **Environment Variables** (zaškrtnite Production aj Preview):
    - `ADVENT_UCITEL_HESLO` – vaše heslo,
    - `ADVENT_TAJNY_KLUC` – náhodný reťazec aspoň 16 znakov (podpisuje cookie, nikdy ho nezadávate),
-   - `ADVENT_KODY` – kódy tried vo tvare `1a=slovo1,1b=slovo2,1c=slovo3,1d=slovo4,1g=slovo5,1r=slovo6,2a=slovo7,2b=slovo8,2c=slovo9,2d=slovo10,2g=slovo11`
+   - `ADVENT_KODY` – kódy tried vo tvare `1a=slovo1,1b=slovo2,1c=slovo3,1d=slovo4,1g=slovo5,1r=slovo6,druhaci=slovo7`
      (kód povedzte žiakom v škole; veľkosť písmen sa neráta).
 3. **Redeploy**, aby sa premenné dostali do nasadenia.
 

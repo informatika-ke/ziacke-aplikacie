@@ -30,7 +30,7 @@ export function nacitajAdvent(ROOT) {
   }
   const videne = new Set();
   for (const t of cfg.triedy) {
-    if (!t || !/^[a-z0-9]{2}$/.test(t.kluc || '')) out.errors.push(`advent.json: trieda má neplatný „kluc“ (presne 2 znaky a–z, 0–9): ${JSON.stringify(t)}`);
+    if (!t || !/^[a-z0-9]{2,10}$/.test(t.kluc || '')) out.errors.push(`advent.json: trieda má neplatný „kluc“ (2 až 10 znakov a–z, 0–9): ${JSON.stringify(t)}`);
     else if (videne.has(t.kluc)) out.errors.push(`advent.json: kľúč „${t.kluc}“ je dvakrát`);
     else videne.add(t.kluc);
     if (t && (!t.nazov || !cfg.motivy?.[t.motiv])) out.errors.push(`advent.json: trieda „${t.kluc}“ potrebuje „nazov“ a existujúci „motiv“`);

@@ -29,7 +29,7 @@
       ]
     },
     {
-      "source": "/advent/2026/:trieda([a-z0-9]{2})/:path*",
+      "source": "/advent/2026/:trieda([a-z0-9]{2,10})/:path*",
       "headers": [
         {
           "key": "Content-Security-Policy",

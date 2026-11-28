@@ -26,7 +26,7 @@ export async function POST(request) {
 
   const trieda = String(f.get('trieda') ?? '').toLowerCase();
   const kod = String(f.get('kod') ?? '').trim().toLowerCase();
-  if (!/^[a-z0-9]{2}$/.test(trieda) || !kody[trieda]) return strana(`Vyber triedu.${SPAT}`, 400);
+  if (!/^[a-z0-9]{2,10}$/.test(trieda) || !kody[trieda]) return strana(`Vyber triedu.${SPAT}`, 400);
   if (!(await hesloSedi(kod, kody[trieda], kluc))) {
     await new Promise((r) => setTimeout(r, 1000)); // spomalenie hádania kódu
     return strana(`Kód triedy nesedí. Opýtaj sa učiteľky.${SPAT}`, 403);

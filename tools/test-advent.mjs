@@ -61,7 +61,7 @@ await test('heslo a čítanie cookie', async () => {
 console.log('Pomocné funkcie');
 await test('platnyDen', () => {
   assert.deepEqual(platnyDen('1C', '7'), { trieda: '1c', den: 7 });
-  for (const [t, d] of [['1c', '0'], ['1c', '25'], ['1c', '07x'], ['1', '5'], ['../', '5'], ['1c', ''], [null, null], ['1cc', '5']]) assert.equal(platnyDen(t, d), null, `${t}/${d}`);
+  for (const [t, d] of [['1c', '0'], ['1c', '25'], ['1c', '07x'], ['1', '5'], ['../', '5'], ['1c', ''], [null, null], ['abcdefghijk', '5']]) assert.equal(platnyDen(t, d), null, `${t}/${d}`);
 });
 await test('parsujKody', () => {
   assert.deepEqual(parsujKody('1a=Sneh, 1b = Vločka;1c=x\n1d=y'), { '1a': 'sneh', '1b': 'vločka', '1c': 'x', '1d': 'y' });

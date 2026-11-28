@@ -1,18 +1,918 @@
 <!DOCTYPE html>
-<html lang="sk">
+<html lang="uk">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="galeria-placeholder" content="1">
-  <title>Pripravuje sa</title>
-  <link rel="stylesheet" href="../../../assets/galeria.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>2D Графічний Редактор Креслень</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f4f6f8;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* TOOLBAR CONTAINER */
+    .toolbar-wrapper {
+      background: #ffffff;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      position: relative;
+      z-index: 100;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    }
+
+    .scroll-btn {
+      background: #ffffff;
+      border: none;
+      color: #555;
+      font-size: 16px;
+      padding: 0 10px;
+      height: 48px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    .scroll-btn:hover { background: #f0f0f0; color: #000; }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      overflow-x: auto;
+      white-space: nowrap;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-x;
+      flex-grow: 1;
+    }
+
+    .toolbar::-webkit-scrollbar {
+      height: 4px;
+    }
+    .toolbar::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 4px;
+    }
+
+    .tool-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: #f8f9fa;
+      padding: 3px 6px;
+      border-radius: 6px;
+      border: 1px solid #e9ecef;
+      flex-shrink: 0;
+    }
+
+    /* LANGUAGE DROPDOWN */
+    .lang-dropdown-wrapper {
+      position: relative;
+      flex-shrink: 0;
+    }
+    .lang-btn {
+      background: #fff;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #333;
+      height: 34px;
+    }
+    .lang-btn:hover { background: #e9ecef; }
+    .lang-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      margin-top: 4px;
+      background: #ffffff;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 200;
+      min-width: 150px;
+      overflow: hidden;
+    }
+    .lang-menu.show { display: block; }
+    .lang-option {
+      padding: 8px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.15s;
+    }
+    .lang-option:hover { background: #e7f1ff; color: #0d6efd; }
+
+    /* BUTTONS */
+    .btn {
+      background: #ffffff;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: #495057;
+      height: 34px;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+    }
+    .btn:hover {
+      background: #e9ecef;
+      color: #212529;
+    }
+    .btn.active {
+      background: #0d6efd;
+      color: #ffffff;
+      border-color: #0d6efd;
+    }
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .color-picker-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      padding: 0 4px;
+    }
+    input[type="color"] {
+      -webkit-appearance: none;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      width: 26px;
+      height: 26px;
+      cursor: pointer;
+      padding: 0;
+      background: none;
+    }
+    input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+    input[type="color"]::-webkit-color-swatch { border: none; border-radius: 3px; }
+
+    select {
+      background: #ffffff;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 13px;
+      height: 34px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* WORKSPACE */
+    .workspace-wrapper {
+      flex-grow: 1;
+      position: relative;
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      grid-template-rows: 24px 1fr;
+      background: #eef1f5;
+      overflow: hidden;
+    }
+
+    .ruler-corner {
+      background: #e9ecef;
+      border-right: 1px solid #ccc;
+      border-bottom: 1px solid #ccc;
+      z-index: 10;
+    }
+    canvas#rulerH {
+      width: 100%;
+      height: 24px;
+      background: #f8f9fa;
+      border-bottom: 1px solid #ccc;
+    }
+    canvas#rulerV {
+      width: 24px;
+      height: 100%;
+      background: #f8f9fa;
+      border-right: 1px solid #ccc;
+    }
+
+    .canvas-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #ffffff;
+      touch-action: none;
+    }
+    canvas#mainCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      cursor: crosshair;
+    }
+
+    /* STATUSBAR */
+    .statusbar {
+      background: #ffffff;
+      border-top: 1px solid #e0e0e0;
+      padding: 4px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #6c757d;
+      flex-wrap: wrap;
+      gap: 8px;
+      z-index: 100;
+    }
+    .status-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .status-item input[type="number"] {
+      width: 54px;
+      padding: 2px 4px;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      max-width: 320px;
+      width: 90%;
+      text-align: center;
+    }
+    .modal p { margin-bottom: 16px; font-size: 14px; color: #333; }
+    .modal-buttons { display: flex; justify-content: center; gap: 10px; }
+
+    .btn-danger { background: #dc3545; color: white; border-color: #dc3545; }
+    .btn-danger:hover { background: #bb2d3b; }
+  </style>
 </head>
 <body>
-  <header>
-    <nav class="crumbs"><a href="../../../">Žiacke aplikácie</a> › <a href="../../">2026-27</a> › <a href="../">2.G</a></nav>
-    <h1>Pripravuje sa</h1>
-    <p>Na aplikácii sa ešte pracuje. Pozrite sa sem neskôr.</p>
-  </header>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar-wrapper">
+    <button class="scroll-btn" onclick="scrollTools(-120)">◀</button>
+    <div class="toolbar" id="toolbar">
+
+      <!-- LANGUAGE SELECTOR -->
+      <div class="lang-dropdown-wrapper">
+        <button class="lang-btn" id="langBtn" onclick="toggleLangMenu(event)">
+          <span id="langFlag">🇺🇦</span> <span id="langText">Українська</span> ▼
+        </button>
+        <div class="lang-menu" id="langMenu">
+          <div class="lang-option" onclick="changeLanguage('uk')">🇺🇦 Українська</div>
+          <div class="lang-option" onclick="changeLanguage('en')">🇬🇧 English</div>
+          <div class="lang-option" onclick="changeLanguage('sk')">🇸🇰 Slovenčina</div>
+          <div class="lang-option" onclick="changeLanguage('ru')">🌐 Русский</div>
+        </div>
+      </div>
+
+      <!-- DRAWING TOOLS -->
+      <div class="tool-group">
+        <button class="btn active" data-tool="pencil" onclick="setTool('pencil')" id="btnPencil">✏️ <span data-i18n="pencil">Олівець</span></button>
+        <button class="btn" data-tool="line" onclick="setTool('line')" id="btnLine">📏 <span data-i18n="line">Лінія</span></button>
+        <button class="btn" data-tool="rect" onclick="setTool('rect')" id="btnRect">▭ <span data-i18n="rect">Прямокутник</span></button>
+        <button class="btn" data-tool="circle" onclick="setTool('circle')" id="btnCircle">○ <span data-i18n="circle">Коло</span></button>
+        <button class="btn" data-tool="triangle" onclick="setTool('triangle')" id="btnTriangle">△ <span data-i18n="triangle">Трикутник</span></button>
+        <button class="btn" data-tool="measure" onclick="setTool('measure')" id="btnMeasure">📐 <span data-i18n="measure">Вимірювання</span></button>
+        <button class="btn" data-tool="eraser" onclick="setTool('eraser')" id="btnEraser">🧹 <span data-i18n="eraser">Гумка</span></button>
+      </div>
+
+      <!-- COLOR & STROKE -->
+      <div class="tool-group">
+        <div class="color-picker-wrapper">
+          <span data-i18n="color">Колір</span>:
+          <input type="color" id="colorPicker" value="#000000">
+        </div>
+        <div class="color-picker-wrapper">
+          <span data-i18n="stroke">Товщина</span>:
+          <select id="strokeWidth">
+            <option value="1">1 px</option>
+            <option value="2">2 px</option>
+            <option value="3" selected>3 px</option>
+            <option value="5">5 px</option>
+            <option value="8">8 px</option>
+            <option value="10">10 px</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- UNDO / REDO / CLEAR / SAVE -->
+      <div class="tool-group">
+        <button class="btn" id="btnUndo" onclick="undo()" disabled>↩ <span data-i18n="undo">Undo</span></button>
+        <button class="btn" id="btnRedo" onclick="redo()" disabled>↪ <span data-i18n="redo">Redo</span></button>
+        <button class="btn" onclick="confirmClear()">🗑 <span data-i18n="clear">Очистити</span></button>
+        <button class="btn" onclick="saveImage()">💾 <span data-i18n="save">Зберегти PNG</span></button>
+      </div>
+
+    </div>
+    <button class="scroll-btn" onclick="scrollTools(120)">▶</button>
+  </div>
+
+  <!-- WORKSPACE -->
+  <div class="workspace-wrapper">
+    <div class="ruler-corner"></div>
+    <canvas id="rulerH"></canvas>
+    <canvas id="rulerV"></canvas>
+    <div class="canvas-container" id="canvasContainer">
+      <canvas id="mainCanvas"></canvas>
+    </div>
+  </div>
+
+  <!-- STATUSBAR -->
+  <div class="statusbar">
+    <div class="status-group">
+      <div class="status-item">
+        <span data-i18n="units">Одиниці</span>:
+        <select id="unitSelect" onchange="updateUnit()">
+          <option value="mm">mm</option>
+          <option value="cm" selected>cm</option>
+          <option value="m">m</option>
+        </select>
+      </div>
+      <div class="status-item">
+        <span data-i18n="scale">Масштаб</span>: 1 cm = 
+        <input type="number" id="scaleInput" value="50" min="10" max="500" onchange="updateScale()"> px
+      </div>
+    </div>
+    <div class="status-group">
+      <button class="btn active" id="btnGrid" onclick="toggleGrid()">☷ <span data-i18n="grid">Сітка</span></button>
+      <button class="btn" id="btnSnap" onclick="toggleSnap()">🧲 <span data-i18n="snap">Snap</span></button>
+      <div class="status-item" style="min-width: 140px; font-weight: bold;">
+        <span id="coordsDisplay">X: 0 cm  Y: 0 cm</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="clearModal">
+    <div class="modal">
+      <p data-i18n="confirmClearMsg">Ви дійсно хочете очистити все полотно?</p>
+      <div class="modal-buttons">
+        <button class="btn btn-danger" onclick="executeClear()" data-i18n="yes">Так</button>
+        <button class="btn" onclick="closeClearModal()" data-i18n="cancel">Скасувати</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const i18n = {
+      uk: {
+        pencil: "Олівець", line: "Лінія", rect: "Прямокутник", circle: "Коло",
+        triangle: "Трикутник", measure: "Вимірювання", eraser: "Гумка", color: "Колір",
+        stroke: "Товщина", undo: "Undo", redo: "Redo", clear: "Очистити",
+        save: "Зберегти PNG", units: "Одиниці", scale: "Масштаб", grid: "Сітка",
+        snap: "Snap", confirmClearMsg: "Ви дійсно хочете очистити все полотно?",
+        yes: "Так", cancel: "Скасувати", width: "Ширина", height: "Висота", rad: "Радіус"
+      },
+      en: {
+        pencil: "Pencil", line: "Line", rect: "Rectangle", circle: "Circle",
+        triangle: "Triangle", measure: "Measure", eraser: "Eraser", color: "Color",
+        stroke: "Width", undo: "Undo", redo: "Redo", clear: "Clear",
+        save: "Save PNG", units: "Units", scale: "Scale", grid: "Grid",
+        snap: "Snap", confirmClearMsg: "Are you sure you want to clear the canvas?",
+        yes: "Yes", cancel: "Cancel", width: "Width", height: "Height", rad: "Radius"
+      },
+      sk: {
+        pencil: "Ceruzka", line: "Čiara", rect: "Obdĺžnik", circle: "Kruh",
+        triangle: "Trojuholník", measure: "Meranie", eraser: "Guma", color: "Farba",
+        stroke: "Hrúbka", undo: "Späť", redo: "Znova", clear: "Vyčistiť",
+        save: "Uložiť PNG", units: "Jednotky", scale: "Mierka", grid: "Mriežka",
+        snap: "Prichytenie", confirmClearMsg: "Naozaj chcete vyčistiť celú plochu?",
+        yes: "Áno", cancel: "Zrušiť", width: "Šírka", height: "Výška", rad: "Polomer"
+      },
+      ru: {
+        pencil: "Карандаш", line: "Линия", rect: "Прямоугольник", circle: "Окружность",
+        triangle: "Треугольник", measure: "Измерение", eraser: "Ластик", color: "Цвет",
+        stroke: "Толщина", undo: "Отмена", redo: "Повтор", clear: "Очистить",
+        save: "Сохранить PNG", units: "Единицы", scale: "Масштаб", grid: "Сетка",
+        snap: "Привязка", confirmClearMsg: "Вы действительно хотите очистить весь холст?",
+        yes: "Да", cancel: "Отмена", width: "Ширина", height: "Высота", rad: "Радиус"
+      }
+    };
+
+    let currentLang = 'uk';
+
+    function toggleLangMenu(e) {
+      e.stopPropagation();
+      document.getElementById('langMenu').classList.toggle('show');
+    }
+
+    document.addEventListener('click', () => {
+      document.getElementById('langMenu').classList.remove('show');
+    });
+
+    function changeLanguage(lang) {
+      currentLang = lang;
+      const flags = { uk: '🇺🇦', en: '🇬🇧', sk: '🇸🇰', ru: '🌐' };
+      const labels = { uk: 'Українська', en: 'English', sk: 'Slovenčina', ru: 'Русский' };
+      
+      document.getElementById('langFlag').innerText = flags[lang];
+      document.getElementById('langText').innerText = labels[lang];
+      
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (i18n[lang][key]) {
+          el.innerText = i18n[lang][key];
+        }
+      });
+      redraw();
+    }
+
+    function scrollTools(amount) {
+      document.getElementById('toolbar').scrollBy({ left: amount, behavior: 'smooth' });
+    }
+
+    const canvas = document.getElementById('mainCanvas');
+    const ctx = canvas.getContext('2d');
+    const container = document.getElementById('canvasContainer');
+    
+    const rulerH = document.getElementById('rulerH');
+    const rulerV = document.getElementById('rulerV');
+    const ctxH = rulerH.getContext('2d');
+    const ctxV = rulerV.getContext('2d');
+
+    let currentTool = 'pencil';
+    let unit = 'cm';
+    let pxPerCm = 50;
+    let showGrid = true;
+    let snapEnabled = false;
+
+    let shapes = [];
+    let history = [];
+    let historyStep = -1;
+
+    let isDrawing = false;
+    let startPoint = { x: 0, y: 0 };
+    let currentPoint = { x: 0, y: 0 };
+    let currentPath = [];
+
+    function init() {
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+      setupEvents();
+      saveState();
+      redraw();
+    }
+
+    function resizeCanvas() {
+      const rect = container.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      rulerH.width = rect.width;
+      rulerH.height = 24;
+      rulerV.width = 24;
+      rulerV.height = rect.height;
+      redraw();
+    }
+
+    function setTool(tool) {
+      currentTool = tool;
+      document.querySelectorAll('.toolbar .btn[data-tool]').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-tool') === tool);
+      });
+    }
+
+    function toggleGrid() {
+      showGrid = !showGrid;
+      document.getElementById('btnGrid').classList.toggle('active', showGrid);
+      redraw();
+    }
+
+    function toggleSnap() {
+      snapEnabled = !snapEnabled;
+      document.getElementById('btnSnap').classList.toggle('active', snapEnabled);
+    }
+
+    function updateUnit() {
+      unit = document.getElementById('unitSelect').value;
+      redraw();
+    }
+
+    function updateScale() {
+      const val = parseFloat(document.getElementById('scaleInput').value);
+      if (val && val >= 5) {
+        pxPerCm = val;
+        redraw();
+      }
+    }
+
+    function saveState() {
+      historyStep++;
+      if (historyStep < history.length) {
+        history = history.slice(0, historyStep);
+      }
+      history.push(JSON.stringify(shapes));
+      updateUndoButtons();
+    }
+
+    function undo() {
+      if (historyStep > 0) {
+        historyStep--;
+        shapes = JSON.parse(history[historyStep]);
+        redraw();
+        updateUndoButtons();
+      }
+    }
+
+    function redo() {
+      if (historyStep < history.length - 1) {
+        historyStep++;
+        shapes = JSON.parse(history[historyStep]);
+        redraw();
+        updateUndoButtons();
+      }
+    }
+
+    function updateUndoButtons() {
+      document.getElementById('btnUndo').disabled = (historyStep <= 0);
+      document.getElementById('btnRedo').disabled = (historyStep >= history.length - 1);
+    }
+
+    function confirmClear() {
+      document.getElementById('clearModal').classList.add('show');
+    }
+    function closeClearModal() {
+      document.getElementById('clearModal').classList.remove('show');
+    }
+    function executeClear() {
+      closeClearModal();
+      shapes = [];
+      saveState();
+      redraw();
+    }
+
+    function saveImage() {
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = canvas.width;
+      tempCanvas.height = canvas.height;
+      const tCtx = tempCanvas.getContext('2d');
+      
+      tCtx.fillStyle = "#ffffff";
+      tCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+      
+      // Draw shapes on temp canvas
+      ctxBaseRender(tCtx);
+
+      const a = document.createElement('a');
+      a.download = `drawing-${Date.now()}.png`;
+      a.href = tempCanvas.toDataURL('image/png');
+      a.click();
+    }
+
+    function pxToUnit(px) {
+      const cm = px / pxPerCm;
+      if (unit === 'mm') return cm * 10;
+      if (unit === 'm') return cm / 100;
+      return cm;
+    }
+
+    function formatVal(val) {
+      if (unit === 'm') {
+        return val.toFixed(3) + ' ' + unit;
+      } else if (unit === 'mm') {
+        return val.toFixed(0) + ' ' + unit;
+      } else {
+        return val.toFixed(1) + ' ' + unit;
+      }
+    }
+
+    function getScreenCoords(e) {
+      const rect = canvas.getBoundingClientRect();
+      let clientX = e.clientX;
+      let clientY = e.clientY;
+      if (e.touches && e.touches.length > 0) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      }
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    }
+
+    function applySnap(start, current) {
+      if (!snapEnabled) return current;
+      const dx = current.x - start.x;
+      const dy = current.y - start.y;
+      const angle = Math.atan2(dy, dx);
+      const dist = Math.hypot(dx, dy);
+
+      const snapAngle = Math.round(angle / (Math.PI / 4)) * (Math.PI / 4);
+      return {
+        x: start.x + dist * Math.cos(snapAngle),
+        y: start.y + dist * Math.sin(snapAngle)
+      };
+    }
+
+    function setupEvents() {
+      const onStart = (e) => {
+        const pt = getScreenCoords(e);
+        isDrawing = true;
+        startPoint = pt;
+        currentPoint = pt;
+        currentPath = [pt];
+      };
+
+      const onMove = (e) => {
+        const pt = getScreenCoords(e);
+        
+        const uX = pxToUnit(pt.x);
+        const uY = pxToUnit(pt.y);
+        document.getElementById('coordsDisplay').innerText = `X: ${formatVal(uX)} Y: ${formatVal(uY)}`;
+
+        if (!isDrawing) return;
+
+        currentPoint = snapEnabled ? applySnap(startPoint, pt) : pt;
+
+        if (currentTool === 'pencil' || currentTool === 'eraser') {
+          currentPath.push(currentPoint);
+        }
+
+        redraw();
+        drawActiveShape();
+      };
+
+      const onEnd = () => {
+        if (!isDrawing) return;
+        isDrawing = false;
+
+        commitShape();
+        saveState();
+        redraw();
+      };
+
+      canvas.addEventListener('mousedown', onStart);
+      canvas.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', onEnd);
+
+      canvas.addEventListener('touchstart', (e) => { e.preventDefault(); onStart(e); }, {passive: false});
+      canvas.addEventListener('touchmove', (e) => { e.preventDefault(); onMove(e); }, {passive: false});
+      canvas.addEventListener('touchend', onEnd);
+    }
+
+    function redraw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (showGrid) drawGrid();
+      ctxBaseRender(ctx);
+      drawRulers();
+    }
+
+    function ctxBaseRender(targetCtx) {
+      shapes.forEach(sh => {
+        targetCtx.save();
+        targetCtx.strokeStyle = sh.tool === 'eraser' ? '#ffffff' : sh.color;
+        targetCtx.fillStyle = sh.color;
+        targetCtx.lineWidth = sh.width;
+        targetCtx.lineCap = 'round';
+        targetCtx.lineJoin = 'round';
+
+        if (sh.tool === 'pencil' || sh.tool === 'eraser') {
+          targetCtx.beginPath();
+          sh.path.forEach((pt, idx) => {
+            if (idx === 0) targetCtx.moveTo(pt.x, pt.y);
+            else targetCtx.lineTo(pt.x, pt.y);
+          });
+          targetCtx.stroke();
+        } 
+        else if (sh.tool === 'line') {
+          targetCtx.beginPath();
+          targetCtx.moveTo(sh.p1.x, sh.p1.y);
+          targetCtx.lineTo(sh.p2.x, sh.p2.y);
+          targetCtx.stroke();
+
+          const len = Math.hypot(sh.p2.x - sh.p1.x, sh.p2.y - sh.p1.y);
+          const midX = (sh.p1.x + sh.p2.x) / 2;
+          const midY = (sh.p1.y + sh.p2.y) / 2;
+          drawTextLabelOnContext(targetCtx, formatVal(pxToUnit(len)), midX, midY);
+        } 
+        else if (sh.tool === 'rect') {
+          const w = sh.p2.x - sh.p1.x;
+          const h = sh.p2.y - sh.p1.y;
+          targetCtx.strokeRect(sh.p1.x, sh.p1.y, w, h);
+
+          const lbl = `${i18n[currentLang].width}: ${formatVal(pxToUnit(Math.abs(w)))} x ${i18n[currentLang].height}: ${formatVal(pxToUnit(Math.abs(h)))}`;
+          drawTextLabelOnContext(targetCtx, lbl, sh.p1.x + w / 2, sh.p1.y + h / 2);
+        } 
+        else if (sh.tool === 'circle') {
+          const r = Math.hypot(sh.p2.x - sh.p1.x, sh.p2.y - sh.p1.y);
+          targetCtx.beginPath();
+          targetCtx.arc(sh.p1.x, sh.p1.y, r, 0, Math.PI * 2);
+          targetCtx.stroke();
+
+          drawTextLabelOnContext(targetCtx, `${i18n[currentLang].rad}: ${formatVal(pxToUnit(r))}`, sh.p1.x, sh.p1.y);
+        } 
+        else if (sh.tool === 'triangle') {
+          targetCtx.beginPath();
+          targetCtx.moveTo(sh.p1.x, sh.p2.y);
+          targetCtx.lineTo(sh.p2.x, sh.p2.y);
+          targetCtx.lineTo(sh.p1.x + (sh.p2.x - sh.p1.x) / 2, sh.p1.y);
+          targetCtx.closePath();
+          targetCtx.stroke();
+
+          const baseLen = Math.abs(sh.p2.x - sh.p1.x);
+          drawTextLabelOnContext(targetCtx, formatVal(pxToUnit(baseLen)), sh.p1.x + (sh.p2.x - sh.p1.x) / 2, sh.p2.y + 15);
+        }
+        targetCtx.restore();
+      });
+    }
+
+    function drawGrid() {
+      ctx.save();
+      ctx.strokeStyle = "#e9ecef";
+      ctx.lineWidth = 1;
+
+      const step = pxPerCm;
+      ctx.beginPath();
+      for (let x = 0; x < canvas.width; x += step) {
+        ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height);
+      }
+      for (let y = 0; y < canvas.height; y += step) {
+        ctx.moveTo(0, y); ctx.lineTo(canvas.width, y);
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawRulers() {
+      ctxH.clearRect(0, 0, rulerH.width, rulerH.height);
+      ctxV.clearRect(0, 0, rulerV.width, rulerV.height);
+
+      ctxH.fillStyle = "#495057"; ctxH.strokeStyle = "#adb5bd"; ctxH.font = "9px sans-serif";
+      ctxV.fillStyle = "#495057"; ctxV.strokeStyle = "#adb5bd"; ctxV.font = "9px sans-serif";
+
+      const step = pxPerCm;
+
+      ctxH.beginPath();
+      for (let x = 0; x < rulerH.width; x += step) {
+        ctxH.moveTo(x, 14); ctxH.lineTo(x, 24);
+        const val = pxToUnit(x);
+        if (x > 5) ctxH.fillText(val.toFixed(0), x + 2, 12);
+      }
+      ctxH.stroke();
+
+      ctxV.beginPath();
+      for (let y = 0; y < rulerV.height; y += step) {
+        ctxV.moveTo(14, y); ctxV.lineTo(24, y);
+        const val = pxToUnit(y);
+        if (y > 5) ctxV.fillText(val.toFixed(0), 2, y - 2);
+      }
+      ctxV.stroke();
+    }
+
+    function getStyle() {
+      return {
+        color: document.getElementById('colorPicker').value,
+        width: parseInt(document.getElementById('strokeWidth').value)
+      };
+    }
+
+    function drawActiveShape() {
+      const style = getStyle();
+      ctx.save();
+      ctx.strokeStyle = currentTool === 'eraser' ? '#ffffff' : style.color;
+      ctx.fillStyle = style.color;
+      ctx.lineWidth = style.width;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      const p1 = startPoint;
+      const p2 = currentPoint;
+
+      if (currentTool === 'pencil' || currentTool === 'eraser') {
+        ctx.beginPath();
+        for (let i = 0; i < currentPath.length; i++) {
+          if (i === 0) ctx.moveTo(currentPath[i].x, currentPath[i].y);
+          else ctx.lineTo(currentPath[i].x, currentPath[i].y);
+        }
+        ctx.stroke();
+      } 
+      else if (currentTool === 'line' || currentTool === 'measure') {
+        if (currentTool === 'measure') {
+          ctx.setLineDash([5, 5]);
+          ctx.strokeStyle = "#0d6efd";
+        }
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+
+        const len = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+        const midX = (p1.x + p2.x) / 2;
+        const midY = (p1.y + p2.y) / 2;
+        drawTextLabelOnContext(ctx, formatVal(pxToUnit(len)), midX, midY);
+      } 
+      else if (currentTool === 'rect') {
+        const w = p2.x - p1.x;
+        const h = p2.y - p1.y;
+        ctx.strokeRect(p1.x, p1.y, w, h);
+
+        const lbl = `${i18n[currentLang].width}: ${formatVal(pxToUnit(Math.abs(w)))} x ${i18n[currentLang].height}: ${formatVal(pxToUnit(Math.abs(h)))}`;
+        drawTextLabelOnContext(ctx, lbl, p1.x + w / 2, p1.y + h / 2);
+      } 
+      else if (currentTool === 'circle') {
+        const r = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+        ctx.beginPath();
+        ctx.arc(p1.x, p1.y, r, 0, Math.PI * 2);
+        ctx.stroke();
+
+        drawTextLabelOnContext(ctx, `${i18n[currentLang].rad}: ${formatVal(pxToUnit(r))}`, p1.x, p1.y);
+      } 
+      else if (currentTool === 'triangle') {
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p2.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.lineTo(p1.x + (p2.x - p1.x) / 2, p1.y);
+        ctx.closePath();
+        ctx.stroke();
+
+        const baseLen = Math.abs(p2.x - p1.x);
+        drawTextLabelOnContext(ctx, formatVal(pxToUnit(baseLen)), p1.x + (p2.x - p1.x) / 2, p2.y + 15);
+      }
+
+      ctx.restore();
+    }
+
+    function commitShape() {
+      if (currentTool === 'measure') return; // Temporary measurement tool is not saved permanently
+
+      const style = getStyle();
+      shapes.push({
+        tool: currentTool,
+        p1: { ...startPoint },
+        p2: { ...currentPoint },
+        path: [...currentPath],
+        color: style.color,
+        width: style.width
+      });
+    }
+
+    function drawTextLabelOnContext(targetCtx, text, x, y) {
+      targetCtx.save();
+      targetCtx.font = "bold 12px sans-serif";
+      const tw = targetCtx.measureText(text).width;
+      
+      targetCtx.fillStyle = "rgba(255, 255, 255, 0.85)";
+      targetCtx.fillRect(x - tw / 2 - 4, y - 10, tw + 8, 18);
+      targetCtx.strokeStyle = "#ced4da";
+      targetCtx.lineWidth = 1;
+      targetCtx.strokeRect(x - tw / 2 - 4, y - 10, tw + 8, 18);
+
+      targetCtx.fillStyle = "#212529";
+      targetCtx.textAlign = "center";
+      targetCtx.textBaseline = "middle";
+      targetCtx.fillText(text, x, y);
+      targetCtx.restore();
+    }
+
+    window.onload = init;
+  </script>
 </body>
 </html>

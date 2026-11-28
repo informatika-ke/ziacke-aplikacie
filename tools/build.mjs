@@ -170,7 +170,7 @@ if (errors.length) {
 }
 
 // ---------- generovanie stránok ----------
-function page({ depth, title, crumbs, heading, lead, body, pozadie = '' }) {
+function page({ depth, title, crumbs, heading, lead, body, pozadie = '', odbor = '' }) {
   const up = '../'.repeat(depth);
   const nav = crumbs.length
     ? `<nav class="crumbs">${crumbs.map((c) => `<a href="${c.href}">${esc(c.text)}</a>`).join(' › ')}</nav>`
@@ -184,7 +184,7 @@ function page({ depth, title, crumbs, heading, lead, body, pozadie = '' }) {
   <title>${esc(title)}</title>
   <link rel="stylesheet" href="${up}assets/galeria.css">
 </head>
-<body${pozadie ? ` class="s-pozadie" style="--pozadie:url('${pozadie}')"` : ''}>
+<body${pozadie ? ` class="s-pozadie${odbor && /^[a-z0-9-]+$/.test(odbor) ? " odbor-" + odbor : ""}" style="--pozadie:url('${pozadie}')"` : ''}>
   <header>
     ${nav}
     <h1>${esc(heading)}</h1>
@@ -291,6 +291,7 @@ for (const y of years) {
         heading: `Trieda ${label}`,
         lead: `Školský rok ${y} · ${countText(list)}`,
         pozadie: pozadieTriedy(k, '../../assets/', y),
+        odbor: pozadiaTried[k] || '',
         body: `    <ul class="grid">\n${list.map(appCard).join('\n')}\n    </ul>`,
       })
     );

@@ -1,18 +1,208 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="galeria-placeholder" content="1">
-  <title>Pripravuje sa</title>
-  <link rel="stylesheet" href="../../../assets/galeria.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AutoKvíz – Ako dobre poznáš autá?</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#0a0a0a;--panel:#161617;--panel2:#202022;--line:#2e2e31;--red:#e10600;--red2:#ff3b30;--text:#f2f2f2;--mute:#9a9aa0;--ok:#22c55e;--bad:#ff2d2d;
+--d:'Chakra Petch','Arial Narrow',Impact,sans-serif;--b:'Barlow','Segoe UI',Arial,sans-serif;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;min-height:100vh;background:radial-gradient(900px 500px at 80% -10%,#3a0604 0,transparent 60%),var(--bg);color:var(--text);font-family:var(--b);font-size:17px;line-height:1.5;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;background:repeating-linear-gradient(115deg,transparent 0 46px,rgba(255,255,255,.015) 46px 48px);pointer-events:none}
+main{position:relative;max-width:880px;margin:0 auto;padding:28px 20px 48px}
+.screen{display:none}.screen.on{display:block;animation:in .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes in{from{opacity:0;transform:translateX(26px)}to{opacity:1;transform:none}}
+h1,h2,h3{font-family:var(--d);margin:0;line-height:1.05}
+.brand{font-family:var(--d);font-weight:700;font-size:clamp(3rem,11vw,6rem);letter-spacing:-.01em;font-style:italic;transform:skewX(-6deg);margin-top:8px}
+.brand span{color:var(--red)}
+.sub{font-family:var(--d);font-size:clamp(1.2rem,4vw,1.7rem);color:var(--mute);margin:6px 0 14px}
+.lead{max-width:56ch;color:#cfcfd3}
+.car{width:100%;max-width:640px;margin:18px 0 6px;filter:drop-shadow(0 12px 30px rgba(225,6,0,.35))}
+.car .go{animation:drive 3s ease-in-out infinite alternate}
+@keyframes drive{from{transform:translateX(-6px)}to{transform:translateX(8px)}}
+.levels{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:22px 0}
+.lv{background:var(--panel);border:2px solid var(--line);color:var(--text);padding:14px 10px;cursor:pointer;font:inherit;text-align:left;border-radius:6px;transition:.2s}
+.lv strong{display:block;font-family:var(--d);font-size:1.25rem}
+.lv small{color:var(--mute);font-size:.82rem;line-height:1.3;display:block}
+.lv:hover{border-color:var(--red);transform:translateY(-3px)}
+.lv.sel{border-color:var(--red);background:#2a0907;box-shadow:0 0 0 1px var(--red),0 8px 24px rgba(225,6,0,.25)}
+.btn{position:relative;overflow:hidden;font-family:var(--d);font-weight:700;font-size:1.15rem;letter-spacing:.08em;color:#fff;background:var(--red);border:0;padding:15px 34px;cursor:pointer;clip-path:polygon(14px 0,100% 0,calc(100% - 14px) 100%,0 100%);transition:.25s}
+.btn::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);transform:translateX(-120%);transition:.6s}
+.btn:hover{background:var(--red2);transform:translateY(-2px) scale(1.03)}.btn:hover::after{transform:translateX(120%)}
+.btn.ghost{background:var(--panel2);color:var(--text)}.btn.ghost:hover{background:#2e2e32}
+.btn:focus-visible,.lv:focus-visible,.opt:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.top{display:flex;justify-content:space-between;align-items:center;font-family:var(--d);gap:10px;flex-wrap:wrap}
+.pill{background:var(--panel2);border-left:4px solid var(--red);padding:4px 14px;font-weight:700}
+.bar{height:8px;background:var(--panel2);margin:14px 0 24px;border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#8d0300,var(--red2));transition:width .5s}
+.q{font-family:var(--d);font-size:clamp(1.35rem,4.4vw,2rem);margin-bottom:20px;line-height:1.2}
+.opts{display:grid;gap:10px}
+.opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--panel);color:var(--text);border:2px solid var(--line);border-radius:6px;padding:13px 16px;font:inherit;font-weight:500;cursor:pointer;transition:.18s}
+.opt b{flex:none;width:36px;height:36px;display:grid;place-items:center;background:var(--panel2);font-family:var(--d);transition:.18s;transform:skewX(-8deg)}
+.opt:hover:not(:disabled){border-color:var(--red);transform:translateX(6px)}.opt:hover:not(:disabled) b{background:var(--red)}
+.opt:disabled{cursor:default}
+.opt.ok{border-color:var(--ok);background:rgba(34,197,94,.14)}.opt.ok b{background:var(--ok);color:#000}
+.opt.no{border-color:var(--bad);background:rgba(255,45,45,.14);animation:shake .35s}.opt.no b{background:var(--bad)}
+@keyframes shake{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.fb{min-height:64px;margin-top:18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.fb .t{font-family:var(--d);font-size:1.3rem;font-weight:700}.fb .t.ok{color:var(--ok)}.fb .t.no{color:var(--bad)}
+.res{text-align:center}
+.ring{position:relative;width:min(260px,70vw);margin:16px auto}
+.ring svg{width:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:14}
+.ring .bg{stroke:var(--panel2)}.ring .fg{stroke:var(--red);stroke-linecap:round;stroke-dasharray:540;stroke-dashoffset:540;transition:stroke-dashoffset 1.3s cubic-bezier(.2,.8,.2,1)}
+.ring div{position:absolute;inset:0;display:grid;place-content:center;font-family:var(--d)}
+.ring .n{font-size:3.4rem;font-weight:700;line-height:1}.ring .p{color:var(--mute)}
+.rank{font-family:var(--d);font-size:clamp(1.6rem,6vw,2.4rem);color:var(--red2);margin:6px 0}
+.acts{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+@media(max-width:620px){.levels{grid-template-columns:1fr}.btn{width:100%}.fb{flex-direction:column;align-items:stretch}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
 </head>
 <body>
-  <header>
-    <nav class="crumbs"><a href="../../../">Žiacke aplikácie</a> › <a href="../../">2026-27</a> › <a href="../">2.A</a></nav>
-    <h1>Pripravuje sa</h1>
-    <p>Na aplikácii sa ešte pracuje. Pozrite sa sem neskôr.</p>
-  </header>
+<main>
+<section id="menu" class="screen on">
+  <h1 class="brand">Auto<span>Kvíz</span></h1>
+  <p class="sub">Ako dobre poznáš autá?</p>
+  <p class="lead">Desať otázok o značkách, modeloch, motoroch, superšportoch a Formule 1. Vyber si obtiažnosť a ukáž, čo vieš.</p>
+  <svg class="car" viewBox="0 0 640 200" role="img" aria-label="Športové auto">
+    <ellipse cx="320" cy="176" rx="270" ry="9" fill="#e10600" opacity=".25"/>
+    <g class="go">
+      <path d="M40 140 L52 118 Q70 106 130 100 L210 66 Q250 44 330 44 Q400 46 440 72 L500 94 Q580 104 600 128 L604 144 Q604 152 594 152 L50 152 Q38 152 40 140Z" fill="#e10600"/>
+      <path d="M218 74 L260 54 Q300 48 340 52 L338 92 L196 92Z M356 52 Q400 54 428 76 L440 92 L352 92Z" fill="#0a0a0a"/>
+      <path d="M60 128 L590 128" stroke="#8d0300" stroke-width="3"/>
+      <rect x="560" y="116" width="34" height="8" fill="#fff" opacity=".9"/>
+      <circle cx="150" cy="152" r="30" fill="#111"/><circle cx="150" cy="152" r="15" fill="#555"/>
+      <circle cx="486" cy="152" r="30" fill="#111"/><circle cx="486" cy="152" r="15" fill="#555"/>
+    </g>
+  </svg>
+  <div class="levels" role="radiogroup" aria-label="Obtiažnosť">
+    <button class="lv sel" data-l="easy" role="radio" aria-checked="true"><strong>Ľahká</strong><small>Známe značky a základy</small></button>
+    <button class="lv" data-l="mid" role="radio" aria-checked="false"><strong>Stredná</strong><small>Motory, výkon, parametre</small></button>
+    <button class="lv" data-l="hard" role="radio" aria-checked="false"><strong>Ťažká</strong><small>Detaily, história, preteky</small></button>
+  </div>
+  <button class="btn" id="start">SPUSTIŤ KVÍZ</button>
+</section>
+
+<section id="quiz" class="screen">
+  <div class="top"><span class="pill" id="num"></span><span class="pill" id="lvl"></span><span class="pill" id="score"></span></div>
+  <div class="bar" role="progressbar" aria-label="Priebeh kvízu"><i id="prog"></i></div>
+  <div id="card">
+    <h2 class="q" id="qt"></h2>
+    <div class="opts" id="opts"></div>
+    <div class="fb"><span class="t" id="msg" aria-live="polite"></span><button class="btn" id="next" hidden>ĎALŠIA OTÁZKA</button></div>
+  </div>
+</section>
+
+<section id="result" class="screen res">
+  <h2 class="sub" style="margin-top:20px">Tvoj výsledok</h2>
+  <div class="ring"><svg viewBox="0 0 200 200"><circle class="bg" cx="100" cy="100" r="86"/><circle class="fg" id="fg" cx="100" cy="100" r="86"/></svg>
+    <div><span class="n" id="rs"></span><span class="p" id="rp"></span></div></div>
+  <div class="rank" id="rank"></div>
+  <p class="lead" style="margin:0 auto" id="rtext"></p>
+  <div class="acts"><button class="btn" id="again">ZAHRAŤ ZNOVA</button><button class="btn ghost" id="home">SPÄŤ DO MENU</button></div>
+</section>
+</main>
+
+<script>
+// Formát: [otázka, správna odpoveď, zlá1, zlá2, zlá3] – možnosti sa pri hre náhodne premiešajú
+const DB={
+easy:[
+["Ktorá značka má v logu štyri prepojené kruhy?","Audi","BMW","Mercedes-Benz","Toyota"],
+["Z ktorej krajiny pochádza značka Ferrari?","Taliansko","Nemecko","Francúzsko","Británia"],
+["Ktorá značka má v logu rozzúreného býka?","Lamborghini","Ferrari","Maserati","Bugatti"],
+["V ktorom meste sídli automobilka Škoda Auto?","Mladá Boleslav","Brno","Plzeň","Bratislava"],
+["Ktorá značka vyrába model Golf?","Volkswagen","Opel","Ford","Peugeot"],
+["Čo znamená skratka SUV?","Sport Utility Vehicle","Super Urban Vehicle","Safe Universal Vehicle","Standard Utility Van"],
+["Ktorá značka vyrába modely Model S, Model 3 a Model Y?","Tesla","Rivian","Lucid","Polestar"],
+["Ktorá japonská značka vyrába model Corolla?","Toyota","Honda","Mazda","Nissan"],
+["Ktorá značka vyrába legendárny model Mustang?","Ford","Chevrolet","Dodge","Pontiac"],
+["Ktorá značka má v logu trojcípu hviezdu v kruhu?","Mercedes-Benz","Mitsubishi","Citroën","Subaru"],
+["Aké palivo používa dieselový motor?","Nafta","Benzín","LPG","Vodík"],
+["Ktorá značka vyrába model 911?","Porsche","Jaguar","Aston Martin","Lotus"],
+["Ktorý tím Formuly 1 sídli v Maranelle a jazdí v červenom?","Ferrari","McLaren","Williams","Alpine"],
+["Ktorá značka vyrába modely Fabia a Octavia?","Škoda","Seat","Dacia","Kia"],
+["Z ktorej krajiny pochádza značka BMW?","Nemecko","Rakúsko","Švédsko","Taliansko"]],
+mid:[
+["Čo znamená skratka BMW?","Bayerische Motoren Werke","Berliner Motoren Werke","Bavarian Motor Wheels","Baden Motoren Werke"],
+["Aké usporiadanie valcov používa motor Boxer od Subaru?","Protiľahlé (ploché)","Radové","V","W"],
+["Ktorá značka vyrába športový model Supra?","Toyota","Nissan","Mazda","Honda"],
+["Čo sa meria v jednotke Newtonmeter (Nm)?","Krútiaci moment","Výkon","Spotreba","Rýchlosť"],
+["Koľko PS zhruba zodpovedá výkonu 100 kW?","136 PS","100 PS","120 PS","160 PS"],
+["Ktorý výrobca vyrába superšport Huracán?","Lamborghini","Ferrari","McLaren","Pagani"],
+["Ktorá značka vyrába roadster MX-5 Miata?","Mazda","Toyota","Subaru","Suzuki"],
+["Ktorá značka je preslávená Wankelovým rotačným motorom?","Mazda","Honda","Subaru","Mitsubishi"],
+["Ktorá značka vyrába model Skyline GT-R?","Nissan","Toyota","Mitsubishi","Subaru"],
+["Kto založil automobilku Ferrari?","Enzo Ferrari","Ferruccio Lamborghini","Ettore Bugatti","Battista Pininfarina"],
+["Z ktorej krajiny pochádza značka Koenigsegg?","Švédsko","Dánsko","Nórsko","Fínsko"],
+["Koľkokrát sa stal majstrom sveta Formuly 1 Michael Schumacher?","7-krát","5-krát","6-krát","8-krát"],
+["Čo označuje číslo 2.0 pri motore 2.0 TDI?","Objem motora v litroch","Výkon v stovkách kW","Počet ventilov","Rok výroby"],
+["Ktorá značka vyrába luxusný model Quattroporte?","Maserati","Alfa Romeo","Lancia","Fiat"],
+["Ktorá z týchto značiek patrí do koncernu Volkswagen?","Bentley","Jaguar","Volvo","Lotus"]],
+hard:[
+["Aký motor poháňa Bugatti Veyron 16.4?","8,0 l W16 so štyrmi turbodúchadlami","6,0 l V12","8,0 l V16 atmosferický","4,0 l V8 biturbo"],
+["Aké výrobky pôvodne vyrábal Ferruccio Lamborghini?","Traktory","Lode","Motocykle","Lietadlá"],
+["Ktorá značka má najviac celkových víťazstiev v 24 hodinách Le Mans?","Porsche","Audi","Ferrari","Bentley"],
+["Kto vyhral prvý šampionát Formuly 1 v roku 1950?","Giuseppe Farina","Juan Manuel Fangio","Alberto Ascari","Stirling Moss"],
+["Aký motor má Nissan GT-R (R35)?","3,8 l V6 biturbo","2,6 l R6 biturbo","4,0 l V8","3,0 l R6 turbo"],
+["Ktorý rok vznikla firma Laurin & Klement, predchodca Škody?","1895","1905","1918","1923"],
+["Motor ktorej značky poháňal McLaren F1 z roku 1992?","BMW","Honda","Mercedes-Benz","Ford"],
+["Ktorá značka vyrába superšport Zonda?","Pagani","Koenigsegg","Spyker","Noble"],
+["Ktorý okruh sa prezýva „Zelené peklo“?","Nürburgring Nordschleife","Spa-Francorchamps","Suzuka","Monza"],
+["Aký pohon využíva Toyota Mirai?","Vodíkový palivový článok","Čisto batériový","Hybrid s dieselom","Stirlingov motor"],
+["Aký motor mal Ferrari 250 GTO?","3,0 l V12","4,0 l V8","2,0 l V6","5,0 l V12"],
+["Ktorý tím má najviac titulov v Pohári konštruktérov F1?","Ferrari","McLaren","Williams","Mercedes"],
+["V ktorom roku bol patentovaný Benz Patent-Motorwagen?","1886","1769","1896","1908"],
+["Kto navrhol pôvodný Volkswagen Brúk?","Ferdinand Porsche","Enzo Ferrari","Henry Ford","Louis Renault"],
+["Čo znamená RS v označení Porsche 911 GT3 RS?","Rennsport","Reise Sport","Road Sport","Racing Series"]]
+};
+const NAMES={easy:"Ľahká",mid:"Stredná",hard:"Ťažká"};
+const $=id=>document.getElementById(id);
+let level="easy",qs=[],i=0,score=0,locked=false;
+const shuffle=a=>{a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a};
+function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on",s.id===id))}
+document.querySelectorAll(".lv").forEach(b=>b.onclick=()=>{level=b.dataset.l;document.querySelectorAll(".lv").forEach(x=>{const on=x===b;x.classList.toggle("sel",on);x.setAttribute("aria-checked",on)})});
+function begin(){
+  qs=shuffle(DB[level]).slice(0,10).map(r=>({q:r[0],a:r[1],o:shuffle(r.slice(1))}));
+  i=0;score=0;show("quiz");render();
+}
+function render(){
+  locked=false;const q=qs[i];
+  $("num").textContent=`Otázka ${i+1}/10`;$("lvl").textContent=NAMES[level];$("score").textContent=`Skóre: ${score}`;
+  $("prog").style.width=(i/10*100)+"%";
+  $("qt").textContent=q.q;$("msg").textContent="";$("msg").className="t";$("next").hidden=true;
+  const box=$("opts");box.innerHTML="";
+  q.o.forEach((t,k)=>{const b=document.createElement("button");b.className="opt";
+    b.innerHTML=`<b>${"ABCD"[k]}</b><span></span>`;b.lastChild.textContent=t;b.onclick=()=>answer(b,t);box.appendChild(b)});
+  const c=$("card");c.style.animation="none";void c.offsetWidth;c.style.animation="in .4s cubic-bezier(.2,.8,.2,1)";
+}
+function answer(btn,t){
+  if(locked)return;locked=true;const q=qs[i],right=t===q.a;
+  document.querySelectorAll(".opt").forEach(b=>{b.disabled=true;if(b.lastChild.textContent===q.a)b.classList.add("ok")});
+  if(right)score++;else btn.classList.add("no");
+  $("msg").textContent=right?"Správna odpoveď!":"Nesprávna odpoveď!";$("msg").className="t "+(right?"ok":"no");
+  $("score").textContent=`Skóre: ${score}`;$("prog").style.width=((i+1)/10*100)+"%";
+  const n=$("next");n.hidden=false;n.textContent=i===9?"ZOBRAZIŤ VÝSLEDOK":"ĎALŠIA OTÁZKA";n.focus();
+}
+$("next").onclick=()=>{if(!locked)return;if(i<9){i++;render()}else finish()};
+function finish(){
+  show("result");$("rs").textContent=`${score}/10`;$("rp").textContent=`${score*10} % úspešnosť`;
+  const r=score<=3?["Začiatočník","Zatiaľ si na štarte. Skús ďalšie kolo a posuň sa v poradí."]:
+    score<=6?["Automobilový nadšenec","Autá poznáš dobre, ale na špičku ti ešte chýba pár detailov."]:
+    score<=8?["Skutočný znalec áut","Máš skvelé znalosti. Do titulu experta chýba už len kúsok."]:
+    ["Automobilový expert","Dokonalé! Si pravý majster volantu aj vedomostí."];
+  $("rank").textContent=r[0];$("rtext").textContent=r[1];
+  const fg=$("fg");fg.style.strokeDashoffset=540;requestAnimationFrame(()=>requestAnimationFrame(()=>fg.style.strokeDashoffset=540-540*score/10));
+}
+$("start").onclick=begin;$("again").onclick=begin;$("home").onclick=()=>show("menu");
+document.addEventListener("keydown",e=>{
+  if(!$("quiz").classList.contains("on"))return;
+  const k="abcd".indexOf(e.key.toLowerCase());
+  if(k>-1&&!locked){const b=document.querySelectorAll(".opt")[k];b&&b.click()}
+});
+</script>
 </body>
 </html>

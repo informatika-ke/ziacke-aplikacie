@@ -1,18 +1,766 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="galeria-placeholder" content="1">
-  <title>Pripravuje sa</title>
-  <link rel="stylesheet" href="../../../assets/galeria.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memory Rush</title>
+<style>
+:root {
+  --navy: #102747;
+  --navy2: #18385f;
+  --yellow: #ffd34e;
+  --cream: #f4f7fb;
+  --ink: #17304f;
+  --green: #39a96b;
+  --red: #e56b6f;
+  --shadow: 0 12px 30px rgba(5, 20, 40, .22);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; min-height: 100vh; color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top, #244b77 0, var(--navy) 58%);
+}
+button { font: inherit; cursor: pointer; border: 0; }
+button:focus-visible { outline: 3px solid #ffcf40; outline-offset: 3px; }
+.app { width: min(1100px, 100%); margin: auto; padding: 24px 18px 42px; }
+.screen { display: none; }
+.screen.active { display: block; }
+.panel {
+  background: var(--cream); border-radius: 24px; padding: clamp(20px, 4vw, 38px);
+  box-shadow: var(--shadow); margin: 12px auto; max-width: 900px;
+}
+.brand { text-align: center; color: white; margin: 18px 0 24px; }
+.brand h1 { margin: 0; color: var(--yellow); font-size: clamp(2.5rem, 8vw, 4.7rem); letter-spacing: .045em; line-height: 1.05; }
+.brand p { margin: 12px 0 0; font-size: 1.12rem; color: #e4edf8; }
+.brand-mark { font-size: 2rem; margin-bottom: 6px; }
+h2 { margin: 0 0 12px; color: var(--navy); font-size: clamp(1.5rem, 4vw, 2rem); }
+h3 { margin: 0 0 8px; }
+.muted { color: #63748a; line-height: 1.55; }
+.menu-buttons { display: grid; gap: 12px; width: min(390px, 100%); margin: 28px auto 0; }
+.btn {
+  border-radius: 14px; padding: 14px 20px; font-weight: 800; transition: transform .15s, filter .15s;
+}
+.btn:hover { transform: translateY(-2px); filter: brightness(1.03); }
+.btn:active { transform: translateY(0); }
+.primary { background: var(--yellow); color: #2b2b20; box-shadow: 0 5px 0 #d7a92d; }
+.secondary { background: #e3ebf5; color: var(--navy); }
+.danger { background: #ffe2e2; color: #8d3034; }
+.small-btn { padding: 9px 13px; border-radius: 11px; font-weight: 750; }
+.difficulty-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 22px 0; }
+.difficulty {
+  text-align: left; border: 3px solid transparent; border-radius: 18px; padding: 20px 16px;
+  min-height: 145px; transition: transform .15s, border-color .15s;
+}
+.difficulty:hover { transform: translateY(-3px); border-color: var(--navy); }
+.difficulty strong { display: block; font-size: 1.2rem; margin-bottom: 8px; }
+.easy { background: #e2f5e8; color: #205c37; }
+.medium { background: #fff1cf; color: #76520b; }
+.hard { background: #ffe3e3; color: #8a3035; }
+.toolbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+.stats {
+ display: grid; grid-template-columns: repeat(5, 1fr); gap: 9px; margin: 12px 0 18px;
+}
+.stat { background: #e8eef6; border-radius: 13px; padding: 10px 8px; text-align: center; }
+.stat span { display: block; font-size: .78rem; color: #60738c; font-weight: 700; }
+.stat strong { display: block; color: var(--navy); font-size: 1.12rem; margin-top: 3px; }
+.board {
+ display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+ gap: clamp(8px, 1.6vw, 14px); max-width: 790px; margin: 0 auto;
+}
+.card {
+ aspect-ratio: 1 / 1; min-width: 0; border-radius: 16px; position: relative;
+ background: transparent; perspective: 700px; padding: 0;
+}
+.card-inner { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .35s ease; }
+.card.flipped .card-inner, .card.matched .card-inner { transform: rotateY(180deg); }
+.card-face {
+ position: absolute; inset: 0; display: grid; place-items: center; border-radius: 16px;
+ backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: 0 4px 10px rgba(13,35,61,.14);
+}
+.card-back { background: linear-gradient(145deg, #21466f, #102747); color: var(--yellow); border: 2px solid #42658b; font-size: clamp(2rem, 5vw, 3rem); font-weight: 900; }
+.card-front { transform: rotateY(180deg); background: white; border: 3px solid #dce6f1; font-size: clamp(2.1rem, 6vw, 3.7rem); }
+.card.matched .card-front { border-color: var(--green); background: #effbf3; }
+.card:disabled { cursor: default; }
+.card.wrong .card-inner { animation: shake .25s linear 2; }
+@keyframes shake { 0%,100% { translate: 0; } 25% { translate: -4px; } 75% { translate: 4px; } }
+.game-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+.overlay {
+ position: fixed; inset: 0; z-index: 10; display: none; place-items: center; padding: 20px;
+ background: rgba(5,17,34,.72); backdrop-filter: blur(3px);
+}
+.overlay.show { display: grid; }
+.dialog { width: min(420px, 100%); background: white; border-radius: 20px; padding: 26px; text-align: center; box-shadow: var(--shadow); }
+.dialog p { color: #5e7085; line-height: 1.5; }
+.dialog-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+.pause-layer {
+ position: fixed; inset: 0; z-index: 8; display: none; place-items: center;
+ background: rgba(7,23,44,.78); color: white; text-align: center; padding: 20px;
+}
+.pause-layer.show { display: grid; }
+.pause-box { background: #17385e; border: 1px solid #537397; border-radius: 22px; padding: 30px; width: min(380px, 100%); }
+.pause-box h2 { color: white; }
+.result-score { font-size: clamp(2rem, 7vw, 3rem); font-weight: 900; color: var(--navy); margin: 5px 0 18px; }
+.breakdown { background: #eaf0f7; border-radius: 15px; padding: 14px 17px; margin: 18px auto; max-width: 470px; }
+.breakdown div { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; }
+.breakdown .total { border-top: 1px solid #cbd7e5; margin-top: 7px; padding-top: 11px; font-weight: 900; }
+.record-table { width: 100%; border-collapse: collapse; margin-top: 18px; }
+.record-table th, .record-table td { padding: 12px 8px; text-align: center; border-bottom: 1px solid #d8e1ec; }
+.record-table th { color: #53677e; font-size: .88rem; }
+.setting-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 0; border-bottom: 1px solid #dce4ee; }
+.switch { width: 56px; height: 31px; border-radius: 30px; background: #aab6c5; padding: 4px; transition: background .2s; }
+.switch::after { content: ""; display: block; height: 23px; width: 23px; border-radius: 50%; background: white; transition: transform .2s; }
+.switch.on { background: #35a66a; }
+.switch.on::after { transform: translateX(25px); }
+.footer-note { color: #d1deed; text-align: center; font-size: .82rem; margin-top: 22px; }
+#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 7; overflow: hidden; }
+.confetti-piece { position: absolute; top: -20px; width: 9px; height: 14px; animation: fall 2.8s linear forwards; }
+@keyframes fall { to { transform: translateY(110vh) rotate(760deg); opacity: .9; } }
+@media (max-width: 650px) {
+ .difficulty-grid { grid-template-columns: 1fr; }
+ .difficulty { min-height: auto; }
+ .stats { grid-template-columns: repeat(2, 1fr); }
+ .stat:last-child { grid-column: span 2; }
+ .board { grid-template-columns: repeat(auto-fit, minmax(66px, 1fr)); gap: 7px; }
+ .card, .card-face { border-radius: 11px; }
+ .record-table th, .record-table td { padding: 9px 3px; font-size: .82rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+ *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+</style>
 </head>
 <body>
-  <header>
-    <nav class="crumbs"><a href="../../../">Žiacke aplikácie</a> › <a href="../../">2026-27</a> › <a href="../">2.B</a></nav>
-    <h1>Pripravuje sa</h1>
-    <p>Na aplikácii sa ešte pracuje. Pozrite sa sem neskôr.</p>
+<div class="app">
+  <header class="brand">
+    <div class="brand-mark">🧠</div>
+    <h1>MEMORY RUSH</h1>
+    <p>Otestuj svoju pamäť!</p>
   </header>
+
+  <main>
+    <section id="menuScreen" class="screen active">
+      <div class="panel" style="text-align:center">
+        <h2>Vitaj v Memory Rush!</h2>
+        <p class="muted">Nájdi všetky dvojice ovocia, precvič si pamäť a pokús sa prekonať svoj rekord.</p>
+        <div class="menu-buttons">
+          <button class="btn primary" id="goDifficulty">Začať hru</button>
+          <button class="btn secondary" id="goRecords">Najlepšie výsledky</button>
+          <button class="btn secondary" id="goSettings">Nastavenia</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="difficultyScreen" class="screen">
+      <div class="panel">
+        <div class="toolbar"><button class="btn secondary small-btn" data-screen="menuScreen">← Menu</button></div>
+        <h2>Vyber si náročnosť</h2>
+        <p class="muted">Čím viac dvojíc, tým väčšia výzva!</p>
+        <div class="difficulty-grid">
+          <button class="difficulty easy" data-difficulty="easy"><strong>🟢 Ľahká</strong>5 dvojíc · 10 kariet<br><small>Pre začiatočníkov</small></button>
+          <button class="difficulty medium" data-difficulty="medium"><strong>🟡 Stredná</strong>10 dvojíc · 20 kariet<br><small>Pre pokročilejších</small></button>
+          <button class="difficulty hard" data-difficulty="hard"><strong>🔴 Ťažká</strong>15 dvojíc · 30 kariet<br><small>Pre skúsených hráčov</small></button>
+        </div>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen">
+      <div class="panel">
+        <div class="toolbar">
+          <button class="btn secondary small-btn" id="pauseBtn">Ⅱ Pozastaviť</button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn secondary small-btn" id="restartBtn">↻ Reštartovať</button>
+            <button class="btn secondary small-btn" id="menuDuringGameBtn">Menu</button>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stat"><span>ČAS</span><strong id="timeStat">00:00</strong></div>
+          <div class="stat"><span>SKÓRE</span><strong id="scoreStat">0</strong></div>
+          <div class="stat"><span>POKUSY</span><strong id="attemptStat">0</strong></div>
+          <div class="stat"><span>DVOJICE</span><strong id="pairsStat">0/5</strong></div>
+          <div class="stat"><span>NÁROČNOSŤ</span><strong id="levelStat">Ľahká</strong></div>
+        </div>
+        <div id="board" class="board" aria-label="Hracie karty"></div>
+      </div>
+    </section>
+
+    <section id="resultScreen" class="screen">
+      <div class="panel" style="text-align:center">
+        <div style="font-size:3rem">🎉</div>
+        <h2>Výborne, našiel/našla si všetky dvojice!</h2>
+        <p id="recordMessage" class="muted"></p>
+        <p class="muted">Tvoj konečný výsledok</p>
+        <div id="finalScore" class="result-score">0 bodov</div>
+        <p id="resultSummary" class="muted"></p>
+        <div class="breakdown">
+          <div><span>Body za dvojice</span><strong id="pairPoints">0</strong></div>
+          <div><span>Časový bonus</span><strong id="timeBonus">0</strong></div>
+          <div><span>Bonus za nový rekord</span><strong id="recordBonus">0</strong></div>
+          <div class="total"><span>Celkové skóre</span><strong id="totalPoints">0</strong></div>
+        </div>
+        <div class="menu-buttons">
+          <button class="btn primary" id="playAgainBtn">Hrať znova</button>
+          <button class="btn secondary" id="resultMenuBtn">Návrat do menu</button>
+          <button class="btn secondary" id="resultRecordsBtn">Najlepšie výsledky</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="recordsScreen" class="screen">
+      <div class="panel">
+        <div class="toolbar"><button class="btn secondary small-btn" data-screen="menuScreen">← Menu</button></div>
+        <h2>🏆 Najlepšie výsledky</h2>
+        <p class="muted">Rekordy sa ukladajú v tomto prehliadači a zariadení.</p>
+        <div style="overflow-x:auto">
+          <table class="record-table">
+            <thead><tr><th>Náročnosť</th><th>Najlepší čas</th><th>Najlepšie skóre</th><th>Pokusy pri čase</th></tr></thead>
+            <tbody id="recordsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="settingsScreen" class="screen">
+      <div class="panel">
+        <div class="toolbar"><button class="btn secondary small-btn" data-screen="menuScreen">← Menu</button></div>
+        <h2>⚙️ Nastavenia</h2>
+        <div class="setting-row">
+          <div><strong>Zvukové efekty</strong><div class="muted" style="font-size:.9rem">Otočenie, dvojice a víťazný zvuk</div></div>
+          <button id="soundToggle" class="switch on" role="switch" aria-checked="true" aria-label="Zapnúť alebo vypnúť zvuky"></button>
+        </div>
+        <div style="padding-top:22px">
+          <button class="btn danger" id="deleteRecordsBtn">Vymazať všetky rekordy</button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <p class="footer-note">Memory Rush · Hra na precvičenie pamäti</p>
+</div>
+
+<div id="pauseLayer" class="pause-layer">
+  <div class="pause-box">
+    <h2>Hra je pozastavená</h2>
+    <p>Oddýchni si. Tvoj postup zostáva zachovaný.</p>
+    <button class="btn primary" id="resumeBtn">Pokračovať</button>
+  </div>
+</div>
+<div id="dialogOverlay" class="overlay" role="dialog" aria-modal="true">
+  <div class="dialog">
+    <h2 id="dialogTitle">Naozaj?</h2>
+    <p id="dialogText"></p>
+    <div class="dialog-actions">
+      <button class="btn danger" id="dialogYes">Áno</button>
+      <button class="btn secondary" id="dialogNo">Nie</button>
+    </div>
+  </div>
+</div>
+<div id="confetti"></div>
+
+<script>
+// ==========================================
+// 1. ÚDAJE HRY – tu môžeš meniť ovocie a pravidlá
+// ==========================================
+const fruits = [
+  { name: "Jablko", emoji: "🍎" },
+  { name: "Banán", emoji: "🍌" },
+  { name: "Jahoda", emoji: "🍓" },
+  { name: "Pomaranč", emoji: "🍊" },
+  { name: "Hrozno", emoji: "🍇" },
+  { name: "Hruška", emoji: "🍐" },
+  { name: "Melón", emoji: "🍉" },
+  { name: "Ananás", emoji: "🍍" },
+  { name: "Kiwi", emoji: "🥝" },
+  { name: "Čerešne", emoji: "🍒" },
+  { name: "Mango", emoji: "🥭" },
+  { name: "Citrón", emoji: "🍋" },
+  { name: "Čučoriedky", emoji: "🫐" },
+  { name: "Broskyňa", emoji: "🍑" },
+  { name: "Kokos", emoji: "🥥" }
+];
+
+const levels = {
+  easy:   { name: "Ľahká", pairs: 5, bonus: [30, 45, 60, 90, 120] },
+  medium: { name: "Stredná", pairs: 10, bonus: [60, 90, 120, 180, 240] },
+  hard:   { name: "Ťažká", pairs: 15, bonus: [90, 135, 180, 270, 360] }
+};
+const bonusPoints = [500, 400, 300, 200, 100];
+
+// ==========================================
+// 2. STAV HRY
+// ==========================================
+let currentLevel = "easy";
+let cards = [];
+let firstCard = null;
+let secondCard = null;
+let locked = false;
+let attempts = 0;
+let matchedPairs = 0;
+let pairPoints = 0;
+let elapsedBeforePause = 0;
+let startedAt = 0;
+let timerInterval = null;
+let mismatchTimeout = null;
+let mismatchRemaining = 1000;
+let mismatchStartedAt = 0;
+let paused = false;
+let currentGameFinished = false;
+let dialogAction = null;
+let soundEnabled = true;
+
+const $ = (id) => document.getElementById(id);
+
+// ==========================================
+// 3. UKLADANIE DO LOCALSTORAGE
+// ==========================================
+const STORAGE_KEY = "memoryRushData_v1";
+function loadSavedData() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    return {
+      sound: saved.sound !== false,
+      records: saved.records || {}
+    };
+  } catch (error) {
+    return { sound: true, records: {} };
+  }
+}
+let savedData = loadSavedData();
+soundEnabled = savedData.sound;
+
+function saveData() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(savedData));
+  } catch (error) {
+    console.warn("Ukladanie nie je dostupné v tomto prehliadači.", error);
+  }
+}
+function getRecord(level) {
+  return savedData.records[level] || null;
+}
+function formatTime(seconds) {
+  const safe = Math.max(0, Math.floor(seconds));
+  const minutes = Math.floor(safe / 60).toString().padStart(2, "0");
+  const secs = (safe % 60).toString().padStart(2, "0");
+  return `${minutes}:${secs}`;
+}
+
+// ==========================================
+// 4. PREPÍNANIE OBRAZOVIEK
+// ==========================================
+function showScreen(screenId) {
+  document.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
+  $(screenId).classList.add("active");
+  if (screenId === "recordsScreen") renderRecords();
+}
+document.querySelectorAll("[data-screen]").forEach(button => {
+  button.addEventListener("click", () => showScreen(button.dataset.screen));
+});
+$("goDifficulty").addEventListener("click", () => showScreen("difficultyScreen"));
+$("goRecords").addEventListener("click", () => showScreen("recordsScreen"));
+$("goSettings").addEventListener("click", () => showScreen("settingsScreen"));
+
+// ==========================================
+// 5. ZVUKY – vytvárané priamo v JavaScripte
+// ==========================================
+let audioContext = null;
+function playTone(frequency, duration, type = "sine", volume = 0.07, delay = 0) {
+  if (!soundEnabled) return;
+  try {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+    if (!audioContext) audioContext = new AudioContextClass();
+    if (audioContext.state === "suspended") audioContext.resume();
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    const start = audioContext.currentTime + delay;
+    oscillator.type = type;
+    oscillator.frequency.setValueAtTime(frequency, start);
+    gain.gain.setValueAtTime(volume, start);
+    gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+    oscillator.start(start);
+    oscillator.stop(start + duration);
+  } catch (error) {
+    // Ak zvuk prehliadač nepodporuje, hra pokračuje bez neho.
+  }
+}
+function playSound(kind) {
+  if (kind === "flip") playTone(420, .07, "sine", .045);
+  if (kind === "match") {
+    playTone(660, .12, "sine", .07);
+    playTone(880, .16, "sine", .06, .1);
+  }
+  if (kind === "wrong") playTone(190, .18, "triangle", .055);
+  if (kind === "win") {
+    [523, 659, 784, 1046].forEach((note, index) => playTone(note, .24, "sine", .07, index * .14));
+  }
+}
+
+// ==========================================
+// 6. SPUSTENIE A PRÍPRAVA HRY
+// ==========================================
+document.querySelectorAll("[data-difficulty]").forEach(button => {
+  button.addEventListener("click", () => startGame(button.dataset.difficulty));
+});
+
+function shuffle(array) {
+  const result = [...array];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+function startGame(level) {
+  stopTimer();
+  if (mismatchTimeout) clearTimeout(mismatchTimeout);
+  currentLevel = level;
+  const settings = levels[level];
+  const selectedFruits = shuffle(fruits).slice(0, settings.pairs);
+  cards = shuffle(selectedFruits.flatMap((fruit, index) => [
+    { ...fruit, pairId: index, cardId: `${index}-a` },
+    { ...fruit, pairId: index, cardId: `${index}-b` }
+  ]));
+  firstCard = null;
+  secondCard = null;
+  locked = false;
+  attempts = 0;
+  matchedPairs = 0;
+  pairPoints = 0;
+  elapsedBeforePause = 0;
+  startedAt = Date.now();
+  mismatchRemaining = 1000;
+  paused = false;
+  currentGameFinished = false;
+  $("pauseLayer").classList.remove("show");
+  $("pauseBtn").disabled = false;
+  $("pauseBtn").textContent = "Ⅱ Pozastaviť";
+  renderBoard();
+  updateStats();
+  showScreen("gameScreen");
+  startTimer();
+}
+
+function renderBoard() {
+  const board = $("board");
+  board.innerHTML = "";
+  cards.forEach((card, index) => {
+    const button = document.createElement("button");
+    button.className = "card";
+    button.type = "button";
+    button.setAttribute("aria-label", "Neotočená karta");
+    button.dataset.index = index;
+    button.innerHTML = `
+      <span class="card-inner">
+        <span class="card-face card-back">?</span>
+        <span class="card-face card-front" aria-hidden="true">${card.emoji}</span>
+      </span>`;
+    button.addEventListener("click", () => flipCard(index, button));
+    board.appendChild(button);
+  });
+}
+
+function getCardElement(index) {
+  return $("board").querySelector(`[data-index="${index}"]`);
+}
+
+// ==========================================
+// 7. OTVÁRANIE A VYHODNOCOVANIE KARIET
+// ==========================================
+function flipCard(index, element) {
+  if (paused || currentGameFinished || locked) return;
+  const card = cards[index];
+  if (element.classList.contains("flipped") || element.classList.contains("matched")) return;
+
+  element.classList.add("flipped");
+  element.setAttribute("aria-label", card.name);
+  playSound("flip");
+
+  if (firstCard === null) {
+    firstCard = index;
+    return;
+  }
+
+  secondCard = index;
+  attempts++;
+  locked = true;
+  updateStats();
+
+  if (cards[firstCard].pairId === cards[secondCard].pairId) {
+    const firstElement = getCardElement(firstCard);
+    const secondElement = getCardElement(secondCard);
+    firstElement.classList.add("matched");
+    secondElement.classList.add("matched");
+    firstElement.disabled = true;
+    secondElement.disabled = true;
+    firstElement.setAttribute("aria-label", `Nájdená dvojica: ${cards[firstCard].name}`);
+    secondElement.setAttribute("aria-label", `Nájdená dvojica: ${cards[secondCard].name}`);
+    matchedPairs++;
+    pairPoints += 100;
+    playSound("match");
+    firstCard = null;
+    secondCard = null;
+    locked = false;
+    updateStats();
+
+    if (matchedPairs === levels[currentLevel].pairs) finishGame();
+  } else {
+    playSound("wrong");
+    firstElementShake(firstCard);
+    firstElementShake(secondCard);
+    mismatchRemaining = 1000;
+    scheduleMismatchFlip();
+  }
+}
+
+function firstElementShake(index) {
+  const element = getCardElement(index);
+  if (element) element.classList.add("wrong");
+}
+
+function scheduleMismatchFlip() {
+  mismatchStartedAt = Date.now();
+  mismatchTimeout = setTimeout(() => {
+    if (firstCard !== null) {
+      [firstCard, secondCard].forEach(index => {
+        const element = getCardElement(index);
+        if (element) {
+          element.classList.remove("flipped", "wrong");
+          element.setAttribute("aria-label", "Neotočená karta");
+        }
+      });
+    }
+    firstCard = null;
+    secondCard = null;
+    locked = false;
+    mismatchTimeout = null;
+    mismatchRemaining = 1000;
+  }, mismatchRemaining);
+}
+
+// ==========================================
+// 8. ČASOVAČ A PAUZA
+// ==========================================
+function getElapsedSeconds() {
+  if (paused || currentGameFinished) return elapsedBeforePause;
+  return elapsedBeforePause + (Date.now() - startedAt) / 1000;
+}
+function startTimer() {
+  startedAt = Date.now();
+  stopTimer();
+  timerInterval = setInterval(() => {
+    $("timeStat").textContent = formatTime(getElapsedSeconds());
+  }, 200);
+}
+function stopTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
+}
+
+function pauseGame() {
+  if (paused || currentGameFinished) return;
+  elapsedBeforePause = getElapsedSeconds();
+  paused = true;
+  stopTimer();
+
+  if (mismatchTimeout) {
+    clearTimeout(mismatchTimeout);
+    mismatchTimeout = null;
+    mismatchRemaining = Math.max(0, mismatchRemaining - (Date.now() - mismatchStartedAt));
+  }
+  $("pauseLayer").classList.add("show");
+}
+function resumeGame() {
+  if (!paused) return;
+  paused = false;
+  startedAt = Date.now();
+  $("pauseLayer").classList.remove("show");
+  startTimer();
+  if (locked && firstCard !== null && secondCard !== null) scheduleMismatchFlip();
+}
+$("pauseBtn").addEventListener("click", pauseGame);
+$("resumeBtn").addEventListener("click", resumeGame);
+
+// ==========================================
+// 9. BODY A REKORDY
+// ==========================================
+function calculateTimeBonus(seconds) {
+  const thresholds = levels[currentLevel].bonus;
+  for (let i = 0; i < thresholds.length; i++) {
+    if (seconds <= thresholds[i]) return bonusPoints[i];
+  }
+  return 0;
+}
+
+function finishGame() {
+  // Najprv zachyť čas, až potom označ hru ako dokončenú.
+  elapsedBeforePause = getElapsedSeconds();
+  currentGameFinished = true;
+  stopTimer();
+  const finalSeconds = Math.floor(elapsedBeforePause);
+  const timeBonusValue = calculateTimeBonus(elapsedBeforePause);
+  const baseScore = pairPoints + timeBonusValue;
+  const oldRecord = getRecord(currentLevel);
+
+  // Prvý výsledok vytvorí rekordy, ale nedostane bonus.
+  const isFirstResult = !oldRecord;
+  const newTimeRecord = !isFirstResult && finalSeconds < oldRecord.bestTime;
+  const newScoreRecord = !isFirstResult && baseScore > oldRecord.bestScore;
+  const gotRecordBonus = newTimeRecord || newScoreRecord;
+  const recordBonusValue = gotRecordBonus ? 200 : 0;
+  const totalScore = baseScore + recordBonusValue;
+
+  let record = oldRecord || {
+    bestTime: finalSeconds,
+    bestScore: baseScore,
+    attemptsAtBestTime: attempts
+  };
+  if (newTimeRecord) {
+    record.bestTime = finalSeconds;
+    record.attemptsAtBestTime = attempts;
+  }
+  if (newScoreRecord) record.bestScore = baseScore;
+  if (isFirstResult) {
+    record.bestTime = finalSeconds;
+    record.bestScore = baseScore;
+    record.attemptsAtBestTime = attempts;
+  }
+  savedData.records[currentLevel] = record;
+  saveData();
+
+  $("recordMessage").textContent = isFirstResult
+    ? "Toto je tvoj prvý výsledok na tejto náročnosti. Rekordy sú uložené!"
+    : gotRecordBonus
+      ? "🏆 Skvelé! Prekonal/a si svoj rekord a získavaš bonus 200 bodov!"
+      : "Tentoraz sa ti nepodarilo prekonať rekord. Skús to znova!";
+  $("finalScore").textContent = `${totalScore} bodov`;
+  $("resultSummary").textContent = `Náročnosť: ${levels[currentLevel].name} · Čas: ${formatTime(finalSeconds)} · Pokusy: ${attempts}`;
+  $("pairPoints").textContent = `${pairPoints} bodov`;
+  $("timeBonus").textContent = `${timeBonusValue} bodov`;
+  $("recordBonus").textContent = `${recordBonusValue} bodov`;
+  $("totalPoints").textContent = `${totalScore} bodov`;
+  showScreen("resultScreen");
+  playSound("win");
+  launchConfetti();
+}
+
+// ==========================================
+// 10. AKTUALIZÁCIA ÚDAJOV POČAS HRY
+// ==========================================
+function updateStats() {
+  $("scoreStat").textContent = pairPoints;
+  $("attemptStat").textContent = attempts;
+  $("pairsStat").textContent = `${matchedPairs}/${levels[currentLevel].pairs}`;
+  $("levelStat").textContent = levels[currentLevel].name;
+  $("timeStat").textContent = formatTime(getElapsedSeconds());
+}
+
+// ==========================================
+// 11. REŠTART A NÁVRAT DO MENU S POTVRDENÍM
+// ==========================================
+function openConfirm(title, message, action) {
+  $("dialogTitle").textContent = title;
+  $("dialogText").textContent = message;
+  dialogAction = action;
+  $("dialogOverlay").classList.add("show");
+}
+function closeConfirm() {
+  $("dialogOverlay").classList.remove("show");
+  dialogAction = null;
+}
+$("dialogNo").addEventListener("click", closeConfirm);
+$("dialogYes").addEventListener("click", () => {
+  const action = dialogAction;
+  closeConfirm();
+  if (action) action();
+});
+$("restartBtn").addEventListener("click", () => {
+  openConfirm("Reštartovať hru?", "Naozaj chceš začať túto hru odznova?", () => startGame(currentLevel));
+});
+$("menuDuringGameBtn").addEventListener("click", () => {
+  openConfirm("Návrat do menu?", "Naozaj chceš ukončiť aktuálnu hru?", () => {
+    stopTimer();
+    if (mismatchTimeout) clearTimeout(mismatchTimeout);
+    paused = false;
+    showScreen("menuScreen");
+  });
+});
+$("playAgainBtn").addEventListener("click", () => startGame(currentLevel));
+$("resultMenuBtn").addEventListener("click", () => showScreen("menuScreen"));
+$("resultRecordsBtn").addEventListener("click", () => showScreen("recordsScreen"));
+
+// ==========================================
+// 12. TABUĽKA REKORDOV
+// ==========================================
+function renderRecords() {
+  const body = $("recordsBody");
+  body.innerHTML = "";
+  ["easy", "medium", "hard"].forEach(level => {
+    const record = getRecord(level);
+    const row = document.createElement("tr");
+    const values = [
+      levels[level].name,
+      record ? formatTime(record.bestTime) : "—",
+      record ? `${record.bestScore} b.` : "—",
+      record ? record.attemptsAtBestTime : "—"
+    ];
+    values.forEach(value => {
+      const cell = document.createElement("td");
+      cell.textContent = value;
+      row.appendChild(cell);
+    });
+    body.appendChild(row);
+  });
+}
+
+// ==========================================
+// 13. NASTAVENIA
+// ==========================================
+function updateSoundButton() {
+  $("soundToggle").classList.toggle("on", soundEnabled);
+  $("soundToggle").setAttribute("aria-checked", String(soundEnabled));
+  $("soundToggle").setAttribute("aria-label", soundEnabled ? "Zvuky zapnuté" : "Zvuky vypnuté");
+}
+$("soundToggle").addEventListener("click", () => {
+  soundEnabled = !soundEnabled;
+  savedData.sound = soundEnabled;
+  saveData();
+  updateSoundButton();
+});
+$("deleteRecordsBtn").addEventListener("click", () => {
+  openConfirm("Vymazať rekordy?", "Naozaj chceš vymazať všetky rekordy zo všetkých náročností? Túto akciu nemožno vrátiť späť.", () => {
+    savedData.records = {};
+    saveData();
+    renderRecords();
+    alert("Všetky rekordy boli vymazané.");
+  });
+});
+
+// ==========================================
+// 14. KONFETY
+// ==========================================
+function launchConfetti() {
+  const container = $("confetti");
+  container.innerHTML = "";
+  const colors = ["#ffd34e", "#ff6b6b", "#55c98b", "#6ba8ff", "#c18cff", "#ff9d55"];
+  for (let i = 0; i < 85; i++) {
+    const piece = document.createElement("span");
+    piece.className = "confetti-piece";
+    piece.style.left = `${Math.random() * 100}%`;
+    piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = `${Math.random() * 1.2}s`;
+    piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+    container.appendChild(piece);
+  }
+  setTimeout(() => { container.innerHTML = ""; }, 4500);
+}
+
+// ==========================================
+// 15. PRVOTNÉ NASTAVENIE
+// ==========================================
+updateSoundButton();
+</script>
 </body>
 </html>

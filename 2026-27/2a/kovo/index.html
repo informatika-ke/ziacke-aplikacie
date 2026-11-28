@@ -1,18 +1,231 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="galeria-placeholder" content="1">
-  <title>Pripravuje sa</title>
-  <link rel="stylesheet" href="../../../assets/galeria.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matematický Kvíz (10 otázok)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 360px;
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 0;
+            font-size: 22px;
+        }
+
+        .question-counter {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+
+        .question {
+            font-size: 24px;
+            margin: 15px 0;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .option-btn {
+            padding: 12px;
+            font-size: 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .option-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .result {
+            margin-top: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            min-height: 24px;
+        }
+
+        .restart-btn {
+            padding: 12px 20px;
+            font-size: 16px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .restart-btn:hover {
+            background-color: #27ae60;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <nav class="crumbs"><a href="../../../">Žiacke aplikácie</a> › <a href="../../">2026-27</a> › <a href="../">2.A</a></nav>
-    <h1>Pripravuje sa</h1>
-    <p>Na aplikácii sa ešte pracuje. Pozrite sa sem neskôr.</p>
-  </header>
+
+    <div class="card" id="quiz-card">
+        <h1>Matematický kvíz</h1>
+        <div id="counter" class="question-counter">Otázka 1 z 10</div>
+        <div id="question" class="question">Načítavam...</div>
+        
+        <div class="options-container" id="options">
+            <!-- Sem sa vygenerujú možnosti -->
+        </div>
+        
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        let currentQuestion = 1;
+        let score = 0;
+        let correctAnswer;
+        const totalQuestions = 10;
+
+        const counterEl = document.getElementById("counter");
+        const questionEl = document.getElementById("question");
+        const optionsEl = document.getElementById("options");
+        const resultEl = document.getElementById("result");
+        const cardEl = document.getElementById("quiz-card");
+
+        // Funkcia na vygenerovanie novej otázky
+        function generateQuestion() {
+            if (currentQuestion > totalQuestions) {
+                showFinalEvaluation();
+                return;
+            }
+
+            counterEl.textContent = `Otázka ${currentQuestion} z ${totalQuestions}`;
+            resultEl.textContent = "";
+
+            let num1 = Math.floor(Math.random() * 10) + 1;
+            let num2 = Math.floor(Math.random() * 10) + 1;
+            correctAnswer = num1 * num2;
+
+            questionEl.textContent = `Koľko je ${num1} × ${num2}?`;
+
+            // Vygenerovanie možností
+            let choices = [correctAnswer];
+            while (choices.length < 4) {
+                let wrongAnswer = Math.floor(Math.random() * 100) + 1;
+                if (!choices.includes(wrongAnswer)) {
+                    choices.push(wrongAnswer);
+                }
+            }
+
+            // Zamiešanie možností
+            choices.sort(() => Math.random() - 0.5);
+
+            // Vytvorenie tlačidiel
+            optionsEl.innerHTML = "";
+            choices.forEach(choice => {
+                let btn = document.createElement("button");
+                btn.textContent = choice;
+                btn.className = "option-btn";
+                btn.addEventListener("click", () => checkAnswer(choice));
+                optionsEl.appendChild(btn);
+            });
+        }
+
+        // Kontrola vybranej odpovede
+        function checkAnswer(selectedChoice) {
+            // Zablokovanie klikania po výbere
+            const buttons = optionsEl.querySelectorAll("button");
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (selectedChoice === correctAnswer) {
+                resultEl.textContent = "Správne! 🎉";
+                resultEl.style.color = "green";
+                score++;
+            } else {
+                resultEl.textContent = `Nesprávne. Správna bola ${correctAnswer}. ❌`;
+                resultEl.style.color = "red";
+            }
+
+            currentQuestion++;
+
+            // Počkám 1.5 sekundy a idem na ďalšiu otázku
+            setTimeout(generateQuestion, 1500);
+        }
+
+        // Záverečné vyhodnotenie po 10 otázkach
+        function showFinalEvaluation() {
+            counterEl.textContent = "Koniec kvízu!";
+            questionEl.textContent = "Výsledky";
+            
+            let evaluationText = "";
+            let color = "#333";
+
+            if (score === 10) {
+                evaluationText = "🏆 Perfektné! Si matematický genius!";
+                color = "#27ae60";
+            } else if (score >= 8) {
+                evaluationText = "🌟 Výborne! To bol skvelý výkon.";
+                color = "#2980b9";
+            } else if (score >= 5) {
+                evaluationText = "👍 Dobrá práca, ale môžeš to skúsiť znova.";
+                color = "#f39c12";
+            } else {
+                evaluationText = "📚 Treba ešte trochu trénovať. Skús to znova!";
+                color = "#c0392b";
+            }
+
+            optionsEl.innerHTML = `
+                <div style="font-size: 20px; margin: 15px 0; color: ${color}; font-weight: bold;">
+                    Tvoje skóre: ${score} / ${totalQuestions}
+                </div>
+                <div style="font-size: 16px; margin-bottom: 15px; color: #555;">
+                    ${evaluationText}
+                </div>
+            `;
+
+            resultEl.textContent = "";
+
+            // Tlačidlo na reštart
+            let restartBtn = document.createElement("button");
+            restartBtn.textContent = "Spustiť odznova 🔄";
+            restartBtn.className = "restart-btn";
+            restartBtn.addEventListener("click", resetQuiz);
+            optionsEl.appendChild(restartBtn);
+        }
+
+        // Resetovanie kvízu
+        function resetQuiz() {
+            currentQuestion = 1;
+            score = 0;
+            generateQuestion();
+        }
+
+        // Spustenie prvého príkladu
+        generateQuestion();
+    </script>
+
 </body>
 </html>

@@ -1,18 +1,430 @@
+
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="galeria-placeholder" content="1">
-  <title>Pripravuje sa</title>
-  <link rel="stylesheet" href="../../../assets/galeria.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeoMaster – Geografický kvíz</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    background: white;
+    width: 100%;
+    max-width: 600px;
+    padding: 30px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+h1 {
+    color: #1e3c72;
+}
+
+.info {
+    color: #777;
+    margin-bottom: 20px;
+}
+
+.question {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 25px 0;
+    color: #2f3640;
+}
+
+.options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.option {
+    background: #f1f2f6;
+    border: 2px solid #dcdde1;
+    color: #333;
+}
+
+.option:hover:not(:disabled) {
+    background: #dfe4ea;
+}
+
+.option.correct {
+    background: #2ed573;
+    color: white;
+}
+
+.option.wrong {
+    background: #ff4757;
+    color: white;
+}
+
+.option:disabled {
+    cursor: default;
+}
+
+.start, .restart {
+    background: #2ed573;
+    color: white;
+    margin-top: 20px;
+    padding: 15px 30px;
+}
+
+.next {
+    display: none;
+    width: 100%;
+    margin-top: 20px;
+    background: #1e3c72;
+    color: white;
+}
+
+.feedback {
+    min-height: 25px;
+    margin-top: 18px;
+    font-weight: bold;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@media(max-width: 450px) {
+    .options {
+        grid-template-columns: 1fr;
+    }
+
+    .container {
+        padding: 20px;
+    }
+}
+</style>
 </head>
+
 <body>
-  <header>
-    <nav class="crumbs"><a href="../../../">Žiacke aplikácie</a> › <a href="../../">2026-27</a> › <a href="../">2.A</a></nav>
-    <h1>Pripravuje sa</h1>
-    <p>Na aplikácii sa ešte pracuje. Pozrite sa sem neskôr.</p>
-  </header>
+
+<div class="container">
+
+    <!-- ÚVOD -->
+
+    <div id="start-screen">
+        <h1>🌍 GeoMaster</h1>
+        <p class="info">Geografický vedomostný kvíz</p>
+        <p>Otestuj si svoje vedomosti o svete!</p>
+        <p>Čaká ťa 10 otázok.</p>
+
+        <button class="start" onclick="startQuiz()">
+            SPUSTIŤ KVÍZ
+        </button>
+    </div>
+
+    <!-- KVÍZ -->
+
+    <div id="quiz-screen" class="hidden">
+
+        <h1>🌍 GeoMaster</h1>
+
+        <p id="progress" class="info"></p>
+
+        <div class="question" id="question"></div>
+
+        <div class="options">
+            <button class="option" id="opt0" onclick="checkAnswer(0)"></button>
+            <button class="option" id="opt1" onclick="checkAnswer(1)"></button>
+            <button class="option" id="opt2" onclick="checkAnswer(2)"></button>
+            <button class="option" id="opt3" onclick="checkAnswer(3)"></button>
+        </div>
+
+        <div id="feedback" class="feedback"></div>
+
+        <button id="next-btn" class="next" onclick="nextQuestion()">
+            ĎALŠIA OTÁZKA ➜
+        </button>
+
+    </div>
+
+    <!-- VÝSLEDOK -->
+
+    <div id="end-screen" class="hidden">
+
+        <h1>🎉 Kvíz dokončený!</h1>
+
+        <h2 id="score"></h2>
+
+        <p id="grade" style="font-size:21px;font-weight:bold;color:#1e3c72;"></p>
+
+        <p id="message"></p>
+
+        <button class="restart" onclick="restartQuiz()">
+            HRAŤ ZNOVA
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+// OTÁZKY
+
+const questions = [
+
+{
+    question: "Aké je hlavné mesto Slovenska?",
+    answers: ["Košice", "Bratislava", "Žilina", "Nitra"],
+    correct: 1
+},
+
+{
+    question: "Ktorý je najväčší oceán na svete?",
+    answers: ["Atlantický", "Indický", "Tichý", "Severný ľadový"],
+    correct: 2
+},
+
+{
+    question: "Ktorý štát má najväčšiu rozlohu na svete?",
+    answers: ["Kanada", "Čína", "USA", "Rusko"],
+    correct: 3
+},
+
+{
+    question: "Na ktorom kontinente sa nachádza Egypt?",
+    answers: ["Ázia", "Afrika", "Európa", "Austrália"],
+    correct: 1
+},
+
+{
+    question: "Aké je hlavné mesto Francúzska?",
+    answers: ["Rím", "Madrid", "Paríž", "Berlín"],
+    correct: 2
+},
+
+{
+    question: "Ktorá rieka preteká cez Bratislavu?",
+    answers: ["Váh", "Hron", "Dunaj", "Morava"],
+    correct: 2
+},
+
+{
+    question: "Ktorý kontinent je najväčší?",
+    answers: ["Afrika", "Európa", "Ázia", "Južná Amerika"],
+    correct: 2
+},
+
+{
+    question: "Aké je hlavné mesto Japonska?",
+    answers: ["Peking", "Soul", "Tokio", "Bangkok"],
+    correct: 2
+},
+
+{
+    question: "Ktorá krajina má tvar čižmy?",
+    answers: ["Španielsko", "Taliansko", "Grécko", "Portugalsko"],
+    correct: 1
+},
+
+{
+    question: "Ktorý je najvyšší vrch sveta?",
+    answers: ["Mont Blanc", "Kilimandžáro", "Mount Everest", "Matterhorn"],
+    correct: 2
+}
+
+];
+
+// PREMENNÉ
+
+let currentQuestion = 0;
+let score = 0;
+let answered = false;
+
+
+// SPUSTENIE KVÍZU
+
+function startQuiz() {
+
+    currentQuestion = 0;
+    score = 0;
+
+    document.getElementById("start-screen").classList.add("hidden");
+    document.getElementById("end-screen").classList.add("hidden");
+    document.getElementById("quiz-screen").classList.remove("hidden");
+
+    loadQuestion();
+}
+
+
+// NAČÍTANIE OTÁZKY
+
+function loadQuestion() {
+
+    answered = false;
+
+    const q = questions[currentQuestion];
+
+    document.getElementById("progress").innerText =
+        "Otázka " + (currentQuestion + 1) + " / " + questions.length;
+
+    document.getElementById("question").innerText = q.question;
+
+    document.getElementById("feedback").innerText = "";
+
+    document.getElementById("next-btn").style.display = "none";
+
+    for (let i = 0; i < 4; i++) {
+
+        const btn = document.getElementById("opt" + i);
+
+        btn.innerText = q.answers[i];
+        btn.className = "option";
+        btn.disabled = false;
+
+    }
+}
+
+
+// VYHODNOTENIE ODPOVEDE
+
+function checkAnswer(selected) {
+
+    if (answered) return;
+
+    answered = true;
+
+    const q = questions[currentQuestion];
+
+    for (let i = 0; i < 4; i++) {
+
+        const btn = document.getElementById("opt" + i);
+
+        btn.disabled = true;
+
+        if (i === q.correct) {
+            btn.classList.add("correct");
+        }
+
+        else if (i === selected) {
+            btn.classList.add("wrong");
+        }
+
+    }
+
+    if (selected === q.correct) {
+
+        score++;
+
+        document.getElementById("feedback").innerText =
+            "✅ Správna odpoveď!";
+
+        document.getElementById("feedback").style.color = "#26af5f";
+
+    } else {
+
+        document.getElementById("feedback").innerText =
+            "❌ Nesprávne! Správna odpoveď: " +
+            q.answers[q.correct];
+
+        document.getElementById("feedback").style.color = "#e84118";
+
+    }
+
+    document.getElementById("next-btn").style.display = "block";
+}
+
+
+// ĎALŠIA OTÁZKA
+
+function nextQuestion() {
+
+    currentQuestion++;
+
+    if (currentQuestion < questions.length) {
+        loadQuestion();
+    } else {
+        showResult();
+    }
+
+}
+
+
+// VÝSLEDKY
+
+function showResult() {
+
+    document.getElementById("quiz-screen").classList.add("hidden");
+    document.getElementById("end-screen").classList.remove("hidden");
+
+    document.getElementById("score").innerText =
+        "Tvoje skóre: " + score + " / " + questions.length;
+
+    let grade = "";
+    let message = "";
+
+    if (score === 10) {
+        grade = "Známka: 1*";
+        message = "Fantastické! Si geografický expert! 🏆";
+    }
+
+    else if (score >= 8) {
+        grade = "Známka: 1";
+        message = "Výborne! Máš skvelé vedomosti! ⭐";
+    }
+
+    else if (score >= 6) {
+        grade = "Známka: 2";
+        message = "Veľmi dobre! 👍";
+    }
+
+    else if (score >= 4) {
+        grade = "Známka: 3";
+        message = "Dobrý výsledok, ešte trochu trénuj.";
+    }
+
+    else if (score >= 2) {
+        grade = "Známka: 4";
+        message = "Ešte sa trochu uč a skúsiš to znova.";
+    }
+
+    else {
+        grade = "Známka: 5";
+        message = "Nevadí, skús to ešte raz! 💪";
+    }
+
+    document.getElementById("grade").innerText = grade;
+    document.getElementById("message").innerText = message;
+
+}
+
+
+// REŠTART
+
+function restartQuiz() {
+    startQuiz();
+}
+
+</script>
+
 </body>
 </html>

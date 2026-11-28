@@ -1,18 +1,134 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="galeria-placeholder" content="1">
-  <title>Pripravuje sa</title>
-  <link rel="stylesheet" href="../../../assets/galeria.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KARTY – Učebné kartičky</title>
+<style>
+:root{--bg:#0b1020;--panel:#131d32;--panel2:#1b2943;--line:#2c3b58;--text:#eef3ff;--muted:#a1afc7;--accent:#819cff;--green:#4bc99b;--red:#ff7d8a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#192747,var(--bg) 60%);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.app{width:min(920px,calc(100% - 28px));margin:auto;padding:22px 0 45px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}.brand{display:flex;gap:12px;align-items:center}.logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#819cff,#9b8cff);display:grid;place-items:center;font-size:23px}
+h1{font-size:21px;letter-spacing:2px;margin:0}.sub{font-size:12px;color:var(--muted)}.tag{font-size:11px;color:var(--muted);border:1px solid var(--line);padding:8px 11px;border-radius:30px}
+.screen{display:none}.screen.active{display:block}.hero{margin:35px 0 22px}.eyebrow{color:var(--accent);font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+h2{font-size:clamp(28px,5vw,40px);line-height:1.13;margin:10px 0}.lead{color:var(--muted);line-height:1.65;max-width:680px}
+.panel{background:rgba(19,29,50,.95);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 18px 45px #0004}
+label{font-size:13px;font-weight:700;display:block;margin-bottom:9px}textarea,input{width:100%;background:#0d1629;color:var(--text);border:1px solid var(--line);border-radius:11px;padding:13px;font:inherit;outline:none}textarea{min-height:210px;resize:vertical;line-height:1.55}input:focus,textarea:focus{border-color:var(--accent)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.btn{border:1px solid transparent;border-radius:11px;padding:11px 16px;font-weight:750;font:inherit;font-size:13px;cursor:pointer}.primary{background:linear-gradient(135deg,#819cff,#9b8cff);color:white}.secondary{background:var(--panel2);border-color:var(--line);color:var(--text)}.quiet{background:transparent;border-color:var(--line);color:var(--muted)}.btn:disabled{opacity:.35;cursor:not-allowed}
+.hint,.muted{color:var(--muted);font-size:12px;line-height:1.55;margin-top:10px}.error{color:var(--red);font-size:13px;margin-top:10px;display:none}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}.count{color:var(--muted);font-size:12px}
+.card-edit{background:#101a2e;border:1px solid var(--line);border-radius:15px;padding:15px;margin:13px 0}.card-edit-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.number{color:var(--accent);font-size:12px;font-weight:800}.field{margin-top:10px}.field label{color:var(--muted);font-size:11px;margin-bottom:6px}.field input{padding:10px;font-size:14px}
+.progressbar{height:7px;background:#263550;border-radius:20px;overflow:hidden;margin:12px 0 20px}.progress{height:100%;width:0;background:linear-gradient(90deg,#819cff,#9b8cff)}
+.flashcard{height:310px;position:relative;perspective:1000px;cursor:pointer}.inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.2,.75,.2,1)}.flashcard.flipped .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border:1px solid #3a4b6c;border-radius:22px;background:linear-gradient(145deg,#213252,#121d32);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:25px;box-shadow:0 18px 45px #0004}.face.back{transform:rotateY(180deg);background:linear-gradient(145deg,#20413d,#142c35)}
+.face-label{font-size:11px;letter-spacing:2px;font-weight:800;color:#afc2ee;margin-bottom:18px}.back .face-label{color:#8ce0bf}.cardtext{font-size:clamp(20px,4vw,29px);line-height:1.45;font-weight:700;overflow-wrap:anywhere}.tip{font-size:12px;color:var(--muted);margin-top:18px}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:17px}.nav .btn{min-width:140px}.center{text-align:center;color:var(--muted);font-size:12px;margin-top:13px}
+.done{text-align:center;padding:40px 15px}.done .emoji{font-size:52px}.done p{color:var(--muted);line-height:1.6}
+.file{display:none}footer{text-align:center;color:#74839d;font-size:11px;margin-top:30px}
+@media(max-width:600px){.app{padding-top:15px}.tag{display:none}.panel{padding:16px}.hero{margin:25px 0 18px}.flashcard{height:285px}.nav .btn{min-width:0;flex:1;padding:11px 8px;font-size:12px}}
+</style>
 </head>
 <body>
-  <header>
-    <nav class="crumbs"><a href="../../../">Žiacke aplikácie</a> › <a href="../../">2026-27</a> › <a href="../">2.B</a></nav>
-    <h1>Pripravuje sa</h1>
-    <p>Na aplikácii sa ešte pracuje. Pozrite sa sem neskôr.</p>
-  </header>
+<div class="app">
+<header><div class="brand"><div class="logo">▱</div><div><h1>KARTY</h1><div class="sub">Uč sa jednoducho. Zapamätaj si viac.</div></div></div><div class="tag">OFFLINE • BEZ REGISTRÁCIE</div></header>
+
+<section id="home" class="screen active">
+ <div class="hero"><div class="eyebrow">Tvoj osobný učebný pomocník</div><h2>Premeníme tvoje poznámky<br>na učebné kartičky.</h2><p class="lead">Vlož poznámky alebo nahraj textový súbor. Každá veta sa zmení na jednu kartičku. Pred učením si ku každej vete napíšeš vlastnú otázku.</p></div>
+ <div class="panel"><label for="notes">Tvoje študijné poznámky</label><textarea id="notes" placeholder="Betón je stavebný materiál.\nVyrába sa zmiešaním cementu, vody a kameniva.\nPoužíva sa na zhotovovanie základov, stien a stropov."></textarea>
+ <div class="actions"><button class="btn secondary" id="fileBtn">＋ Nahrať .txt súbor</button><input class="file" type="file" id="file" accept=".txt,text/plain"><button class="btn primary" id="prepare">Rozdeliť na kartičky →</button></div>
+ <div class="hint">Každú vetu ukonči bodkou, otáznikom alebo výkričníkom. Každá veta bude samostatná kartička.</div><div id="error" class="error"></div></div>
+ <p class="muted">Poznámky zostávajú v tvojom zariadení. Aplikácia ich nikam neposiela.</p>
+</section>
+
+<section id="editor" class="screen">
+ <div class="topline"><div><div class="eyebrow">Príprava kartičiek</div><h2 style="font-size:29px">Doplň vlastné otázky</h2></div><div class="count" id="editCount"></div></div>
+ <p class="lead">Každá veta z poznámok je pripravená ako odpoveď. Do poľa „Tvoja otázka“ napíš otázku, na ktorú táto veta odpovedá. Môžeš upraviť aj samotnú odpoveď.</p>
+ <div id="editList"></div>
+ <div class="actions"><button class="btn quiet" id="backHome">← Upraviť poznámky</button><button class="btn primary" id="startStudy">Spustiť učenie →</button></div>
+ <p class="hint">Pred spustením skontroluj, či má každá kartička otázku aj odpoveď.</p>
+</section>
+
+<section id="study" class="screen">
+ <div class="topline"><div class="count">Tvoje učenie</div><button class="btn quiet" id="toEditor">Upraviť kartičky</button></div>
+ <div class="progressbar"><div class="progress" id="bar"></div></div>
+ <div class="topline"><span class="count" id="step"></span><span class="count" id="pct"></span></div>
+ <div class="flashcard" id="flash" tabindex="0" role="button" aria-label="Otočiť kartičku"><div class="inner">
+ <div class="face"><div class="face-label">OTÁZKA</div><div class="cardtext" id="qText"></div><div class="tip">Klikni na kartičku a zobraz odpoveď ↻</div></div>
+ <div class="face back"><div class="face-label">ODPOVEĎ</div><div class="cardtext" id="aText"></div><div class="tip">Klikni a vráť sa k otázke ↻</div></div>
+ </div></div>
+ <div class="nav"><button class="btn secondary" id="prev">← Predchádzajúca</button><button class="btn primary" id="next">Ďalšia →</button></div><div class="center" id="counter"></div>
+</section>
+
+<section id="finish" class="screen"><div class="panel done"><div class="emoji">🎉</div><div class="eyebrow">Hotovo!</div><h2>Ver si :)</h2><p>Prešiel/prešla si všetky kartičky.<br>Skvelá práca – nezabudni si učivo zopakovať.</p><div class="actions" style="justify-content:center"><button class="btn primary" id="repeat">Učiť sa znova</button><button class="btn secondary" id="new">Nové poznámky</button></div></div></section>
+<footer>KARTY • Jednoduchá offline učebná pomôcka</footer>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+let cards = [], index = 0;
+
+function screen(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));$(id).classList.add("active");}
+function splitSentences(text){
+  // Vety oddeľujeme podľa bodky, otázniku, výkričníka a nových riadkov.
+  return text.replace(/\r/g,"").split(/(?<=[.!?])\s+|\n+/).map(s=>s.trim()).filter(Boolean);
+}
+function prepareCards(){
+  $("error").style.display="none";
+  const text=$("notes").value.trim();
+  if(!text){$("error").textContent="Najskôr vlož svoje poznámky."; $("error").style.display="block";return;}
+  const sentences=splitSentences(text);
+  if(!sentences.length){$("error").textContent="V texte sa nenašli žiadne vety."; $("error").style.display="block";return;}
+  // Zámerne nevymýšľame automatickú otázku, ak si aplikácia nevie spoľahlivo určiť význam vety.
+  cards=sentences.map(sentence=>({question:"",answer:sentence}));
+  renderEditor();screen("editor");
+}
+function renderEditor(){
+  $("editCount").textContent=cards.length+" kartičiek";
+  $("editList").innerHTML="";
+  cards.forEach((card,i)=>{
+    const wrap=document.createElement("div");wrap.className="card-edit";
+    const head=document.createElement("div");head.className="card-edit-head";
+    const num=document.createElement("span");num.className="number";num.textContent="KARTIČKA "+(i+1);
+    const del=document.createElement("button");del.className="btn quiet";del.textContent="Odstrániť";
+    del.addEventListener("click",()=>{cards.splice(i,1);renderEditor();});
+    head.append(num,del);
+    const qLabel=document.createElement("label");qLabel.textContent="Tvoja otázka";
+    const q=document.createElement("input");q.placeholder="Napríklad: Čo je betón?";q.value=card.question;
+    q.addEventListener("input",()=>cards[i].question=q.value);
+    const aLabel=document.createElement("label");aLabel.textContent="Odpoveď / informácia";aLabel.style.marginTop="12px";
+    const a=document.createElement("input");a.value=card.answer;
+    a.addEventListener("input",()=>cards[i].answer=a.value);
+    const qField=document.createElement("div");qField.className="field";qField.append(qLabel,q);
+    const aField=document.createElement("div");aField.className="field";aField.append(aLabel,a);
+    wrap.append(head,qField,aField);$("editList").append(wrap);
+  });
+}
+function start(){
+  const missing=cards.findIndex(c=>!c.question.trim()||!c.answer.trim());
+  if(missing!==-1){alert("Doplň otázku aj odpoveď na kartičke číslo "+(missing+1)+".");return;}
+  if(!cards.length){alert("Nemáš vytvorené žiadne kartičky.");return;}
+  index=0;renderCard();screen("study");
+}
+function renderCard(){
+  const c=cards[index];$("qText").textContent=c.question;$("aText").textContent=c.answer;
+  $("flash").classList.remove("flipped");
+  $("step").textContent="Kartička "+(index+1)+" z "+cards.length;
+  $("counter").textContent=(index+1)+" / "+cards.length;
+  const percent=Math.round(index/cards.length*100);$("bar").style.width=percent+"%";$("pct").textContent=percent+" %";
+  $("prev").disabled=index===0;$("next").textContent=index===cards.length-1?"Dokončiť ✓":"Ďalšia →";
+}
+function flip(){$("flash").classList.toggle("flipped");}
+$("prepare").addEventListener("click",prepareCards);
+$("fileBtn").addEventListener("click",()=>$("file").click());
+$("file").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{$("notes").value=String(r.result||"");};r.onerror=()=>alert("Súbor sa nepodarilo načítať.");r.readAsText(f,"UTF-8");});
+$("backHome").addEventListener("click",()=>screen("home"));
+$("startStudy").addEventListener("click",start);
+$("toEditor").addEventListener("click",()=>{renderEditor();screen("editor");});
+$("flash").addEventListener("click",flip);
+$("flash").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();flip();}});
+$("prev").addEventListener("click",()=>{if(index>0){index--;renderCard();}});
+$("next").addEventListener("click",()=>{if(index<cards.length-1){index++;renderCard();}else{$("bar").style.width="100%";$("pct").textContent="100 %";$("step").textContent="Dokončené: "+cards.length+" z "+cards.length;screen("finish");}});
+$("repeat").addEventListener("click",()=>{index=0;renderCard();screen("study");});
+$("new").addEventListener("click",()=>{$("notes").value="";cards=[];screen("home");});
+</script>
 </body>
 </html>

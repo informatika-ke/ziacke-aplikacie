@@ -2,17 +2,794 @@
 <html lang="sk">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="galeria-placeholder" content="1">
-  <title>Pripravuje sa</title>
-  <link rel="stylesheet" href="../../../assets/galeria.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pexeso — Minimalistická pamäťová hra</title>
+  <style>
+    :root {
+      --bg-page: #f4f6f9;
+      --bg-surface: #ffffff;
+      --primary: #1e293b;
+      --primary-hover: #0f172a;
+      --accent: #3b82f6;
+      --accent-soft: #eff6ff;
+      --success: #10b981;
+      --success-bg: #ecfdf5;
+      --error: #ef4444;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --shadow-sm: 0 2px 6px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 760px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* 1. Horná lišta (Header) */
+    header {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow-sm);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--primary);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .brand h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--primary);
+    }
+
+    .stats-bar {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .stat-value {
+      font-size: 1.15rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--primary);
+    }
+
+    .btn-icon {
+      background: var(--bg-page);
+      border: 1px solid var(--border);
+      color: var(--primary);
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-icon:hover {
+      background: var(--border);
+    }
+
+    /* 2. Nastavenia pred hrou */
+    .setup-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .setup-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .setup-group label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    .option-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .option-btn {
+      background: var(--bg-page);
+      border: 2px solid transparent;
+      border-radius: 12px;
+      padding: 14px 12px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .option-btn:hover {
+      border-color: #cbd5e1;
+      background: #f8fafc;
+    }
+
+    .option-btn.active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--primary);
+    }
+
+    .option-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--primary);
+    }
+
+    .option-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      padding: 15px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.1s ease;
+      width: 100%;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.99);
+    }
+
+    /* 3. Hracia plocha (Grid) */
+    .board-wrapper {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .board-wrapper.active {
+      display: flex;
+    }
+
+    .grid-board {
+      display: grid;
+      gap: 14px;
+      width: 100%;
+      perspective: 1000px;
+    }
+
+    /* Rozloženie podľa obtiažnosti */
+    .grid-4x3 {
+      grid-template-columns: repeat(4, 1fr);
+      max-width: 560px;
+    }
+
+    .grid-4x4 {
+      grid-template-columns: repeat(4, 1fr);
+      max-width: 560px;
+    }
+
+    .grid-6x4 {
+      grid-template-columns: repeat(6, 1fr);
+      max-width: 740px;
+    }
+
+    /* Karty (3D Flip efekt) */
+    .card {
+      aspect-ratio: 1 / 1;
+      cursor: pointer;
+      position: relative;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      border-radius: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card.flipped .card-inner,
+    .card.matched .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Rub karty: tmavomodrý s decentným geometrickým vzorom */
+    .card-back {
+      background-color: var(--primary);
+      background-image:
+        radial-gradient(rgba(255, 255, 255, 0.08) 1.5px, transparent 1.5px),
+        radial-gradient(rgba(255, 255, 255, 0.08) 1.5px, var(--primary) 1.5px);
+      background-size: 20px 20px;
+      background-position: 0 0, 10px 10px;
+      border: 2px solid #334155;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .card:not(.flipped):not(.matched):hover .card-back {
+      border-color: var(--accent);
+    }
+
+    .card-back::after {
+      content: "";
+      width: 24px;
+      height: 24px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      transform: rotate(45deg);
+    }
+
+    /* Líc karty */
+    .card-front {
+      background-color: var(--bg-surface);
+      border: 2px solid var(--border);
+      transform: rotateY(180deg);
+      font-size: clamp(1.5rem, 4vw, 2.35rem);
+      font-weight: 700;
+      color: var(--primary);
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .card-front svg {
+      width: 48%;
+      height: 48%;
+      stroke: var(--primary);
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .card.matched .card-front {
+      background-color: var(--success-bg);
+      border-color: var(--success);
+      color: #065f46;
+    }
+
+    .card.matched .card-front svg {
+      stroke: #065f46;
+    }
+
+    .card.mismatch .card-front {
+      border-color: var(--error);
+      background-color: #fef2f2;
+    }
+
+    /* 4. Výherná obrazovka (Modal) */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 100;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--bg-surface);
+      border-radius: 18px;
+      padding: 32px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .win-badge {
+      width: 56px;
+      height: 56px;
+      background: var(--success-bg);
+      color: var(--success);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      margin: 0 auto;
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+
+    .modal-card h2 {
+      font-size: 1.5rem;
+      color: var(--primary);
+    }
+
+    .modal-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-top: -10px;
+    }
+
+    .summary-box {
+      background: var(--bg-page);
+      border-radius: 12px;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .summary-item span {
+      display: block;
+    }
+
+    .summary-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .summary-val {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-top: 2px;
+    }
+
+    .modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-page);
+      color: var(--primary);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 540px) {
+      .option-grid {
+        grid-template-columns: 1fr;
+      }
+      .grid-6x4 {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      .grid-board {
+        gap: 10px;
+      }
+      header {
+        padding: 14px 16px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <nav class="crumbs"><a href="../../../">Žiacke aplikácie</a> › <a href="../../">2026-27</a> › <a href="../">2.A</a></nav>
-    <h1>Pripravuje sa</h1>
-    <p>Na aplikácii sa ešte pracuje. Pozrite sa sem neskôr.</p>
-  </header>
+
+  <div class="app-container">
+    <!-- 1. Horná lišta (Header) -->
+    <header>
+      <div class="brand">
+        <div class="brand-icon">P</div>
+        <h1>Pexeso</h1>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span class="stat-label">Čas</span>
+          <span class="stat-value" id="timerDisplay">00:00</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Ťahy</span>
+          <span class="stat-value" id="movesDisplay">0</span>
+        </div>
+        <button class="btn-icon" id="settingsBtn" style="display: none;">Nastavenia</button>
+      </div>
+    </header>
+
+    <!-- 2. Nastavenia pred hrou -->
+    <section class="setup-panel" id="setupPanel">
+      <div class="setup-group">
+        <label>1. Vyber kategóriu symbolov</label>
+        <div class="option-grid" id="themeOptions">
+          <button type="button" class="option-btn active" data-theme="shapes">
+            <span class="option-title">Geometrické tvary</span>
+            <span class="option-desc">Minimalistické ikony</span>
+          </button>
+          <button type="button" class="option-btn" data-theme="letters">
+            <span class="option-title">Písmená</span>
+            <span class="option-desc">Abeceda A – L</span>
+          </button>
+          <button type="button" class="option-btn" data-theme="numbers">
+            <span class="option-title">Čísla</span>
+            <span class="option-desc">Číslice 1 – 12</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="setup-group">
+        <label>2. Nastav obtiažnosť</label>
+        <div class="option-grid" id="difficultyOptions">
+          <button type="button" class="option-btn" data-diff="easy">
+            <span class="option-title">Jednoduchá</span>
+            <span class="option-desc">4 × 3 (6 párov)</span>
+          </button>
+          <button type="button" class="option-btn active" data-diff="medium">
+            <span class="option-title">Stredná</span>
+            <span class="option-desc">4 × 4 (8 párov)</span>
+          </button>
+          <button type="button" class="option-btn" data-diff="hard">
+            <span class="option-title">Ťažká</span>
+            <span class="option-desc">6 × 4 (12 párov)</span>
+          </button>
+        </div>
+      </div>
+
+      <button type="button" class="btn-primary" id="startBtn">Spustiť hru</button>
+    </section>
+
+    <!-- 3. Hracia plocha (Grid) -->
+    <main class="board-wrapper" id="boardWrapper">
+      <div class="grid-board" id="gridBoard"></div>
+    </main>
+  </div>
+
+  <!-- 4. Výherná obrazovka -->
+  <div class="modal-overlay" id="winModal">
+    <div class="modal-card">
+      <div class="win-badge">✓</div>
+      <div>
+        <h2>Výborne! Hra dokončená</h2>
+        <p>Našiel si všetky dvojice v Solo móde.</p>
+      </div>
+
+      <div class="summary-box">
+        <div class="summary-item">
+          <span class="summary-label">Celkový čas</span>
+          <span class="summary-val" id="finalTime">00:00</span>
+        </div>
+        <div class="summary-item">
+          <span class="summary-label">Počet ťahov</span>
+          <span class="summary-val" id="finalMoves">0</span>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-primary" id="playAgainBtn">Hrať znova</button>
+        <button type="button" class="btn-secondary" id="changeSettingsBtn">Zmeniť tému alebo obtiažnosť</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Dátové sady pre jednotlivé kategórie (12 unikátnych symbolov pre max. obtiažnosť)
+    const SYMBOLS = {
+      shapes: [
+        '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg>',
+        '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>',
+        '<svg viewBox="0 0 24 24"><polygon points="12 4 21 20 3 20"/></svg>',
+        '<svg viewBox="0 0 24 24"><polygon points="12 2 22 12 12 22 2 12"/></svg>',
+        '<svg viewBox="0 0 24 24"><polygon points="12 2 19 7 19 17 12 22 5 17 5 7"/></svg>',
+        '<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+        '<svg viewBox="0 0 24 24"><line x1="12" y1="4" x2="12" y2="20"/><line x1="4" y1="12" x2="20" y2="12"/></svg>',
+        '<svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>',
+        '<svg viewBox="0 0 24 24"><polygon points="12 3 21 9.5 17.5 20 6.5 20 3 9.5"/></svg>',
+        '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>',
+        '<svg viewBox="0 0 24 24"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>',
+        '<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>'
+      ],
+      letters: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'],
+      numbers: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+    };
+
+    const DIFFICULTIES = {
+      easy: { pairs: 6, gridClass: 'grid-4x3' },
+      medium: { pairs: 8, gridClass: 'grid-4x4' },
+      hard: { pairs: 12, gridClass: 'grid-6x4' }
+    };
+
+    // Stav hry
+    let selectedTheme = 'shapes';
+    let selectedDiff = 'medium';
+    let flippedCards = [];
+    let matchedPairs = 0;
+    let totalPairs = 8;
+    let moves = 0;
+    let lockBoard = false;
+    let timerInterval = null;
+    let secondsElapsed = 0;
+    let gameStarted = false;
+
+    // DOM elementy
+    const setupPanel = document.getElementById('setupPanel');
+    const boardWrapper = document.getElementById('boardWrapper');
+    const gridBoard = document.getElementById('gridBoard');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const movesDisplay = document.getElementById('movesDisplay');
+    const settingsBtn = document.getElementById('settingsBtn');
+    const winModal = document.getElementById('winModal');
+    const finalTime = document.getElementById('finalTime');
+    const finalMoves = document.getElementById('finalMoves');
+
+    // Výber témy
+    document.querySelectorAll('#themeOptions .option-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#themeOptions .option-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedTheme = btn.dataset.theme;
+      });
+    });
+
+    // Výber obtiažnosti
+    document.querySelectorAll('#difficultyOptions .option-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#difficultyOptions .option-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedDiff = btn.dataset.diff;
+      });
+    });
+
+    // Tlačidlá ovládania
+    document.getElementById('startBtn').addEventListener('click', startGame);
+    document.getElementById('playAgainBtn').addEventListener('click', () => {
+      winModal.classList.remove('active');
+      startGame();
+    });
+    document.getElementById('changeSettingsBtn').addEventListener('click', showSettings);
+    settingsBtn.addEventListener('click', showSettings);
+
+    function showSettings() {
+      stopTimer();
+      winModal.classList.remove('active');
+      boardWrapper.classList.remove('active');
+      settingsBtn.style.display = 'none';
+      setupPanel.style.display = 'flex';
+      timerDisplay.textContent = '00:00';
+      movesDisplay.textContent = '0';
+    }
+
+    function startGame() {
+      // Reset stavu
+      stopTimer();
+      flippedCards = [];
+      matchedPairs = 0;
+      moves = 0;
+      secondsElapsed = 0;
+      lockBoard = false;
+      gameStarted = false;
+
+      timerDisplay.textContent = '00:00';
+      movesDisplay.textContent = '0';
+
+      const config = DIFFICULTIES[selectedDiff];
+      totalPairs = config.pairs;
+
+      // Prepnutie UI
+      setupPanel.style.display = 'none';
+      boardWrapper.classList.add('active');
+      settingsBtn.style.display = 'inline-block';
+
+      // Nastavenie mriežky
+      gridBoard.className = `grid-board ${config.gridClass}`;
+      gridBoard.innerHTML = '';
+
+      // Príprava a zamiešanie kariet (Fisher-Yates shuffle)
+      const chosenSymbols = SYMBOLS[selectedTheme].slice(0, totalPairs);
+      const deck = [...chosenSymbols, ...chosenSymbols];
+      for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+      }
+
+      // Generovanie kariet v DOM
+      deck.forEach((symbol, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.dataset.index = index;
+        card.dataset.symbol = symbol;
+
+        card.innerHTML = `
+          <div class="card-inner">
+            <div class="card-face card-back"></div>
+            <div class="card-face card-front">${symbol}</div>
+          </div>
+        `;
+
+        card.addEventListener('click', () => handleCardClick(card));
+        gridBoard.appendChild(card);
+      });
+    }
+
+    function handleCardClick(card) {
+      if (lockBoard) return;
+      if (card.classList.contains('flipped') || card.classList.contains('matched')) return;
+
+      // Spustenie časovača pri prvom ťahu
+      if (!gameStarted) {
+        gameStarted = true;
+        startTimer();
+      }
+
+      card.classList.add('flipped');
+      flippedCards.push(card);
+
+      if (flippedCards.length === 2) {
+        moves++;
+        movesDisplay.textContent = moves;
+        checkForMatch();
+      }
+    }
+
+    function checkForMatch() {
+      const [card1, card2] = flippedCards;
+      const isMatch = card1.dataset.symbol === card2.dataset.symbol;
+
+      if (isMatch) {
+        card1.classList.add('matched');
+        card2.classList.add('matched');
+        flippedCards = [];
+        matchedPairs++;
+
+        if (matchedPairs === totalPairs) {
+          handleWin();
+        }
+      } else {
+        lockBoard = true;
+        card1.classList.add('mismatch');
+        card2.classList.add('mismatch');
+
+        setTimeout(() => {
+          card1.classList.remove('flipped', 'mismatch');
+          card2.classList.remove('flipped', 'mismatch');
+          flippedCards = [];
+          lockBoard = false;
+        }, 800);
+      }
+    }
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        secondsElapsed++;
+        timerDisplay.textContent = formatTime(secondsElapsed);
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    function formatTime(totalSeconds) {
+      const mins = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+      const secs = (totalSeconds % 60).toString().padStart(2, '0');
+      return `${mins}:${secs}`;
+    }
+
+    function handleWin() {
+      stopTimer();
+      setTimeout(() => {
+        finalTime.textContent = formatTime(secondsElapsed);
+        finalMoves.textContent = moves;
+        winModal.classList.add('active');
+      }, 450);
+    }
+  </script>
 </body>
 </html>

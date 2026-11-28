@@ -1,18 +1,199 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="galeria-placeholder" content="1">
-  <title>Pripravuje sa</title>
-  <link rel="stylesheet" href="../../../assets/galeria.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dovolenkové destinácie – cestovateľský kvíz</title>
+<style>
+:root{--sand:#f5f0e5;--paper:#fffdf8;--teal:#168f91;--teal-dark:#126d72;--blue:#347f9e;--ink:#203b43;--muted:#667d7e;--green:#258653;--green-bg:#e3f5e9;--red:#c64d4d;--red-bg:#fde8e5;--line:#e5dfd1;--shadow:0 18px 50px rgba(41,75,75,.12)}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 12% 8%,#fffdf5 0,transparent 32%),linear-gradient(135deg,#f5f0e5,#eaf4ef);font-family:Arial,Helvetica,sans-serif;color:var(--ink);padding:28px 16px 48px}
+.shell{width:min(900px,100%);margin:auto}.topline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}.brand{font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--teal-dark)}.tag{background:#e0f0ed;color:var(--teal-dark);padding:8px 12px;border-radius:30px;font-size:12px;font-weight:700}
+.panel{background:rgba(255,253,248,.96);border:1px solid rgba(255,255,255,.8);border-radius:26px;box-shadow:var(--shadow);padding:clamp(22px,5vw,46px);overflow:hidden}
+.hero{text-align:center;padding:14px 0 8px}.eyebrow{color:var(--teal);font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:800}.hero h1{font-size:clamp(34px,7vw,58px);line-height:1.02;margin:14px 0;color:#21434a}.hero p{max-width:570px;margin:0 auto;color:var(--muted);line-height:1.7;font-size:16px}.hero-art{margin:26px auto 24px;max-width:610px;display:grid;grid-template-columns:1.2fr .8fr;gap:12px}.hero-art img{width:100%;height:180px;object-fit:cover;border-radius:18px;border:1px solid var(--line)}.hero-art img:last-child{height:180px}
+.btn{border:0;border-radius:14px;padding:15px 22px;font-size:15px;font-weight:800;cursor:pointer;transition:transform .15s,filter .15s;background:var(--teal);color:white;box-shadow:0 7px 16px rgba(22,143,145,.2)}.btn:hover{filter:brightness(.96);transform:translateY(-1px)}.btn:focus-visible,.answer:focus-visible{outline:3px solid #f1bd55;outline-offset:3px}.btn.secondary{background:#e5f0ed;color:var(--teal-dark);box-shadow:none}.rules{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:20px 0 25px}.rules span{background:#f2f4ee;border:1px solid #e7e9df;padding:8px 11px;border-radius:30px;font-size:12px;color:#557070}
+.quiz-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.counter{font-weight:800;font-size:14px}.score{font-size:13px;color:var(--muted);background:#f2f4ee;padding:8px 12px;border-radius:30px}.progress{height:9px;background:#e8e9df;border-radius:20px;overflow:hidden;margin-bottom:24px}.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--teal),#63b9ae);border-radius:20px;transition:width .3s}
+.photo{width:100%;height:clamp(210px,40vw,370px);object-fit:cover;border-radius:20px;display:block;background:#dce8e3;border:1px solid var(--line)}.question-title{font-size:clamp(21px,4vw,28px);margin:22px 0 8px}.hint{background:#f3f6ef;border-left:4px solid #e3b65b;border-radius:10px;padding:13px 15px;color:#536b67;line-height:1.5;font-size:14px;margin:0 0 18px}.hint strong{color:#9a7029}.answers{display:grid;grid-template-columns:1fr 1fr;gap:11px}.answer{border:1px solid #dce5df;background:white;border-radius:14px;padding:15px 16px;text-align:left;color:var(--ink);font-size:15px;font-weight:700;cursor:pointer;transition:.15s}.answer:hover:not(:disabled){border-color:var(--teal);background:#f1f9f6;transform:translateY(-1px)}.answer:disabled{cursor:default;opacity:1}.answer.correct{background:var(--green-bg);border:2px solid var(--green);color:#17653c}.answer.wrong{background:var(--red-bg);border:2px solid var(--red);color:#963b3b}
+.feedback{margin-top:18px;padding:17px;border-radius:15px;line-height:1.55}.feedback.good{background:var(--green-bg);color:#185f3b}.feedback.bad{background:var(--red-bg);color:#8d3939}.feedback h3{margin:0 0 5px;font-size:17px}.fact{margin:10px 0 0;color:#435d5c;font-size:14px}.next-wrap{display:flex;justify-content:flex-end;margin-top:17px}
+.result{text-align:center}.result-icon{font-size:52px;margin:4px 0 10px}.result h2{font-size:clamp(30px,6vw,44px);margin:8px 0}.points{font-size:58px;font-weight:900;color:var(--teal-dark);margin:15px 0 3px}.outof{font-size:14px;color:var(--muted)}.rating{font-size:21px;font-weight:800;margin:18px 0 8px}.result p{color:var(--muted);line-height:1.6}.result .btn{margin-top:16px}
+.footer{text-align:center;color:#7a8c88;font-size:12px;margin:17px 0 0}.hidden{display:none!important}
+@media(max-width:600px){body{padding:14px 10px 28px}.panel{border-radius:20px;padding:21px 17px}.hero-art{grid-template-columns:1fr 1fr}.hero-art img,.hero-art img:last-child{height:125px}.answers{grid-template-columns:1fr}.quiz-head{align-items:flex-start}.topline{margin-bottom:12px}}
+</style>
 </head>
 <body>
-  <header>
-    <nav class="crumbs"><a href="../../../">Žiacke aplikácie</a> › <a href="../../">2026-27</a> › <a href="../">2.B</a></nav>
-    <h1>Pripravuje sa</h1>
-    <p>Na aplikácii sa ešte pracuje. Pozrite sa sem neskôr.</p>
-  </header>
+<div class="shell">
+  <div class="topline"><div class="brand">✦ Objavuj svet</div><div class="tag">CESTOVATEĽSKÝ KVÍZ</div></div>
+  <main class="panel">
+    <section id="startScreen">
+      <div class="hero">
+        <div class="eyebrow">10 miest • 10 fotografií • 10 bodov</div>
+        <h1>Dovolenkové<br>destinácie</h1>
+        <p>Dokážeš spoznať svetové miesta aj krásne zákutia Slovenska iba podľa obrázka? Otestuj si svoj cestovateľský prehľad!</p>
+        <div class="hero-art">
+          <img id="heroImage1" alt="Ukážková destinácia">
+          <img id="heroImage2" alt="Ukážková destinácia">
+        </div>
+        <div class="rules"><span>✓ 4 možnosti</span><span>✓ Nápoveda pri každej otázke</span><span>✓ Bez časového limitu</span></div>
+        <button class="btn" id="startBtn">Spustiť kvíz →</button>
+      </div>
+    </section>
+    <section id="quizScreen" class="hidden">
+      <div class="quiz-head"><div class="counter" id="counter">Otázka 1 z 10</div><div class="score" id="score">★ Body: 0</div></div>
+      <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+      <img class="photo" id="questionImage" alt="Fotografia dovolenkovej destinácie">
+      <h2 class="question-title">Ktorú destináciu vidíš na fotografii?</h2>
+      <p class="hint" id="hint"></p>
+      <div class="answers" id="answers"></div>
+      <div id="feedback" class="hidden" aria-live="polite"></div>
+      <div class="next-wrap"><button class="btn hidden" id="nextBtn">Ďalšia otázka →</button></div>
+    </section>
+    <section id="resultScreen" class="result hidden">
+      <div class="result-icon">🌍</div><div class="eyebrow">CIEĽ DOSIAHNUTÝ</div>
+      <h2>Koniec výletu!</h2>
+      <div class="points" id="finalScore">0</div><div class="outof">bodov z 10</div>
+      <div class="rating" id="rating"></div>
+      <p id="resultMessage"></p>
+      <button class="btn" id="againBtn">Zahrať si znova ↻</button>
+    </section>
+  </main>
+  <div class="footer">Dovolenkové destinácie · Malý kvíz, veľký svet</div>
+</div>
+<script>
+// ==========================================================
+// OTÁZKY A FOTOGRAFIE
+// Tu môžeš upravovať názvy, nápovedy, zaujímavosti a odpovede.
+// Obrázky sú vložené priamo v súbore ako SVG, preto fungujú offline.
+// ==========================================================
+const allQuestions = [{"name": "Paríž", "country": "Francúzsko", "hint": "Nad mestom sa týči známa kovová veža a mestom preteká rieka Seina.", "fact": "Eiffelova veža bola postavená pri príležitosti svetovej výstavy v roku 1889.", "answers": ["Paríž", "Rím", "Praha", "Viedeň"], "correct": "Paríž", "image": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MDAgNDQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9IlBhcsOtxb4iPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0ic2t5IiB4Mj0iMCIgeTI9IjEiPjxzdG9wIHN0b3AtY29sb3I9IiNjOGU1ZjAiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNlYWYzZTkiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0nODAwJyBoZWlnaHQ9JzQ0MCcgZmlsbD0nI2E5ZDVlOCcvPjxjaXJjbGUgY3g9JzY2MCcgY3k9Jzg1JyByPSc0MicgZmlsbD0nI2ZmZTZhMycvPjxwYXRoIGQ9J00wIDMxNSBRMTgwIDI5MCAzNTAgMzIwIFQ4MDAgMzA1IFY0NDAgSDBaJyBmaWxsPScjNmFhOWExJy8+PHBhdGggZD0nTTAgMzYwIFEyMDAgMzQwIDQwMCAzNjUgVDgwMCAzNTAgVjQ0MCBIMFonIGZpbGw9JyM0YjhmOTEnLz48ZyBmaWxsPScjZDljNGE1Jz48cmVjdCB4PSc1NScgeT0nMjM1JyB3aWR0aD0nMTE1JyBoZWlnaHQ9JzExNScvPjxyZWN0IHg9JzE5MCcgeT0nMjEwJyB3aWR0aD0nMTI1JyBoZWlnaHQ9JzE0MCcvPjxyZWN0IHg9JzUxMCcgeT0nMjIwJyB3aWR0aD0nMTEwJyBoZWlnaHQ9JzEzMCcvPjxyZWN0IHg9JzY0NScgeT0nMjQwJyB3aWR0aD0nOTUnIGhlaWdodD0nMTEwJy8+PC9nPjxnIHN0cm9rZT0nI2I0OGY3MCcgc3Ryb2tlLXdpZHRoPSc1Jz48cGF0aCBkPSdNNTUgMjcwaDExNSBNMTkwIDI1MGgxMjUgTTUxMCAyNjBoMTEwIE02NDUgMjc1aDk1Jy8+PC9nPjxnIGZpbGw9JyMzMzRlNWQnPjxwYXRoIGQ9J00zNzUgMzM1IEw0MDAgMTEwIEw0MjUgMzM1WicvPjxwYXRoIGQ9J00zODUgMjQ1aDMwIE0zODAgMjg1aDQwIE0zNzAgMzI1aDYwJyBzdHJva2U9JyMzMzRlNWQnIHN0cm9rZS13aWR0aD0nOCcvPjxwYXRoIGQ9J000MDAgMTEwbC0yMiAyMjVoNDRaJyBmaWxsPSdub25lJyBzdHJva2U9JyMzMzRlNWQnIHN0cm9rZS13aWR0aD0nOCcvPjxwYXRoIGQ9J00zOTIgMTcwaDE2IE0zODYgMjIwaDI4IE0zNzggMjc1aDQ0JyBzdHJva2U9JyMzMzRlNWQnIHN0cm9rZS13aWR0aD0nNycvPjwvZz48L3N2Zz4="}, {"name": "Rím", "country": "Taliansko", "hint": "V tomto meste sa nachádza staroveký amfiteáter, v ktorom sa konali gladiátorské zápasy.", "fact": "Koloseum mohlo v minulosti pojať približne 50 000 divákov.", "answers": ["Atény", "Rím", "Istanbul", "Madrid"], "correct": "Rím", "image": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MDAgNDQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9IlLDrW0iPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0ic2t5IiB4Mj0iMCIgeTI9IjEiPjxzdG9wIHN0b3AtY29sb3I9IiNjOGU1ZjAiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNlYWYzZTkiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0nODAwJyBoZWlnaHQ9JzQ0MCcgZmlsbD0nI2I5ZDllOCcvPjxjaXJjbGUgY3g9JzY1MCcgY3k9Jzc1JyByPSc0NScgZmlsbD0nI2ZmZTNhMCcvPjxwYXRoIGQ9J00wIDMzMEg4MDBWNDQwSDBaJyBmaWxsPScjOWJhZjc5Jy8+PHBhdGggZD0nTTE1NSAzNDBWMTcwUTE1NSA5NSAyNDUgOTVINTU1UTY0NSA5NSA2NDUgMTcwVjM0MFonIGZpbGw9JyNjOTlkNzAnIHN0cm9rZT0nIzlhNmU0ZCcgc3Ryb2tlLXdpZHRoPScxMCcvPjxwYXRoIGQ9J00xOTAgMzMwVjE4NVExOTAgMTM1IDI0NSAxMzVINTU1UTYxMCAxMzUgNjEwIDE4NVYzMzAnIGZpbGw9J25vbmUnIHN0cm9rZT0nI2U1YzM5YScgc3Ryb2tlLXdpZHRoPScxNicvPjxnIGZpbGw9JyM1MjYxNmInPjxwYXRoIGQ9J00yMDUgMzM1VjIzMGEyOCAyOCAwIDAgMSA1NiAwdjEwNVonLz48cGF0aCBkPSdNMjkwIDMzNVYyMzBhMjggMjggMCAwIDEgNTYgMHYxMDVaJy8+PHBhdGggZD0nTTM3NSAzMzVWMjMwYTI4IDI4IDAgMCAxIDU2IDB2MTA1WicvPjxwYXRoIGQ9J000NjAgMzM1VjIzMGEyOCAyOCAwIDAgMSA1NiAwdjEwNVonLz48cGF0aCBkPSdNNTQ1IDMzNVYyMzBhMjggMjggMCAwIDEgNTYgMHYxMDVaJy8+PC9nPjxwYXRoIGQ9J00xMzUgMzQ1SDY2NScgc3Ryb2tlPScjODA1ZTQ3JyBzdHJva2Utd2lkdGg9JzE4Jy8+PC9zdmc+"}, {"name": "Maldivy", "country": "Maldivy", "hint": "Tropické ostrovy v Indickom oceáne sú známe bielym pieskom a tyrkysovou vodou.", "fact": "Maldivy tvoria stovky koralových ostrovov a atolov.", "answers": ["Seychely", "Bali", "Maldivy", "Havaj"], "correct": "Maldivy", "image": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MDAgNDQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9Ik1hbGRpdnkiPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0ic2t5IiB4Mj0iMCIgeTI9IjEiPjxzdG9wIHN0b3AtY29sb3I9IiNjOGU1ZjAiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNlYWYzZTkiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0nODAwJyBoZWlnaHQ9JzQ0MCcgZmlsbD0nIzc5Y2JkMCcvPjxwYXRoIGQ9J00wIDBIODAwVjQ0MEgwWicgZmlsbD0nIzM4YTliNScvPjxwYXRoIGQ9J00wIDI4MFExODAgMjMwIDM1MCAyNzBUODAwIDI1MFY0NDBIMFonIGZpbGw9JyNiY2U5ZGMnLz48cGF0aCBkPSdNMTgwIDI0NVEzMDAgMTg1IDQ3MCAyMzVRNTY1IDI3MCA2MTAgMzIwUTQ2MCAzNjUgMjcwIDMyMFExOTAgMjk1IDE4MCAyNDVaJyBmaWxsPScjZjZlNmJkJy8+PGcgZmlsbD0nIzM0N2I1OSc+PGVsbGlwc2UgY3g9JzM4NScgY3k9JzIzNScgcng9JzEyMCcgcnk9JzQ4Jy8+PHBhdGggZD0nTTM3MCAyNjBRMzY1IDE3MCAzMDAgMTI1UTM3NSAxMzAgMzk1IDIwNVE0MDAgMTQ1IDQ2NSAxMTJRNDM1IDE3NSA0MTAgMjUwWicvPjxwYXRoIGQ9J00zOTUgMjU1UTQzMCAxNjUgNTEwIDE1NVE0NjAgMjE1IDQxMCAyNzBaJy8+PC9nPjxwYXRoIGQ9J00wIDM1MFEyMDAgMzE1IDQwMCAzNTVUODAwIDM0NScgZmlsbD0nbm9uZScgc3Ryb2tlPScjZTdmYmY0JyBzdHJva2Utd2lkdGg9JzgnIG9wYWNpdHk9Jy43Jy8+PC9zdmc+"}, {"name": "Vysoké Tatry", "country": "Slovensko", "hint": "V tomto pohorí nájdeš Gerlachovský štít a množstvo horských plies.", "fact": "Gerlachovský štít je s výškou 2 655 metrov najvyšším vrchom Slovenska.", "answers": ["Nízke Tatry", "Vysoké Tatry", "Malá Fatra", "Alpy"], "correct": "Vysoké Tatry", "image": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MDAgNDQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9IlZ5c29rw6kgVGF0cnkiPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0ic2t5IiB4Mj0iMCIgeTI9IjEiPjxzdG9wIHN0b3AtY29sb3I9IiNjOGU1ZjAiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNlYWYzZTkiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0nODAwJyBoZWlnaHQ9JzQ0MCcgZmlsbD0nI2E5ZDVlOCcvPjxjaXJjbGUgY3g9JzY2MCcgY3k9Jzc1JyByPSc0MCcgZmlsbD0nI2ZmZjBiMicvPjxwYXRoIGQ9J00wIDMyMEwxNTAgMTE1TDI1MCAyNDVMMzkwIDY1TDU2MCAyNjVMNjgwIDEzMEw4MDAgMjkwVjQ0MEgwWicgZmlsbD0nIzcxOGI4MycvPjxwYXRoIGQ9J00xMDAgMTg1TDE1MCAxMTVMMTk1IDE3NUwxNjAgMTYwTDE0NSAxODBaIE0zMzAgMTU1TDM5MCA2NUw0NTUgMTcwTDQwMCAxNDBMMzgwIDE1NVogTTYzNSAxOTBMNjgwIDEzMEw3MjUgMTkwTDY4NSAxNzBaJyBmaWxsPScjZjRmNGVkJy8+PHBhdGggZD0nTTAgMzIwUTIwMCAyOTAgNDAwIDMyNVQ4MDAgMzAwVjQ0MEgwWicgZmlsbD0nIzQ2N2M1YScvPjxwYXRoIGQ9J00wIDM2NVEyMDAgMzQwIDQwMCAzNzBUODAwIDM1MFY0NDBIMFonIGZpbGw9JyM0YzliOWEnLz48cGF0aCBkPSdNMCAzOTBRMjAwIDM3NSA0MDAgMzk1VDgwMCAzODUnIHN0cm9rZT0nI2M5ZWVlOCcgc3Ryb2tlLXdpZHRoPSc4JyBmaWxsPSdub25lJy8+PC9zdmc+"}, {"name": "Bojnický zámok", "country": "Slovensko", "hint": "Rozprávkovo vyzerajúci zámok stojí v meste známom aj zoologickou záhradou.", "fact": "Bojnický zámok patrí medzi najnavštevovanejšie historické pamiatky Slovenska.", "answers": ["Oravský hrad", "Bojnický zámok", "Spišský hrad", "Bratislavský hrad"], "correct": "Bojnický zámok", "image": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MDAgNDQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9IkJvam5pY2vDvSB6w6Ftb2siPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0ic2t5IiB4Mj0iMCIgeTI9IjEiPjxzdG9wIHN0b3AtY29sb3I9IiNjOGU1ZjAiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNlYWYzZTkiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0nODAwJyBoZWlnaHQ9JzQ0MCcgZmlsbD0nI2I4ZDllOCcvPjxjaXJjbGUgY3g9JzY2MCcgY3k9JzcwJyByPSc0MicgZmlsbD0nI2ZmZTZhMycvPjxwYXRoIGQ9J00wIDMzMFExODAgMjkwIDQwMCAzMzBUODAwIDMxNVY0NDBIMFonIGZpbGw9JyM2YzlhNjUnLz48ZyBmaWxsPScjZDhjM2EwJyBzdHJva2U9JyM4ZDczNWInIHN0cm9rZS13aWR0aD0nNyc+PHJlY3QgeD0nMjIwJyB5PScxOTAnIHdpZHRoPSczNjAnIGhlaWdodD0nMTcwJy8+PHJlY3QgeD0nMjcwJyB5PScxMzUnIHdpZHRoPSc4MCcgaGVpZ2h0PScyMjUnLz48cmVjdCB4PSc0NTUnIHk9JzE0NScgd2lkdGg9Jzg1JyBoZWlnaHQ9JzIxNScvPjxyZWN0IHg9JzM2NScgeT0nMTEwJyB3aWR0aD0nOTUnIGhlaWdodD0nMjUwJy8+PC9nPjxnIGZpbGw9JyM1MjZiNzgnPjxwYXRoIGQ9J00yNjAgMTQwTDMxMCA3MEwzNjAgMTQwWicvPjxwYXRoIGQ9J000NDUgMTUwTDQ5OCA3NUw1NTAgMTUwWicvPjxwYXRoIGQ9J00zNTUgMTE1TDQxMiAzNUw0NzAgMTE1WicvPjwvZz48ZyBmaWxsPScjNGI2NjcwJz48cmVjdCB4PSczMDAnIHk9JzIyNScgd2lkdGg9JzI4JyBoZWlnaHQ9JzQ1JyByeD0nMTQnLz48cmVjdCB4PSczOTAnIHk9JzIyNScgd2lkdGg9JzI4JyBoZWlnaHQ9JzQ1JyByeD0nMTQnLz48cmVjdCB4PSc0OTAnIHk9JzIyNScgd2lkdGg9JzI4JyBoZWlnaHQ9JzQ1JyByeD0nMTQnLz48L2c+PC9zdmc+"}, {"name": "Santorini", "country": "Grécko", "hint": "Biele domčeky s modrými kupolami stoja na útesoch nad Egejským morom.", "fact": "Santorini je ostrov sopečného pôvodu a jeho dnešný tvar ovplyvnila veľká erupcia.", "answers": ["Santorini", "Kréta", "Cyprus", "Korfu"], "correct": "Santorini", "image": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MDAgNDQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9IlNhbnRvcmluaSI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJza3kiIHgyPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iI2M4ZTVmMCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2VhZjNlOSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSc4MDAnIGhlaWdodD0nNDQwJyBmaWxsPScjOGZjOWU1Jy8+PHBhdGggZD0nTTAgMjMwUTIwMCAxODAgMzkwIDIzMFQ4MDAgMjA1VjQ0MEgwWicgZmlsbD0nIzI3N2VhYScvPjxwYXRoIGQ9J00wIDI1MEwxNjAgMjEwTDMwMCAyNTBMNDUwIDE5NUw2MTAgMjM1TDgwMCAxODVWNDQwSDBaJyBmaWxsPScjNjU1YjU4Jy8+PGcgZmlsbD0nI2ZmZjhlOSc+PHJlY3QgeD0nODAnIHk9JzE2MCcgd2lkdGg9JzE0NScgaGVpZ2h0PScxNDUnIHJ4PScxMicvPjxyZWN0IHg9JzI0NScgeT0nMTIwJyB3aWR0aD0nMTUwJyBoZWlnaHQ9JzE3NScgcng9JzEyJy8+PHJlY3QgeD0nNDUwJyB5PScxNDUnIHdpZHRoPScxNTUnIGhlaWdodD0nMTU1JyByeD0nMTInLz48cmVjdCB4PSc2MzAnIHk9JzExNScgd2lkdGg9JzExMCcgaGVpZ2h0PScxNzAnIHJ4PScxMicvPjwvZz48ZyBmaWxsPScjMjQ4NmM1Jz48cGF0aCBkPSdNOTAgMTY1YTYyIDYyIDAgMCAxIDEyNCAwWicvPjxwYXRoIGQ9J00yNjAgMTI1YTYwIDYwIDAgMCAxIDEyMCAwWicvPjxwYXRoIGQ9J000NjUgMTUwYTY1IDY1IDAgMCAxIDEzMCAwWicvPjwvZz48ZyBmaWxsPScjZTZiODhjJz48cmVjdCB4PScxMjAnIHk9JzIyNScgd2lkdGg9JzM1JyBoZWlnaHQ9JzgwJy8+PHJlY3QgeD0nMzAwJyB5PScyMTAnIHdpZHRoPSczNScgaGVpZ2h0PSc4NScvPjxyZWN0IHg9JzUxMCcgeT0nMjIwJyB3aWR0aD0nMzUnIGhlaWdodD0nODAnLz48L2c+PC9zdmc+"}, {"name": "Hallstatt", "country": "Rakúsko", "hint": "Malebná alpská dedinka leží pri jazere a je obklopená vysokými horami.", "fact": "Oblasť Hallstatt-Dachstein je zapísaná na zozname svetového dedičstva UNESCO.", "answers": ["Hallstatt", "Innsbruck", "Salzburg", "Lucern"], "correct": "Hallstatt", "image": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MDAgNDQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9IkhhbGxzdGF0dCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJza3kiIHgyPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iI2M4ZTVmMCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2VhZjNlOSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSc4MDAnIGhlaWdodD0nNDQwJyBmaWxsPScjYjZkOGU4Jy8+PHBhdGggZD0nTTAgMjUwTDE0MCA5MEwyNjAgMjMwTDQxMCA1NUw1OTAgMjQ1TDcwMCAxMDVMODAwIDIzMFY0NDBIMFonIGZpbGw9JyM3NThiODMnLz48cGF0aCBkPSdNOTAgMTYwTDE0MCA5MEwxODUgMTYwTDE0NSAxNDBaIE0zNDUgMTMwTDQxMCA1NUw0NzUgMTUwTDQxMCAxMjBaIE02NjAgMTYwTDcwMCAxMDVMNzUwIDE3MEw3MDAgMTQ1WicgZmlsbD0nI2Y0ZjJlOCcvPjxwYXRoIGQ9J00wIDI5MFEyMDAgMjcwIDQwMCAyOTVUODAwIDI4MFY0NDBIMFonIGZpbGw9JyMzZTlhYTUnLz48ZyBmaWxsPScjZTlkMmI1Jz48cmVjdCB4PSc5NScgeT0nMjIwJyB3aWR0aD0nODAnIGhlaWdodD0nOTAnLz48cmVjdCB4PScxOTAnIHk9JzIwMCcgd2lkdGg9JzkwJyBoZWlnaHQ9JzExMCcvPjxyZWN0IHg9JzMwMCcgeT0nMjMwJyB3aWR0aD0nODUnIGhlaWdodD0nODAnLz48cmVjdCB4PSc0MjAnIHk9JzIwNScgd2lkdGg9Jzk1JyBoZWlnaHQ9JzEwNScvPjwvZz48ZyBmaWxsPScjOGI1ZjRlJz48cGF0aCBkPSdNODUgMjI1TDEzNSAxODVMMTg1IDIyNVogTTE4MCAyMDVMMjM1IDE2NUwyOTAgMjA1WiBNMjkwIDIzNUwzNDAgMTk1TDM5NSAyMzVaIE00MTAgMjEwTDQ2NSAxNjVMNTI1IDIxMFonLz48L2c+PHBhdGggZD0nTTU3MCAyMTBWMzE1JyBzdHJva2U9JyNlZWU2ZDUnIHN0cm9rZS13aWR0aD0nMTInLz48cGF0aCBkPSdNNTQ1IDIzNUw1NzAgMTg1TDU5NSAyMzVaJyBmaWxsPScjNTg2Yjc4Jy8+PC9zdmc+"}, {"name": "Meteora", "country": "Grécko", "hint": "Starobylé kláštory tu stoja na vrcholoch vysokých skalných stĺpov.", "fact": "Kláštory Meteora sú zapísané na zozname svetového dedičstva UNESCO.", "answers": ["Meteora", "Delfy", "Olymp", "Rhodos"], "correct": "Meteora", "image": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MDAgNDQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9Ik1ldGVvcmEiPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0ic2t5IiB4Mj0iMCIgeTI9IjEiPjxzdG9wIHN0b3AtY29sb3I9IiNjOGU1ZjAiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNlYWYzZTkiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0nODAwJyBoZWlnaHQ9JzQ0MCcgZmlsbD0nI2E4ZDFlNCcvPjxjaXJjbGUgY3g9JzY1MCcgY3k9JzcwJyByPSc0MCcgZmlsbD0nI2ZmZTdhNycvPjxwYXRoIGQ9J00wIDMwMFEyMDAgMjcwIDQwMCAzMDVUODAwIDI5MFY0NDBIMFonIGZpbGw9JyM2ZDk5NjcnLz48ZyBmaWxsPScjOTE4NDc3Jz48cGF0aCBkPSdNMTQwIDM5MEwxNzUgMTMwTDIxNSAzOTBaJy8+PHBhdGggZD0nTTI4MCA0MDBMMzM1IDgwTDM5NSA0MDBaJy8+PHBhdGggZD0nTTQ3NSA0MDBMNTIwIDE0NUw1NzAgNDAwWicvPjxwYXRoIGQ9J002MjAgNDAwTDY2NSAxOTBMNzEwIDQwMFonLz48L2c+PGcgZmlsbD0nI2I5ODI1NCc+PHJlY3QgeD0nMTUwJyB5PScxMjUnIHdpZHRoPSc1NScgaGVpZ2h0PScyNScvPjxwYXRoIGQ9J00xNDUgMTI1TDE3OCA5NUwyMTAgMTI1WicvPjxyZWN0IHg9JzMxMCcgeT0nNzUnIHdpZHRoPSc2NScgaGVpZ2h0PSczMCcvPjxwYXRoIGQ9J00zMDUgNzVMMzQzIDQwTDM4MCA3NVonLz48cmVjdCB4PSc1MDAnIHk9JzE0MCcgd2lkdGg9JzQ1JyBoZWlnaHQ9JzI1Jy8+PHBhdGggZD0nTTQ5NSAxNDBMNTIyIDExMkw1NTAgMTQwWicvPjwvZz48L3N2Zz4="}, {"name": "Praha", "country": "Česko", "hint": "Historické mesto na Vltave je známe kamenným mostom so sochami.", "fact": "Karlov most bol dokončený v 15. storočí a spája Staré Mesto s Malou Stranou.", "answers": ["Budapešť", "Praha", "Krakov", "Ľubľana"], "correct": "Praha", "image": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MDAgNDQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9IlByYWhhIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9InNreSIgeDI9IjAiIHkyPSIxIj48c3RvcCBzdG9wLWNvbG9yPSIjYzhlNWYwIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZWFmM2U5Ii8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9JzgwMCcgaGVpZ2h0PSc0NDAnIGZpbGw9JyNhOGQyZTUnLz48Y2lyY2xlIGN4PSc2NjUnIGN5PSc3NScgcj0nNDAnIGZpbGw9JyNmZmU3YTcnLz48cGF0aCBkPSdNMCAyNzBRMTgwIDIzMCAzNTAgMjcwVDgwMCAyNTVWNDQwSDBaJyBmaWxsPScjNGQ5YmE2Jy8+PGcgZmlsbD0nI2RmYzlhOCc+PHJlY3QgeD0nNDAnIHk9JzE4NScgd2lkdGg9JzEyMCcgaGVpZ2h0PScxMjUnLz48cmVjdCB4PScxNzUnIHk9JzE1NScgd2lkdGg9JzExMCcgaGVpZ2h0PScxNTUnLz48cmVjdCB4PSc1MjAnIHk9JzE4MCcgd2lkdGg9JzExNScgaGVpZ2h0PScxMzAnLz48cmVjdCB4PSc2NTAnIHk9JzE2MCcgd2lkdGg9JzExMCcgaGVpZ2h0PScxNTAnLz48L2c+PGcgZmlsbD0nIzhlNjU1NCc+PHBhdGggZD0nTTM1IDE5MEwxMDAgMTM1TDE2NSAxOTBaIE0xNzAgMTYwTDIzMCAxMTBMMjkwIDE2MFogTTUxNSAxODVMNTc1IDEzMEw2NDAgMTg1WiBNNjQ1IDE2NUw3MDUgMTE1TDc2NSAxNjVaJy8+PC9nPjxwYXRoIGQ9J00wIDI4NVEyMDAgMjQ1IDQwMCAyODVUODAwIDI3MCcgc3Ryb2tlPScjYzNiNDlkJyBzdHJva2Utd2lkdGg9JzI4JyBmaWxsPSdub25lJy8+PGcgZmlsbD0nIzRkNTg2Mic+PHJlY3QgeD0nMzkwJyB5PScxMjAnIHdpZHRoPScyOCcgaGVpZ2h0PScxNTAnLz48cGF0aCBkPSdNMzc4IDEyNUw0MDQgNzVMNDMwIDEyNVonLz48cmVjdCB4PSc0MzAnIHk9JzE1NScgd2lkdGg9JzIwJyBoZWlnaHQ9JzExNScvPjwvZz48L3N2Zz4="}, {"name": "Banská Štiavnica", "country": "Slovensko", "hint": "Historické banské mesto leží v Štiavnických vrchoch a má Starý aj Nový zámok.", "fact": "Historické centrum mesta je súčasťou svetového dedičstva UNESCO.", "answers": ["Banská Bystrica", "Banská Štiavnica", "Kremnica", "Levoča"], "correct": "Banská Štiavnica", "image": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MDAgNDQwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9IkJhbnNrw6EgxaB0aWF2bmljYSI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJza3kiIHgyPSIwIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iI2M4ZTVmMCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2VhZjNlOSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSc4MDAnIGhlaWdodD0nNDQwJyBmaWxsPScjYjZkOWU4Jy8+PHBhdGggZD0nTTAgMjQ1UTE4MCAxNjUgMzYwIDI0NVQ4MDAgMjA1VjQ0MEgwWicgZmlsbD0nIzZlOWE3OCcvPjxwYXRoIGQ9J00wIDMwMFEyMDAgMjQwIDQwMCAzMDBUODAwIDI2MFY0NDBIMFonIGZpbGw9JyM0ZjgwNjgnLz48ZyBmaWxsPScjZTlkMmIwJz48cmVjdCB4PScxMDAnIHk9JzIxNScgd2lkdGg9Jzk1JyBoZWlnaHQ9JzExNScvPjxyZWN0IHg9JzIxMCcgeT0nMTgwJyB3aWR0aD0nMTAwJyBoZWlnaHQ9JzE1MCcvPjxyZWN0IHg9JzMzMCcgeT0nMjA1JyB3aWR0aD0nOTUnIGhlaWdodD0nMTI1Jy8+PHJlY3QgeD0nNDUwJyB5PScxNzAnIHdpZHRoPScxMTAnIGhlaWdodD0nMTYwJy8+PHJlY3QgeD0nNTgwJyB5PScyMTUnIHdpZHRoPScxMDUnIGhlaWdodD0nMTE1Jy8+PC9nPjxnIGZpbGw9JyM5YTY2NTInPjxwYXRoIGQ9J005MCAyMjBMMTQ3IDE3MEwyMDUgMjIwWiBNMjAwIDE4NUwyNjAgMTMwTDMyMCAxODVaIE0zMjAgMjEwTDM3NyAxNjBMNDM1IDIxMFogTTQ0MCAxNzVMNTA1IDExNUw1NzAgMTc1WiBNNTcwIDIyMEw2MzAgMTcwTDY5NSAyMjBaJy8+PC9nPjxnIGZpbGw9JyM1NjZjNzknPjxwYXRoIGQ9J000NTUgMTcwVjk1SDU1NVYxNzBaJy8+PHBhdGggZD0nTTQ0NSAxMDBMNTA1IDU1TDU2NSAxMDBaJy8+PC9nPjwvc3ZnPg=="}];
+
+let questions = [];
+let currentIndex = 0;
+let points = 0;
+let answered = false;
+
+const $ = (id) => document.getElementById(id);
+const startScreen = $("startScreen");
+const quizScreen = $("quizScreen");
+const resultScreen = $("resultScreen");
+
+function shuffle(array) {
+  // Fisher-Yates: premieša prvky poctivo a náhodne.
+  const copy = [...array];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function showScreen(screen) {
+  startScreen.classList.add("hidden");
+  quizScreen.classList.add("hidden");
+  resultScreen.classList.add("hidden");
+  screen.classList.remove("hidden");
+}
+
+function startQuiz() {
+  questions = shuffle(allQuestions).map(q => ({
+    ...q,
+    shuffledAnswers: shuffle(q.answers)
+  }));
+  currentIndex = 0;
+  points = 0;
+  showScreen(quizScreen);
+  showQuestion();
+}
+
+function showQuestion() {
+  answered = false;
+  const q = questions[currentIndex];
+  $("counter").textContent = `Otázka ${currentIndex + 1} z ${questions.length}`;
+  $("score").textContent = `★ Body: ${points}`;
+  $("progressFill").style.width = `${(currentIndex / questions.length) * 100}%`;
+  $("questionImage").src = q.image;
+  $("questionImage").alt = `Obrázok destinácie – otázka ${currentIndex + 1}`;
+  $("hint").innerHTML = `<strong>💡 Nápoveda:</strong> ${escapeHTML(q.hint)}`;
+  $("feedback").className = "hidden";
+  $("feedback").innerHTML = "";
+  $("nextBtn").classList.add("hidden");
+
+  const answersBox = $("answers");
+  answersBox.innerHTML = "";
+  q.shuffledAnswers.forEach(answer => {
+    const button = document.createElement("button");
+    button.className = "answer";
+    button.textContent = answer;
+    button.addEventListener("click", () => checkAnswer(answer, button));
+    answersBox.appendChild(button);
+  });
+}
+
+function checkAnswer(selected, selectedButton) {
+  if (answered) return;
+  answered = true;
+  const q = questions[currentIndex];
+  const isCorrect = selected === q.correct;
+  if (isCorrect) points++;
+
+  document.querySelectorAll(".answer").forEach(button => {
+    button.disabled = true;
+    if (button.textContent === q.correct) button.classList.add("correct");
+  });
+  if (!isCorrect) selectedButton.classList.add("wrong");
+
+  $("score").textContent = `★ Body: ${points}`;
+  const feedback = $("feedback");
+  feedback.className = `feedback ${isCorrect ? "good" : "bad"}`;
+  feedback.innerHTML = `
+    <h3>${isCorrect ? "✓ Správne! Výborne!" : "✕ Tentoraz to nevyšlo."}</h3>
+    <div>Správna odpoveď: <strong>${escapeHTML(q.correct)}</strong> (${escapeHTML(q.country)}).</div>
+    <p class="fact">🌟 <strong>Vedela si, že?</strong> ${escapeHTML(q.fact)}</p>
+  `;
+  $("nextBtn").textContent = currentIndex === questions.length - 1 ? "Zobraziť výsledok →" : "Ďalšia otázka →";
+  $("nextBtn").classList.remove("hidden");
+}
+
+function nextQuestion() {
+  if (!answered) return;
+  currentIndex++;
+  if (currentIndex < questions.length) showQuestion();
+  else showResults();
+}
+
+function showResults() {
+  showScreen(resultScreen);
+  $("finalScore").textContent = points;
+  let rating, message;
+  if (points >= 9) {
+    rating = "Výborný cestovateľ! ✨";
+    message = "Svet máš naozaj v malíčku. Tvoje cestovateľské znalosti sú skvelé!";
+  } else if (points >= 7) {
+    rating = "Skvelý výkon! 🧭";
+    message = "Poznáš množstvo krásnych miest. Ešte pár zastávok a budeš expert!";
+  } else if (points >= 4) {
+    rating = "Dobrý začiatok! 🌴";
+    message = "Každá správna odpoveď je malý objav. Skús si kvíz zahrať znova!";
+  } else {
+    rating = "Skús to znova, cestovateľ! 🌞";
+    message = "Na svete je ešte veľa miest na objavovanie. Ďalší pokus môže byť ešte lepší!";
+  }
+  $("rating").textContent = rating;
+  $("resultMessage").textContent = message;
+  $("progressFill").style.width = "100%";
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  }[char]));
+}
+
+$("startBtn").addEventListener("click", startQuiz);
+$("nextBtn").addEventListener("click", nextQuestion);
+$("againBtn").addEventListener("click", () => showScreen(startScreen));
+
+// Dve ukážkové scenérie na úvodnej obrazovke.
+$("heroImage1").src = allQuestions[3].image;
+$("heroImage2").src = allQuestions[5].image;
+</script>
 </body>
 </html>

@@ -1,18 +1,1781 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="galeria-placeholder" content="1">
-  <title>Pripravuje sa</title>
-  <link rel="stylesheet" href="../../../assets/galeria.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Pink Closet</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+
+:root {
+    --pink: #d97b9b;
+    --pink-dark: #b95f7e;
+    --pink-light: #f9dfe8;
+    --pink-pale: #fff6f8;
+    --cream: #fffaf8;
+    --brown: #46383c;
+    --gray: #8d8084;
+    --white: #ffffff;
+    --line: #eadcdf;
+    --green: #78a982;
+    --red: #c66f73;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--pink-pale);
+    color: var(--brown);
+    font-family: "DM Sans", Arial, sans-serif;
+}
+
+button {
+    font-family: inherit;
+}
+
+header {
+    height: 78px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 7%;
+    background: rgba(255,255,255,.9);
+    border-bottom: 1px solid var(--line);
+}
+
+.logo {
+    font-family: "Playfair Display", serif;
+    font-size: 27px;
+    font-weight: 700;
+    color: var(--brown);
+}
+
+.logo span {
+    color: var(--pink);
+}
+
+.nav-text {
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gray);
+}
+
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: block;
+}
+
+/* HOME */
+
+.home {
+    min-height: calc(100vh - 78px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 50px 20px;
+}
+
+.home-inner {
+    max-width: 1050px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1.1fr .9fr;
+    gap: 70px;
+    align-items: center;
+}
+
+.small-title {
+    color: var(--pink);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.hero-title {
+    font-family: "Playfair Display", serif;
+    font-size: clamp(55px, 8vw, 92px);
+    line-height: .95;
+    margin: 0;
+    font-weight: 600;
+}
+
+.hero-title span {
+    color: var(--pink);
+}
+
+.hero-text {
+    max-width: 520px;
+    color: var(--gray);
+    line-height: 1.8;
+    margin: 25px 0;
+    font-size: 16px;
+}
+
+.start-btn {
+    border: none;
+    background: var(--pink);
+    color: white;
+    padding: 15px 28px;
+    border-radius: 4px;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.start-btn:hover {
+    background: var(--pink-dark);
+    transform: translateY(-2px);
+}
+
+.home-info {
+    display: flex;
+    gap: 35px;
+    margin-top: 35px;
+}
+
+.home-info div {
+    border-left: 2px solid var(--pink-light);
+    padding-left: 15px;
+}
+
+.home-info strong {
+    display: block;
+    font-family: "Playfair Display", serif;
+    font-size: 24px;
+}
+
+.home-info small {
+    color: var(--gray);
+}
+
+.fashion-picture {
+    min-height: 480px;
+    border-radius: 180px 180px 8px 8px;
+    background:
+        linear-gradient(rgba(255,220,230,.15),rgba(255,220,230,.15)),
+        #efcbd7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.fashion-picture::before {
+    content: "";
+    width: 230px;
+    height: 230px;
+    border-radius: 50%;
+    background: #f7dfe6;
+    position: absolute;
+    top: 55px;
+}
+
+.fashion-picture::after {
+    content: "♡";
+    position: absolute;
+    font-family: "Playfair Display", serif;
+    font-size: 240px;
+    color: rgba(185,95,126,.13);
+}
+
+.dress {
+    position: relative;
+    z-index: 2;
+    font-size: 150px;
+    filter: grayscale(.1);
+}
+
+/* SETUP */
+
+.page {
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 55px 20px;
+}
+
+.page-heading {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.page-heading h1 {
+    font-family: "Playfair Display", serif;
+    font-size: 48px;
+    margin: 0 0 10px;
+}
+
+.page-heading p {
+    color: var(--gray);
+}
+
+.choice-section {
+    background: var(--white);
+    padding: 30px;
+    margin-bottom: 20px;
+    border: 1px solid var(--line);
+}
+
+.choice-section h3 {
+    margin-top: 0;
+    font-family: "Playfair Display", serif;
+    font-size: 23px;
+}
+
+.choices {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 12px;
+}
+
+.choice {
+    background: var(--white);
+    border: 1px solid var(--line);
+    padding: 20px 12px;
+    cursor: pointer;
+    color: var(--brown);
+    transition: .2s;
+}
+
+.choice:hover {
+    border-color: var(--pink);
+}
+
+.choice.selected {
+    background: var(--pink-light);
+    border-color: var(--pink);
+}
+
+.choice-icon {
+    font-size: 28px;
+    display: block;
+    margin-bottom: 9px;
+}
+
+.choice strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.choice small {
+    color: var(--gray);
+}
+
+.begin {
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* QUIZ */
+
+.quiz-page {
+    max-width: 900px;
+    margin: auto;
+    padding: 35px 20px 60px;
+}
+
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.quiz-counter {
+    font-size: 13px;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.quiz-score {
+    font-weight: 700;
+    color: var(--pink-dark);
+}
+
+.progress-line {
+    height: 3px;
+    background: var(--pink-light);
+    margin-bottom: 35px;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0;
+    background: var(--pink);
+    transition: .3s;
+}
+
+.question-box {
+    background: white;
+    border: 1px solid var(--line);
+    padding: 40px;
+}
+
+.question-top {
+    display: flex;
+    justify-content: space-between;
+    color: var(--gray);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.question-image {
+    text-align: center;
+    font-size: 90px;
+    margin: 25px 0 15px;
+}
+
+.question {
+    font-family: "Playfair Display", serif;
+    font-size: 32px;
+    text-align: center;
+    line-height: 1.3;
+    margin: 0 auto 30px;
+    max-width: 700px;
+}
+
+.answers {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.answer {
+    border: 1px solid var(--line);
+    background: white;
+    color: var(--brown);
+    padding: 18px;
+    text-align: left;
+    cursor: pointer;
+    font-weight: 600;
+    transition: .2s;
+}
+
+.answer:hover:not(:disabled) {
+    background: var(--pink-pale);
+    border-color: var(--pink);
+}
+
+.answer.correct {
+    background: #edf6ef;
+    border-color: var(--green);
+}
+
+.answer.wrong {
+    background: #fbebeb;
+    border-color: var(--red);
+}
+
+.answer:disabled {
+    cursor: default;
+}
+
+.quiz-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 22px;
+}
+
+.feedback {
+    min-height: 25px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.timer {
+    color: var(--pink-dark);
+    font-weight: 700;
+}
+
+/* RESULT */
+
+.result {
+    min-height: calc(100vh - 78px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+}
+
+.result-box {
+    background: white;
+    border: 1px solid var(--line);
+    text-align: center;
+    max-width: 650px;
+    width: 100%;
+    padding: 55px 30px;
+}
+
+.result-box .heart {
+    font-size: 55px;
+    color: var(--pink);
+}
+
+.result-box h1 {
+    font-family: "Playfair Display", serif;
+    font-size: 48px;
+    margin: 5px 0;
+}
+
+.final-score {
+    font-family: "Playfair Display", serif;
+    font-size: 72px;
+    color: var(--pink);
+    margin: 20px 0 5px;
+}
+
+.result-box p {
+    color: var(--gray);
+}
+
+.result-message {
+    font-family: "Playfair Display", serif;
+    font-size: 23px;
+    margin: 20px;
+}
+
+.result-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+.secondary-btn {
+    border: 1px solid var(--line);
+    background: white;
+    color: var(--brown);
+    padding: 14px 22px;
+    cursor: pointer;
+}
+
+.secondary-btn:hover {
+    border-color: var(--pink);
+}
+
+/* MOBILE */
+
+@media(max-width:750px) {
+
+    header {
+        padding: 0 5%;
+    }
+
+    .nav-text {
+        display: none;
+    }
+
+    .home-inner {
+        grid-template-columns: 1fr;
+        gap: 35px;
+    }
+
+    .home {
+        padding-top: 35px;
+    }
+
+    .fashion-picture {
+        min-height: 300px;
+        border-radius: 120px 120px 8px 8px;
+    }
+
+    .hero-title {
+        font-size: 58px;
+    }
+
+    .choices {
+        grid-template-columns: 1fr;
+    }
+
+    .question-box {
+        padding: 25px 18px;
+    }
+
+    .question {
+        font-size: 25px;
+    }
+
+    .answers {
+        grid-template-columns: 1fr;
+    }
+
+    .quiz-bottom {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+</style>
 </head>
+
 <body>
-  <header>
-    <nav class="crumbs"><a href="../../../">Žiacke aplikácie</a> › <a href="../../">2026-27</a> › <a href="../">2.B</a></nav>
-    <h1>Pripravuje sa</h1>
-    <p>Na aplikácii sa ešte pracuje. Pozrite sa sem neskôr.</p>
-  </header>
+
+<header>
+    <div class="logo">Pink <span>Closet</span></div>
+    <div class="nav-text">fashion quiz · 2026</div>
+</header>
+
+
+<!-- ================= HOME ================= -->
+
+<section id="home" class="screen active">
+
+<div class="home">
+
+<div class="home-inner">
+
+<div>
+
+<div class="small-title">Môj módny kvíz</div>
+
+<h1 class="hero-title">
+Poznáš<br>
+svoj <span>štýl?</span>
+</h1>
+
+<p class="hero-text">
+Móda nie je len o oblečení. Je o detailoch,
+materiáloch, farbách a osobnom štýle.
+Otestuj si, čo všetko o móde vieš.
+</p>
+
+<button class="start-btn" onclick="showScreen('setup')">
+ZAČAŤ KVÍZ
+</button>
+
+<div class="home-info">
+
+<div>
+<strong id="bestScore">0</strong>
+<small>najlepší výsledok</small>
+</div>
+
+<div>
+<strong id="gamesPlayed">0</strong>
+<small>odohraných kvízov</small>
+</div>
+
+</div>
+
+</div>
+
+<div class="fashion-picture">
+<div class="dress">👗</div>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= SETUP ================= -->
+
+<section id="setup" class="screen">
+
+<div class="page">
+
+<div class="page-heading">
+<div class="small-title">Priprav sa</div>
+<h1>Vyber si svoj kvíz</h1>
+<p>Najprv si vyber tému a potom náročnosť.</p>
+</div>
+
+
+<div class="choice-section">
+
+<h3>Téma</h3>
+
+<div class="choices">
+
+<button class="choice selected"
+data-category="all"
+onclick="selectCategory('all',this)">
+
+<span class="choice-icon">♡</span>
+<strong>Celá móda</strong>
+<small>Trochu zo všetkého</small>
+
+</button>
+
+
+<button class="choice"
+data-category="clothes"
+onclick="selectCategory('clothes',this)">
+
+<span class="choice-icon">👚</span>
+<strong>Oblečenie</strong>
+<small>Kúsky, materiály a štýly</small>
+
+</button>
+
+
+<button class="choice"
+data-category="accessories"
+onclick="selectCategory('accessories',this)">
+
+<span class="choice-icon">👜</span>
+<strong>Doplnky</strong>
+<small>Šperky, kabelky a okuliare</small>
+
+</button>
+
+</div>
+
+</div>
+
+
+<div class="choice-section">
+
+<h3>Náročnosť</h3>
+
+<div class="choices">
+
+<button class="choice selected"
+data-difficulty="easy"
+onclick="selectDifficulty('easy',this)">
+
+<span class="choice-icon">🌸</span>
+<strong>Ľahká</strong>
+<small>Základné otázky</small>
+
+</button>
+
+
+<button class="choice"
+data-difficulty="medium"
+onclick="selectDifficulty('medium',this)">
+
+<span class="choice-icon">🌷</span>
+<strong>Stredná</strong>
+<small>Pre väčších fanúšikov módy</small>
+
+</button>
+
+
+<button class="choice"
+data-difficulty="hard"
+onclick="selectDifficulty('hard',this)">
+
+<span class="choice-icon">🥀</span>
+<strong>Ťažká</strong>
+<small>Pre skutočných znalcov</small>
+
+</button>
+
+</div>
+
+</div>
+
+
+<button class="start-btn begin" onclick="startQuiz()">
+ZAČAŤ HRAŤ
+</button>
+
+</div>
+
+</section>
+
+
+<!-- ================= QUIZ ================= -->
+
+<section id="quiz" class="screen">
+
+<div class="quiz-page">
+
+<div class="quiz-header">
+
+<div class="quiz-counter" id="questionNumber">
+Otázka 1 / 10
+</div>
+
+<div class="quiz-score">
+Body: <span id="score">0</span>
+</div>
+
+</div>
+
+<div class="progress-line">
+<div class="progress-fill" id="progress"></div>
+</div>
+
+
+<div class="question-box">
+
+<div class="question-top">
+
+<span id="questionCategory">
+Móda
+</span>
+
+<span>
+Čas: <span class="timer" id="timer">20</span> s
+</span>
+
+</div>
+
+
+<div class="question-image" id="questionVisual">
+👗
+</div>
+
+
+<h2 class="question" id="questionText">
+Otázka
+</h2>
+
+
+<div class="answers" id="answers"></div>
+
+
+<div class="quiz-bottom">
+
+<div class="feedback" id="feedback"></div>
+
+<button
+id="nextButton"
+class="start-btn"
+style="display:none"
+onclick="nextQuestion()">
+ĎALŠIA OTÁZKA
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= RESULT ================= -->
+
+<section id="result" class="screen">
+
+<div class="result">
+
+<div class="result-box">
+
+<div class="heart">♡</div>
+
+<h1>Hotovo!</h1>
+
+<div class="final-score" id="finalScore">
+0
+</div>
+
+<p id="resultDetails"></p>
+
+<div class="result-message" id="rating"></div>
+
+<div class="result-buttons">
+
+<button class="start-btn" onclick="startQuiz()">
+SKÚSIŤ ZNOVA
+</button>
+
+<button class="secondary-btn"
+onclick="showScreen('setup')">
+ZMENIŤ KVÍZ
+</button>
+
+<button class="secondary-btn"
+onclick="showScreen('home')">
+DOMOV
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<script>
+
+/* =====================================================
+   OTÁZKY
+===================================================== */
+
+const questions = [
+
+/* ---------- OBLEČENIE / ĽAHKÁ ---------- */
+
+{
+category:"clothes",
+difficulty:"easy",
+icon:"👕",
+question:"Ktorý kúsok sa najčastejšie nosí na hornej časti tela?",
+answers:["Tričko","Nohavice","Opasok","Ponožky"],
+correct:"Tričko"
+},
+
+{
+category:"clothes",
+difficulty:"easy",
+icon:"👖",
+question:"Ktorý kus oblečenia sa nosí na nohách?",
+answers:["Nohavice","Košeľa","Šál","Čiapka"],
+correct:"Nohavice"
+},
+
+{
+category:"clothes",
+difficulty:"easy",
+icon:"🧥",
+question:"Čo si zvyčajne oblečieme, keď je vonku zima?",
+answers:["Kabát","Plavky","Tielko","Šortky"],
+correct:"Kabát"
+},
+
+{
+category:"clothes",
+difficulty:"easy",
+icon:"👗",
+question:"Ktorý kúsok je jednodielne oblečenie?",
+answers:["Šaty","Opasok","Ponožky","Rukavice"],
+correct:"Šaty"
+},
+
+{
+category:"clothes",
+difficulty:"easy",
+icon:"👔",
+question:"Čo sa často nosí pod sakom?",
+answers:["Košeľa","Šál","Plavky","Čiapka"],
+correct:"Košeľa"
+},
+
+{
+category:"clothes",
+difficulty:"easy",
+icon:"🩳",
+question:"Ako nazývame kratšiu verziu nohavíc?",
+answers:["Šortky","Kabát","Sako","Sveter"],
+correct:"Šortky"
+},
+
+{
+category:"clothes",
+difficulty:"easy",
+icon:"🧶",
+question:"Čo nás môže zahriať počas chladného dňa?",
+answers:["Sveter","Sandále","Tielko","Plavky"],
+correct:"Sveter"
+},
+
+{
+category:"clothes",
+difficulty:"easy",
+icon:"👚",
+question:"Ktorý z týchto kúskov je blúzka?",
+answers:["Vrchný diel oblečenia","Typ topánky","Druh kabelky","Šperk"],
+correct:"Vrchný diel oblečenia"
+},
+
+{
+category:"clothes",
+difficulty:"easy",
+icon:"🧤",
+question:"Čo si dávame na ruky v zime?",
+answers:["Rukavice","Sandále","Ponožky","Šál"],
+correct:"Rukavice"
+},
+
+{
+category:"clothes",
+difficulty:"easy",
+icon:"🧢",
+question:"Čo si môžeme dať na hlavu?",
+answers:["Čiapku","Opasok","Náhrdelník","Topánky"],
+correct:"Čiapku"
+},
+
+
+/* ---------- OBLEČENIE / STREDNÁ ---------- */
+
+{
+category:"clothes",
+difficulty:"medium",
+icon:"🧵",
+question:"Z ktorej rastliny sa získava prírodné vlákno na výrobu bavlny?",
+answers:["Bavlník","Ľan","Konopa","Bambus"],
+correct:"Bavlník"
+},
+
+{
+category:"clothes",
+difficulty:"medium",
+icon:"👖",
+question:"Z akého materiálu sa tradične vyrábajú džínsy?",
+answers:["Denim","Hodváb","Satén","Kašmír"],
+correct:"Denim"
+},
+
+{
+category:"clothes",
+difficulty:"medium",
+icon:"👕",
+question:"Čo znamená pojem oversized?",
+answers:["Voľný a väčší strih","Veľmi krátky strih","Oblečenie bez rukávov","Športový materiál"],
+correct:"Voľný a väčší strih"
+},
+
+{
+category:"clothes",
+difficulty:"medium",
+icon:"👗",
+question:"Čo označuje pojem midi pri šatách?",
+answers:["Dĺžku približne po lýtka","Dĺžku po zem","Veľmi krátku dĺžku","Dĺžku po pás"],
+correct:"Dĺžku približne po lýtka"
+},
+
+{
+category:"clothes",
+difficulty:"medium",
+icon:"🧶",
+question:"Ktorý materiál je známy svojou hrejivosťou?",
+answers:["Vlna","Nylon","Polyester","Akryl"],
+correct:"Vlna"
+},
+
+{
+category:"clothes",
+difficulty:"medium",
+icon:"👚",
+question:"Čo znamená slim fit?",
+answers:["Priliehavejší strih","Veľmi voľný strih","Dlhší strih","Športový strih"],
+correct:"Priliehavejší strih"
+},
+
+{
+category:"clothes",
+difficulty:"medium",
+icon:"🧥",
+question:"Čo je vrstvenie oblečenia?",
+answers:["Kombinovanie viacerých vrstiev","Nosenie iba kabáta","Nosenie jednej farby","Kombinovanie iba doplnkov"],
+correct:"Kombinovanie viacerých vrstiev"
+},
+
+{
+category:"clothes",
+difficulty:"medium",
+icon:"👗",
+question:"Čo je capsule wardrobe?",
+answers:["Premyslený šatník s ľahko kombinovateľnými kúskami","Šatník iba s luxusnými značkami","Šatník určený na šport","Šatník iba čiernej farby"],
+correct:"Premyslený šatník s ľahko kombinovateľnými kúskami"
+},
+
+{
+category:"clothes",
+difficulty:"medium",
+icon:"🧥",
+question:"Ktorý materiál je známy tým, že je ľahký a často sa používa v športovom oblečení?",
+answers:["Polyester","Vlna","Kašmír","Zamat"],
+correct:"Polyester"
+},
+
+{
+category:"clothes",
+difficulty:"medium",
+icon:"👔",
+question:"Čo je formálnejší outfit?",
+answers:["Oblečenie vhodné na spoločenskú alebo pracovnú udalosť","Oblečenie iba na šport","Oblečenie na pláž","Pyžamo"],
+correct:"Oblečenie vhodné na spoločenskú alebo pracovnú udalosť"
+},
+
+
+/* ---------- OBLEČENIE / ŤAŽKÁ ---------- */
+
+{
+category:"clothes",
+difficulty:"hard",
+icon:"✂️",
+question:"Čo znamená haute couture?",
+answers:["Vysokú krajčírsku módu na mieru","Sériovo vyrábané oblečenie","Športovú módu","Vintage oblečenie"],
+correct:"Vysokú krajčírsku módu na mieru"
+},
+
+{
+category:"clothes",
+difficulty:"hard",
+icon:"🧥",
+question:"Čo je trench coat?",
+answers:["Dlhší kabát typický opaskom a ďalšími detailmi","Druh nohavíc","Krátka vesta","Druh svetra"],
+correct:"Dlhší kabát typický opaskom a ďalšími detailmi"
+},
+
+{
+category:"clothes",
+difficulty:"hard",
+icon:"👗",
+question:"Čo je peplum?",
+answers:["Rozšírená časť oblečenia v oblasti pása","Typ goliera","Druh látky","Typ topánky"],
+correct:"Rozšírená časť oblečenia v oblasti pása"
+},
+
+{
+category:"clothes",
+difficulty:"hard",
+icon:"🎩",
+question:"Čo je smoking?",
+answers:["Formálny večerný odev","Športová bunda","Druh klobúka","Letné oblečenie"],
+correct:"Formálny večerný odev"
+},
+
+{
+category:"clothes",
+difficulty:"hard",
+icon:"🧵",
+question:"Čo označuje pojem prêt-à-porter?",
+answers:["Hotovú módu v štandardných veľkostiach","Oblečenie šité výhradne na mieru","Historické kostýmy","Športové oblečenie"],
+correct:"Hotovú módu v štandardných veľkostiach"
+},
+
+{
+category:"clothes",
+difficulty:"hard",
+icon:"📐",
+question:"Čo je strih oblečenia?",
+answers:["Spôsob, akým je oblečenie tvarované a zostavené","Farba látky","Cena oblečenia","Značka oblečenia"],
+correct:"Spôsob, akým je oblečenie tvarované a zostavené"
+},
+
+{
+category:"clothes",
+difficulty:"hard",
+icon:"🧶",
+question:"Ktorý z týchto materiálov pochádza zo zvieraťa?",
+answers:["Kašmír","Bavlna","Ľan","Viskóza"],
+correct:"Kašmír"
+},
+
+{
+category:"clothes",
+difficulty:"hard",
+icon:"👗",
+question:"Ktorá módna návrhárka je spojená so vznikom značky Chanel?",
+answers:["Coco Chanel","Vivienne Westwood","Stella McCartney","Mary Quant"],
+correct:"Coco Chanel"
+},
+
+{
+category:"clothes",
+difficulty:"hard",
+icon:"🪡",
+question:"Čo je drapovanie?",
+answers:["Tvarovanie látky priamo na figuríne","Farbenie látky","Čistenie odevu","Prišívanie gombíkov"],
+correct:"Tvarovanie látky priamo na figuríne"
+},
+
+{
+category:"clothes",
+difficulty:"hard",
+icon:"👔",
+question:"Čo je Windsor golier?",
+answers:["Typ goliera košele","Druh saka","Typ nohavíc","Druh materiálu"],
+correct:"Typ goliera košele"
+},
+
+
+/* ---------- DOPLNKY / ĽAHKÁ ---------- */
+
+{
+category:"accessories",
+difficulty:"easy",
+icon:"⌚",
+question:"Čím si môžeme pozrieť čas?",
+answers:["Hodinkami","Kabelkou","Šálom","Opaskom"],
+correct:"Hodinkami"
+},
+
+{
+category:"accessories",
+difficulty:"easy",
+icon:"🕶️",
+question:"Čo chránia slnečné okuliare?",
+answers:["Oči","Ruky","Uši","Krk"],
+correct:"Oči"
+},
+
+{
+category:"accessories",
+difficulty:"easy",
+icon:"👜",
+question:"Do čoho si môžeme odložiť osobné veci?",
+answers:["Kabelky","Prsteňa","Náušníc","Opasku"],
+correct:"Kabelky"
+},
+
+{
+category:"accessories",
+difficulty:"easy",
+icon:"🧣",
+question:"Ktorý doplnok sa nosí okolo krku?",
+answers:["Šál","Prsteň","Hodinky","Opasok"],
+correct:"Šál"
+},
+
+{
+category:"accessories",
+difficulty:"easy",
+icon:"💍",
+question:"Čo sa nosí na prste?",
+answers:["Prsteň","Kabelka","Klobúk","Šál"],
+correct:"Prsteň"
+},
+
+{
+category:"accessories",
+difficulty:"easy",
+icon:"👒",
+question:"Čo môžeme nosiť na hlave ako módny doplnok?",
+answers:["Klobúk","Náhrdelník","Náramok","Opasok"],
+correct:"Klobúk"
+},
+
+{
+category:"accessories",
+difficulty:"easy",
+icon:"📿",
+question:"Čo nosíme okolo krku ako šperk?",
+answers:["Náhrdelník","Náramok","Prsteň","Hodinky"],
+correct:"Náhrdelník"
+},
+
+{
+category:"accessories",
+difficulty:"easy",
+icon:"📿",
+question:"Čo sa nosí okolo zápästia?",
+answers:["Náramok","Šál","Opasok","Kabelka"],
+correct:"Náramok"
+},
+
+{
+category:"accessories",
+difficulty:"easy",
+icon:"🎀",
+question:"Čo môže byť ozdobou do vlasov?",
+answers:["Mašľa","Opasok","Hodinky","Kabelka"],
+correct:"Mašľa"
+},
+
+{
+category:"accessories",
+difficulty:"easy",
+icon:"🧢",
+question:"Čo môže chrániť hlavu pred slnkom?",
+answers:["Šiltovka","Prsteň","Náhrdelník","Náramok"],
+correct:"Šiltovka"
+},
+
+
+/* ---------- DOPLNKY / STREDNÁ ---------- */
+
+{
+category:"accessories",
+difficulty:"medium",
+icon:"👜",
+question:"Čo je crossbody kabelka?",
+answers:["Kabelka nosená cez telo","Malá peňaženka","Veľký kufor","Druh batohu"],
+correct:"Kabelka nosená cez telo"
+},
+
+{
+category:"accessories",
+difficulty:"medium",
+icon:"👜",
+question:"Čo je clutch?",
+answers:["Malá spoločenská kabelka","Veľký batoh","Druh klobúka","Športová taška"],
+correct:"Malá spoločenská kabelka"
+},
+
+{
+category:"accessories",
+difficulty:"medium",
+icon:"🕶️",
+question:"Na čo slúži UV filter v slnečných okuliaroch?",
+answers:["Na ochranu očí pred UV žiarením","Na zväčšenie rámu","Na zmenu farby skiel","Na ozdobu"],
+correct:"Na ochranu očí pred UV žiarením"
+},
+
+{
+category:"accessories",
+difficulty:"medium",
+icon:"💎",
+question:"Čo je bižutéria?",
+answers:["Ozdobné šperky, ktoré nemusia byť z drahých kovov","Druh topánok","Typ kabelky","Druh hodiniek"],
+correct:"Ozdobné šperky, ktoré nemusia byť z drahých kovov"
+},
+
+{
+category:"accessories",
+difficulty:"medium",
+icon:"🎒",
+question:"Ktorý doplnok je praktický do školy?",
+answers:["Batoh","Prsteň","Náušnice","Náramok"],
+correct:"Batoh"
+},
+
+{
+category:"accessories",
+difficulty:"medium",
+icon:"🧢",
+question:"Čo je snapback?",
+answers:["Šiltovka s nastaviteľným zapínaním","Typ kabelky","Druh hodiniek","Druh šálu"],
+correct:"Šiltovka s nastaviteľným zapínaním"
+},
+
+{
+category:"accessories",
+difficulty:"medium",
+icon:"👛",
+question:"Na čo slúži peňaženka?",
+answers:["Na peniaze a karty","Na šperky","Na topánky","Na oblečenie"],
+correct:"Na peniaze a karty"
+},
+
+{
+category:"accessories",
+difficulty:"medium",
+icon:"🧣",
+question:"Ktorý materiál je vhodný na ľahký letný šál?",
+answers:["Ľan","Hrubá kožušina","Oceľ","Guma"],
+correct:"Ľan"
+},
+
+{
+category:"accessories",
+difficulty:"medium",
+icon:"👜",
+question:"Čo je tote bag?",
+answers:["Priestranná taška s rukoväťami","Malá peňaženka","Druh šperku","Typ klobúka"],
+correct:"Priestranná taška s rukoväťami"
+},
+
+{
+category:"accessories",
+difficulty:"medium",
+icon:"⌚",
+question:"Aký materiál sa často používa na remienky luxusných hodiniek?",
+answers:["Koža","Papier","Kartón","Krieda"],
+correct:"Koža"
+},
+
+
+/* ---------- DOPLNKY / ŤAŽKÁ ---------- */
+
+{
+category:"accessories",
+difficulty:"hard",
+icon:"💎",
+question:"Čo znamená karát pri zlate?",
+answers:["Označenie rýdzosti zlata","Hmotnosť diamantu","Typ retiazky","Druh brúsenia"],
+correct:"Označenie rýdzosti zlata"
+},
+
+{
+category:"accessories",
+difficulty:"hard",
+icon:"💎",
+question:"Čo označuje karát pri drahokame?",
+answers:["Jednotku jeho hmotnosti","Jeho farbu","Jeho tvrdosť","Dĺžku šperku"],
+correct:"Jednotku jeho hmotnosti"
+},
+
+{
+category:"accessories",
+difficulty:"hard",
+icon:"💍",
+question:"Čo je filigrán?",
+answers:["Jemná ozdobná technika z kovových drôtikov","Druh kože","Typ klobúka","Druh kabelky"],
+correct:"Jemná ozdobná technika z kovových drôtikov"
+},
+
+{
+category:"accessories",
+difficulty:"hard",
+icon:"💎",
+question:"Čo označuje pojem solitaire pri šperkoch?",
+answers:["Šperk s jedným dominantným drahokamom","Šperk bez kovu","Viacfarebný šál","Druh kabelky"],
+correct:"Šperk s jedným dominantným drahokamom"
+},
+
+{
+category:"accessories",
+difficulty:"hard",
+icon:"⌚",
+question:"Čo je chronograf?",
+answers:["Hodinky s funkciou stopiek","Druh náhrdelníka","Typ okuliarov","Druh kabelky"],
+correct:"Hodinky s funkciou stopiek"
+},
+
+{
+category:"accessories",
+difficulty:"hard",
+icon:"🕶️",
+question:"Čo znamená polarizácia pri slnečných okuliaroch?",
+answers:["Pomáha znižovať určité odlesky","Mení farbu rámu","Zväčšuje šošovky","Slúži iba ako ozdoba"],
+correct:"Pomáha znižovať určité odlesky"
+},
+
+{
+category:"accessories",
+difficulty:"hard",
+icon:"💎",
+question:"Čo znamená brúsenie diamantu?",
+answers:["Úpravu jeho tvaru a faziet","Čistenie kovu","Farbenie kameňa","Výrobu retiazky"],
+correct:"Úpravu jeho tvaru a faziet"
+},
+
+{
+category:"accessories",
+difficulty:"hard",
+icon:"🎩",
+question:"Čo je fascinátor?",
+answers:["Dekoratívna ozdoba hlavy","Druh kabelky","Typ hodiniek","Druh rukavíc"],
+correct:"Dekoratívna ozdoba hlavy"
+},
+
+{
+category:"accessories",
+difficulty:"hard",
+icon:"⌚",
+question:"Čo je bezel na hodinkách?",
+answers:["Obruba okolo ciferníka","Remienok","Sekundová ručička","Spona"],
+correct:"Obruba okolo ciferníka"
+},
+
+{
+category:"accessories",
+difficulty:"hard",
+icon:"💍",
+question:"Ktorý kov sa často používa pri výrobe luxusných šperkov?",
+answers:["Platina","Hliník","Železo","Cín"],
+correct:"Platina"
+}
+
+];
+
+
+/* =====================================================
+   HRA
+===================================================== */
+
+let selectedCategory = "all";
+let selectedDifficulty = "easy";
+
+let quizQuestions = [];
+let currentQuestion = 0;
+let score = 0;
+let correctAnswers = 0;
+let streak = 0;
+let timerInterval;
+let timeLeft;
+
+
+/* OBRAZOVKY */
+
+function showScreen(id) {
+
+    document.querySelectorAll(".screen")
+    .forEach(s => s.classList.remove("active"));
+
+    document.getElementById(id)
+    .classList.add("active");
+
+    window.scrollTo(0,0);
+}
+
+
+/* KATEGÓRIA */
+
+function selectCategory(category, button) {
+
+    selectedCategory = category;
+
+    document.querySelectorAll("[data-category]")
+    .forEach(b => b.classList.remove("selected"));
+
+    button.classList.add("selected");
+}
+
+
+/* NÁROČNOSŤ */
+
+function selectDifficulty(difficulty, button) {
+
+    selectedDifficulty = difficulty;
+
+    document.querySelectorAll("[data-difficulty]")
+    .forEach(b => b.classList.remove("selected"));
+
+    button.classList.add("selected");
+}
+
+
+/* ZAMIEŠANIE */
+
+function shuffle(array) {
+
+    let result = [...array];
+
+    for(let i = result.length - 1; i > 0; i--) {
+
+        let j = Math.floor(Math.random() * (i + 1));
+
+        [result[i], result[j]] =
+        [result[j], result[i]];
+    }
+
+    return result;
+}
+
+
+/* SPUSTENIE */
+
+function startQuiz() {
+
+    clearInterval(timerInterval);
+
+    quizQuestions = questions.filter(q => {
+
+        let categoryOK =
+            selectedCategory === "all" ||
+            q.category === selectedCategory;
+
+        let difficultyOK =
+            q.difficulty === selectedDifficulty;
+
+        return categoryOK && difficultyOK;
+    });
+
+    /*
+       Každá kombinácia má 10 otázok.
+       Preto sa tu už nemiešajú úrovne.
+    */
+
+    quizQuestions =
+        shuffle(quizQuestions).slice(0,10);
+
+    currentQuestion = 0;
+    score = 0;
+    correctAnswers = 0;
+    streak = 0;
+
+    showScreen("quiz");
+
+    showQuestion();
+}
+
+
+/* OTÁZKA */
+
+function showQuestion() {
+
+    clearInterval(timerInterval);
+
+    const q = quizQuestions[currentQuestion];
+
+    document.getElementById("questionNumber")
+        .textContent =
+        `Otázka ${currentQuestion + 1} / ${quizQuestions.length}`;
+
+    document.getElementById("score")
+        .textContent = score;
+
+    document.getElementById("questionText")
+        .textContent = q.question;
+
+    document.getElementById("questionVisual")
+        .textContent = q.icon;
+
+    document.getElementById("questionCategory")
+        .textContent =
+        q.category === "clothes"
+        ? "Oblečenie"
+        : "Doplnky";
+
+    document.getElementById("progress")
+        .style.width =
+        `${(currentQuestion / quizQuestions.length) * 100}%`;
+
+    document.getElementById("feedback")
+        .textContent = "";
+
+    document.getElementById("nextButton")
+        .style.display = "none";
+
+
+    const container =
+        document.getElementById("answers");
+
+    container.innerHTML = "";
+
+
+    shuffle(q.answers).forEach(answer => {
+
+        const button =
+            document.createElement("button");
+
+        button.className = "answer";
+
+        button.textContent = answer;
+
+        button.onclick = () =>
+            checkAnswer(button, answer, q);
+
+        container.appendChild(button);
+    });
+
+
+    startTimer();
+}
+
+
+/* ČAS */
+
+function startTimer() {
+
+    if(selectedDifficulty === "easy")
+        timeLeft = 20;
+
+    if(selectedDifficulty === "medium")
+        timeLeft = 16;
+
+    if(selectedDifficulty === "hard")
+        timeLeft = 12;
+
+    updateTimer();
+
+    timerInterval = setInterval(() => {
+
+        timeLeft--;
+
+        updateTimer();
+
+        if(timeLeft <= 0) {
+
+            clearInterval(timerInterval);
+
+            timeout();
+        }
+
+    },1000);
+}
+
+
+function updateTimer() {
+
+    document.getElementById("timer")
+        .textContent = timeLeft;
+}
+
+
+/* ODPOVEĎ */
+
+function checkAnswer(button, answer, q) {
+
+    clearInterval(timerInterval);
+
+    const buttons =
+        document.querySelectorAll(".answer");
+
+    buttons.forEach(b => b.disabled = true);
+
+    if(answer === q.correct) {
+
+        button.classList.add("correct");
+
+        correctAnswers++;
+        streak++;
+
+        let points =
+            selectedDifficulty === "easy"
+            ? 10
+            : selectedDifficulty === "medium"
+            ? 15
+            : 20;
+
+        points += Math.max(0, streak - 1) * 2;
+
+        if(timeLeft >= 10)
+            points += 5;
+
+        score += points;
+
+        document.getElementById("feedback")
+            .textContent =
+            `Správne! +${points} bodov`;
+
+    } else {
+
+        button.classList.add("wrong");
+
+        streak = 0;
+
+        buttons.forEach(b => {
+
+            if(b.textContent === q.correct)
+                b.classList.add("correct");
+
+        });
+
+        document.getElementById("feedback")
+            .textContent =
+            `Nie celkom. Správna odpoveď je „${q.correct}“.`;
+    }
+
+    document.getElementById("score")
+        .textContent = score;
+
+    document.getElementById("nextButton")
+        .style.display = "block";
+}
+
+
+/* ČAS VYPRŠAL */
+
+function timeout() {
+
+    const q = quizQuestions[currentQuestion];
+
+    document.querySelectorAll(".answer")
+    .forEach(b => {
+
+        b.disabled = true;
+
+        if(b.textContent === q.correct)
+            b.classList.add("correct");
+    });
+
+    streak = 0;
+
+    document.getElementById("feedback")
+        .textContent =
+        `Čas vypršal. Správna odpoveď je „${q.correct}“.`;
+
+    document.getElementById("nextButton")
+        .style.display = "block";
+}
+
+
+/* ĎALŠIA */
+
+function nextQuestion() {
+
+    currentQuestion++;
+
+    if(currentQuestion >= quizQuestions.length) {
+
+        finishQuiz();
+
+        return;
+    }
+
+    showQuestion();
+}
+
+
+/* KONIEC */
+
+function finishQuiz() {
+
+    clearInterval(timerInterval);
+
+    const best =
+        Number(localStorage.getItem("pinkBest") || 0);
+
+    if(score > best)
+        localStorage.setItem("pinkBest",score);
+
+    const games =
+        Number(localStorage.getItem("pinkGames") || 0);
+
+    localStorage.setItem("pinkGames",games + 1);
+
+    document.getElementById("finalScore")
+        .textContent = score;
+
+    document.getElementById("resultDetails")
+        .textContent =
+        `Máš ${correctAnswers} správnych odpovedí z ${quizQuestions.length}.`;
+
+    let percentage =
+        correctAnswers / quizQuestions.length;
+
+    if(percentage === 1) {
+
+        document.getElementById("rating")
+            .textContent =
+            "Perfektné! Móda ti naozaj ide. ♡";
+
+    } else if(percentage >= .8) {
+
+        document.getElementById("rating")
+            .textContent =
+            "Veľmi dobrý výsledok! Máš dobrý prehľad o móde.";
+
+    } else if(percentage >= .6) {
+
+        document.getElementById("rating")
+            .textContent =
+            "Pekný výsledok! O móde už vieš celkom dosť.";
+
+    } else {
+
+        document.getElementById("rating")
+            .textContent =
+            "Nevadí, skús si kvíz ešte raz a možno prekvapíš sama seba.";
+    }
+
+    updateStats();
+
+    showScreen("result");
+}
+
+
+/* ŠTATISTIKY */
+
+function updateStats() {
+
+    document.getElementById("bestScore")
+        .textContent =
+        localStorage.getItem("pinkBest") || 0;
+
+    document.getElementById("gamesPlayed")
+        .textContent =
+        localStorage.getItem("pinkGames") || 0;
+}
+
+
+/* PRI OTVORENÍ */
+
+updateStats();
+
+</script>
+
 </body>
 </html>

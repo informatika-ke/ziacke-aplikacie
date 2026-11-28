@@ -1,18 +1,272 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="galeria-placeholder" content="1">
-  <title>Pripravuje sa</title>
-  <link rel="stylesheet" href="../../../assets/galeria.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Synesthesia – vedomostný kvíz</title>
+<style>
+:root{--bg:#f4f2ff;--panel:#fff;--ink:#24213d;--muted:#716d89;--accent:#7657e8;--accent2:#e85ca8;--line:#e8e4f5;--good:#168b58;--bad:#d94158;--shadow:0 12px 35px #33206a18}
+body.dark{--bg:#171528;--panel:#24213b;--ink:#f6f3ff;--muted:#b9b3d0;--line:#403b5d;--shadow:0 12px 35px #0005}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top left,#e6ddff 0,transparent 35%),var(--bg);color:var(--ink);font:16px/1.5 system-ui,Arial,sans-serif;min-height:100vh;transition:.2s}
+body.dark{background:radial-gradient(circle at top left,#30264f 0,transparent 35%),var(--bg)}
+button{font:inherit;cursor:pointer;border:0}button:focus-visible{outline:3px solid var(--accent2);outline-offset:3px}
+.wrap{width:min(1050px,92%);margin:32px auto}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}.brand{font-weight:900;font-size:1.25rem;letter-spacing:.04em}.brand span{color:var(--accent)}
+.tools{display:flex;gap:8px;flex-wrap:wrap}.tool,.secondary{background:var(--panel);color:var(--ink);border:1px solid var(--line);padding:9px 13px;border-radius:12px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:clamp(20px,4vw,38px);box-shadow:var(--shadow)}
+h1{font-size:clamp(2.2rem,7vw,4.2rem);line-height:1.05;margin:8px 0 12px;letter-spacing:-.05em}h1 span{background:linear-gradient(100deg,var(--accent),var(--accent2));background-clip:text;color:transparent}
+h2{margin:0 0 8px;font-size:1.5rem}.lead{color:var(--muted);max-width:680px}.section{margin-top:28px}.section h3{margin:0 0 12px;font-size:1rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:11px}
+.choice{background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:16px;padding:15px;text-align:left;min-height:88px;transition:.15s}
+.choice:hover{transform:translateY(-2px);border-color:var(--accent)}.choice.selected{border:2px solid var(--accent);background:color-mix(in srgb,var(--accent) 10%,var(--panel));box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 13%,transparent)}
+.choice b{display:block;font-size:1rem}.choice small{display:block;color:var(--muted);margin-top:4px}.emoji{font-size:1.4rem;display:block;margin-bottom:4px}
+.primary{background:linear-gradient(100deg,var(--accent),var(--accent2));color:white;padding:14px 22px;border-radius:14px;font-weight:800;box-shadow:0 8px 18px #7657e833}.primary:disabled{opacity:.4;cursor:not-allowed}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px;align-items:center}.hint{color:var(--muted);font-size:.9rem}.hidden{display:none!important}
+.rules{background:color-mix(in srgb,var(--accent) 7%,var(--panel));border-radius:15px;padding:15px;color:var(--muted)}
+.meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:.9rem}.pill{background:color-mix(in srgb,var(--accent) 10%,var(--panel));padding:6px 10px;border-radius:999px}
+.progress{height:9px;background:var(--line);border-radius:99px;overflow:hidden;margin:18px 0}.progress div{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0;transition:width .3s}
+.question{font-size:clamp(1.3rem,3vw,2rem);font-weight:800;margin:22px 0}
+.answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.answer{padding:18px;border-radius:15px;border:1px solid var(--line);background:var(--panel);color:var(--ink);text-align:left;font-weight:650;min-height:66px}.answer:hover:not(:disabled){border-color:var(--accent);background:color-mix(in srgb,var(--accent) 7%,var(--panel))}.answer.correct{background:#d9f6e8;color:#075d38;border-color:#168b58}.answer.wrong{background:#ffe1e5;color:#8f1f32;border-color:#d94158}.feedback{font-weight:750;margin-top:15px;min-height:26px}
+.result{text-align:center}.score{font-size:3.5rem;font-weight:900;color:var(--accent);margin:10px}.ring{width:150px;height:150px;border-radius:50%;margin:18px auto;display:grid;place-items:center;background:conic-gradient(var(--accent) var(--pct),var(--line) 0);position:relative}.ring:before{content:"";position:absolute;inset:12px;background:var(--panel);border-radius:50%}.ring strong{z-index:1;font-size:1.7rem}
+.modal{position:fixed;inset:0;background:#100d25a8;display:grid;place-items:center;padding:20px;z-index:5}.modalbox{background:var(--panel);color:var(--ink);padding:25px;border-radius:20px;max-width:420px;width:100%;box-shadow:var(--shadow)}
+footer{text-align:center;color:var(--muted);font-size:.85rem;margin:18px}
+@media(max-width:600px){.wrap{margin:16px auto}.top{align-items:flex-start}.answers{grid-template-columns:1fr}.panel{border-radius:19px}.choice{min-height:78px}}
+</style>
 </head>
 <body>
-  <header>
-    <nav class="crumbs"><a href="../../../">Žiacke aplikácie</a> › <a href="../../">2026-27</a> › <a href="../">2.B</a></nav>
-    <h1>Pripravuje sa</h1>
-    <p>Na aplikácii sa ešte pracuje. Pozrite sa sem neskôr.</p>
-  </header>
+<div class="wrap">
+<header class="top"><div class="brand">✦ <span>SYNESTHESIA</span></div><div class="tools"><button class="tool" id="themeBtn">🌙 Tmavý režim</button><button class="tool" id="soundBtn">🔊 Zvuk: zapnutý</button></div></header>
+<main>
+<section id="home" class="panel">
+<div class="pill">Vedomostný kvíz • školský projekt</div>
+<h1>Objav, čo <span>vieš.</span></h1>
+<p class="lead">Otestuj svoje vedomosti v šiestich oblastiach. Vyber si tému, náročnosť a dĺžku kvízu.</p>
+<div class="rules">Každá otázka má štyri možnosti a iba jednu správnu odpoveď. Za správnu odpoveď získaš 1 bod, za nesprávnu 0 bodov. Cieľom je získať čo najviac bodov.</div>
+<div class="section"><h3>1. Vyber kategóriu</h3><div class="cards" id="categories"></div></div>
+<div class="section"><h3>2. Vyber náročnosť</h3><div class="cards" id="levels"></div></div>
+<div class="section"><h3>3. Vyber počet otázok</h3><div class="cards" id="counts"></div></div>
+<div class="actions"><button class="primary" id="startBtn" disabled>Začať kvíz →</button><button class="secondary" id="aboutBtn">O aplikácii</button><span class="hint" id="availability"></span></div>
+</section>
+<section id="game" class="panel hidden">
+<div class="meta"><span class="pill" id="gameCategory"></span><span class="pill" id="gameLevel"></span><span class="pill" id="gameCount"></span><span class="pill">⏱ <b id="timer">00:00</b></span><span class="pill">★ <b id="score">0</b> bodov</span></div>
+<div class="progress"><div id="progressBar"></div></div>
+<div class="meta"><b id="questionNumber">Otázka 1/5</b></div>
+<div class="question" id="questionText"></div>
+<div class="answers" id="answers"></div><div class="feedback" id="feedback" aria-live="polite"></div>
+<div class="actions"><button class="primary hidden" id="nextBtn">Ďalšia otázka →</button><button class="secondary" id="homeBtn">Domov</button></div>
+</section>
+<section id="results" class="panel result hidden">
+<div class="pill">Kvíz dokončený</div><h2 id="resultHeading">Výborne!</h2><div class="ring" id="ring"><strong id="percent">0%</strong></div>
+<div class="score" id="finalScore">0/0</div><p id="resultTime" class="lead"></p><p id="resultMessage"></p>
+<div class="actions" style="justify-content:center"><button class="primary" id="replayBtn">Zahrať znova</button><button class="secondary" id="resultHomeBtn">Domov</button></div>
+</section>
+<section id="about" class="panel hidden"><h2>O aplikácii Synesthesia</h2><p class="lead">Synesthesia je interaktívny vedomostný kvíz vytvorený ako školský projekt z informatiky.</p><p><b>Autor:</b> Doplň svoje meno</p><p><b>Verzia:</b> 1.0</p><button class="primary" id="backBtn">Späť</button></section>
+</main><footer>Synesthesia • Funguje offline • Nastavenia sa ukladajú v tomto prehliadači</footer>
+</div>
+<div id="modal" class="modal hidden"><div class="modalbox"><h2>Opustiť kvíz?</h2><p>Naozaj chceš opustiť kvíz? Tvoj aktuálny výsledok sa stratí.</p><div class="actions"><button class="secondary" id="stayBtn">Pokračovať v kvíze</button><button class="primary" id="leaveBtn">Opustiť kvíz</button></div></div></div>
+<script>
+// ============================================================
+// 1. DATABÁZA OTÁZOK
+// Každá kombinácia kategórie a náročnosti má 20 otázok.
+// Texty a možnosti môžeš bezpečne upravovať v tejto časti.
+// ============================================================
+const rawFacts = {
+"História": [
+["Ktorá staroveká civilizácia postavila pyramídy v Gíze?","Starovekí Egypťania",["Rimania","Mayovia","Gréci"]],
+["V ktorom roku sa začala prvá svetová vojna?","1914",["1912","1916","1918"]],
+["Kto bol prvým rímskym cisárom?","Augustus",["Julius Caesar","Nero","Traján"]],
+["Ktoré mesto bolo hlavným mestom Byzantskej ríše?","Konštantínopol",["Atény","Rím","Alexandria"]],
+["Kto vynašiel kníhtlač s pohyblivými kovovými literami v Európe?","Johannes Gutenberg",["Leonardo da Vinci","Galileo Galilei","Marco Polo"]],
+["V ktorom roku padol Berlínsky múr?","1989",["1987","1991","1993"]],
+["Ktorá panovníčka vládla Británii počas veľkej časti 19. storočia?","Kráľovná Viktória",["Alžbeta I.","Mária Stuartová","Anna Stuartová"]],
+["Ktorá loď sa potopila v roku 1912 po náraze do ľadovca?","Titanic",["Britannic","Lusitania","Bismarck"]],
+["Ktorá staroveká civilizácia používala klinové písmo?","Sumeri",["Inkovia","Kelti","Feničania"]],
+["Kto bol vodcom Indie v nenásilnom boji za nezávislosť?","Mahátma Gándhí",["Džaváharlál Néhrú","Subháš Čandra Bós","Indira Gándhíová"]],
+["Ktorá udalosť sa spája s rokom 1789 vo Francúzsku?","Začiatok Francúzskej revolúcie",["Bitka pri Waterloo","Korunovácia Napoleona","Parížska komúna"]],
+["Ktorý moreplavec doplával v roku 1492 do Karibiku v službách Španielska?","Krištof Kolumbus",["Vasco da Gama","Fernão de Magalhães","James Cook"]],
+["Ktorá ríša mala centrum v meste Tenochtitlán?","Aztécka ríša",["Inkská ríša","Mayská ríša","Ríša Čibčov"]],
+["Kto bol francúzskym cisárom porazeným pri Waterloo?","Napoleon Bonaparte",["Ľudovít XIV.","Karol Veľký","Ľudovít XVI."]],
+["V ktorom roku vznikla samostatná Slovenská republika?","1993",["1918","1989","2004"]],
+["Ktorý dokument z roku 1215 obmedzil moc anglického kráľa?","Magna charta",["Deklarácia nezávislosti","Zlatá bula","Edikt milánsky"]],
+["Kto bol prvým prezidentom Československa?","Tomáš Garrigue Masaryk",["Edvard Beneš","Milan Rastislav Štefánik","Alexander Dubček"]],
+["Ktorá staroveká bitka sa odohrala v roku 480 pred n. l. pri úžine?","Bitka pri Termopylách",["Bitka pri Maratóne","Bitka pri Gaugamélach","Bitka pri Kannách"]],
+["Ktorá dynastia zjednotila Čínu v roku 221 pred n. l.?","Dynastia Čchin",["Dynastia Ming","Dynastia Chan","Dynastia Tchang"]],
+["Ktorá revolúcia sa začala v Rusku v roku 1917 a viedla k pádu cárstva?","Februárová revolúcia",["Októbrová revolúcia 1905","Kultúrna revolúcia","Slávna revolúcia"]]
+],
+"Geografia": [
+["Ktorý je najväčší oceán na Zemi?","Tichý oceán",["Atlantický oceán","Indický oceán","Severný ľadový oceán"]],
+["Aké je hlavné mesto Austrálie?","Canberra",["Sydney","Melbourne","Perth"]],
+["Ktorá rieka preteká cez Budapešť?","Dunaj",["Rýn","Seina","Temža"]],
+["Na ktorom kontinente leží Sahara?","Afrika",["Ázia","Južná Amerika","Austrália"]],
+["Ktorý štát má tvar čižmy?","Taliansko",["Grécko","Portugalsko","Chorvátsko"]],
+["Ktorý je najvyšší vrch sveta nad morom?","Mount Everest",["K2","Kangčendžonga","Mont Blanc"]],
+["Ktoré jazero je najväčšie podľa rozlohy?","Kaspické more",["Horné jazero","Bajkal","Viktóriino jazero"]],
+["Ktorá krajina má najväčšiu rozlohu na svete?","Rusko",["Kanada","Čína","USA"]],
+["Aké je hlavné mesto Japonska?","Tokio",["Kjóto","Osaka","Hirošima"]],
+["Ktorá púšť sa rozprestiera v Mongolsku a Číne?","Gobi",["Atacama","Kalahari","Namib"]],
+["Ktorý prieliv oddeľuje Európu od Afriky pri Španielsku a Maroku?","Gibraltársky prieliv",["Bospor","Dardanely","La Manche"]],
+["Ktorá krajina je úplne obklopená Južnou Afrikou?","Lesotho",["Eswatini","Botswana","Namíbia"]],
+["Ktorý štát má najviac obyvateľov v Južnej Amerike?","Brazília",["Argentína","Kolumbia","Peru"]],
+["Aké je hlavné mesto Islandu?","Reykjavík",["Oslo","Helsinki","Nuuk"]],
+["Ktoré pohorie tvorí tradičnú hranicu medzi Európou a Áziou?","Ural",["Alpy","Pyreneje","Karpaty"]],
+["Ktorá rieka je najdlhšia v Južnej Amerike?","Amazonka",["Paraná","Orinoko","São Francisco"]],
+["Ktorý ostrov je najväčší na svete, ak nepočítame kontinenty?","Grónsko",["Madagaskar","Borneo","Nová Guinea"]],
+["V ktorom štáte leží mesto Marrákeš?","Maroko",["Tunisko","Alžírsko","Egypt"]],
+["Ktoré more leží medzi Európou a Afrikou?","Stredozemné more",["Baltské more","Čierne more","Arabské more"]],
+["Ktorá krajina má hlavné mesto Ottawa?","Kanada",["USA","Austrália","Nový Zéland"]]
+],
+"Príroda a zvieratá": [
+["Ktorý cicavec kladie vajcia?","Vtákopysk",["Delfín","Netopier","Koala"]],
+["Ako sa nazýva proces, pri ktorom rastliny premieňajú svetlo na chemickú energiu?","Fotosyntéza",["Dýchanie","Kvasenie","Transpirácia"]],
+["Ktoré zviera je najväčším suchozemským cicavcom?","Slon africký",["Nosorožec biely","Žirafa","Hroch"]],
+["Koľko nôh má dospelý hmyz?","Šesť",["Osem","Desať","Dvanásť"]],
+["Ktorý vták je známy tým, že nevie lietať a žije v Antarktíde?","Tučniak",["Albatros","Kondor","Čajka"]],
+["Ako sa nazýva mláďa žaby po vyliahnutí?","Žubrienka",["Larva vážky","Pulčík","Nymfa"]],
+["Ktorý orgán rastliny prijíma väčšinu vody z pôdy?","Koreň",["Kvet","List","Plod"]],
+["Ktoré zviera má najdlhší krk?","Žirafa",["Ťava","Pštros","Lama"]],
+["Ktorý plyn rastliny prijímajú pri fotosyntéze?","Oxid uhličitý",["Kyslík","Dusík","Vodík"]],
+["Ktorá skupina živočíchov má perie?","Vtáky",["Plazy","Obojživelníky","Cicavce"]],
+["Ako sa volá najväčší druh žraloka?","Žralok obrovský",["Žralok biely","Kladivohlav","Žralok tigrovaný"]],
+["Ktorý cicavec používa echolokáciu na orientáciu a lov?","Netopier",["Jež","Veverica","Krt"]],
+["Čo je hlavnou potravou pandy veľkej?","Bambus",["Ryby","Hmyz","Tráva"]],
+["Ktorá časť bunky obsahuje väčšinu genetickej informácie?","Jadro",["Bunková stena","Ribozóm","Vakuola"]],
+["Ako sa nazýva obdobie, keď medveď v zime výrazne zníži aktivitu a metabolizmus?","Zimný spánok",["Letný spánok","Migrácia","Zhadzovanie parožia"]],
+["Ktoré zviera je známe schopnosťou meniť farbu kože?","Chameleón",["Leguán","Gekón","Varan"]],
+["Ktorý strom produkuje žalude?","Dub",["Buk","Javor","Breza"]],
+["Čo opeľujú včely pri návšteve kvetov?","Kvety",["Korene","Kôru stromov","Plody"]],
+["Ktorý oceánsky cicavec dýcha vzduch pľúcami a musí sa vynárať?","Veľryba",["Tuniak","Chobotnica","Medúza"]],
+["Ako sa nazýva prirodzené prostredie organizmu?","Biotop",["Potravový reťazec","Populácia","Ekosystémová služba"]]
+],
+"Veda a technika": [
+["Ktorá planéta je najbližšie k Slnku?","Merkúr",["Venuša","Zem","Mars"]],
+["Aký chemický symbol má voda?","H₂O",["CO₂","O₂","NaCl"]],
+["Koľko strán má trojuholník?","Tri",["Dve","Štyri","Päť"]],
+["Ktorý prístroj meria teplotu?","Teplomer",["Barometer","Hygrometer","Anemometer"]],
+["Kto formuloval zákony pohybu a gravitácie v klasickej fyzike?","Isaac Newton",["Albert Einstein","Nikola Tesla","Charles Darwin"]],
+["Aká je približná rýchlosť svetla vo vákuu?","300 000 km/s",["30 000 km/s","3 000 km/s","3 000 000 km/s"]],
+["Ktorý prvok má chemickú značku Fe?","Železo",["Fluór","Fosfor","Francium"]],
+["Ako sa nazýva stred atómu?","Jadro",["Elektrónový obal","Molekula","Ión"]],
+["Ktorá planéta je známa výraznými prstencami?","Saturn",["Mars","Merkúr","Venuša"]],
+["Aký typ energie má pohybujúce sa teleso?","Kinetická energia",["Chemická energia","Jadrová energia","Potenciálna energia"]],
+["Ktorý vedec navrhol teóriu relativity?","Albert Einstein",["Isaac Newton","Niels Bohr","Louis Pasteur"]],
+["Aký je elektrický odpor meraný v jednotkách?","Ohm",["Volt","Ampér","Watt"]],
+["Ktorý plyn tvorí najväčšiu časť zemskej atmosféry?","Dusík",["Kyslík","Oxid uhličitý","Argón"]],
+["Ako sa nazýva prechod látky z kvapalného do plynného skupenstva?","Vyparovanie",["Tuhnutie","Kondenzácia","Sublimácia"]],
+["Ktorá časť počítača vykonáva hlavné výpočty?","Procesor",["Monitor","Klávesnica","Reproduktor"]],
+["Čo znamená skratka HTML?","HyperText Markup Language",["High Transfer Machine Link","Home Tool Markup List","Hyperlink Text Main Language"]],
+["Ktorý kov je pri izbovej teplote kvapalný?","Ortuť",["Hliník","Meď","Zinok"]],
+["Aká je hodnota gravitačného zrýchlenia pri povrchu Zeme približne?","9,81 m/s²",["1,62 m/s²","24,8 m/s²","0,98 m/s²"]],
+["Ktorá častica má záporný elektrický náboj?","Elektrón",["Protón","Neutrón","Fotón"]],
+["Ktorý typ žiarenia má najkratšiu vlnovú dĺžku z uvedených?","Gama žiarenie",["Rádiové vlny","Mikrovlny","Infračervené žiarenie"]]
+],
+"Šport": [
+["Koľko hráčov jedného futbalového tímu je na ihrisku na začiatku zápasu?","11",["9","10","12"]],
+["V ktorom športe sa používa puk?","Ľadový hokej",["Florbal","Basketbal","Ragby"]],
+["Koľko kruhov je v olympijskom symbole?","Päť",["Štyri","Šesť","Sedem"]],
+["Ako dlho trvá jedna polovica futbalového zápasu bez nadstaveného času?","45 minút",["30 minút","40 minút","50 minút"]],
+["V ktorom športe sa hrá Wimbledon?","Tenis",["Golf","Kriket","Bedminton"]],
+["Aká vzdialenosť je oficiálna dĺžka maratónu?","42,195 km",["40 km","41 km","45 km"]],
+["Koľko bodov má úspešný trestný hod v basketbale?","1",["2","3","4"]],
+["V ktorom športe sa používa výraz „hole-in-one“?","Golf",["Tenis","Hokej","Baseball"]],
+["Ktorá krajina hostila prvé moderné olympijské hry v roku 1896?","Grécko",["Francúzsko","Taliansko","Spojené kráľovstvo"]],
+["Koľko hráčov jedného tímu je na palubovke pri volejbale?","Šesť",["Päť","Sedem","Osem"]],
+["Ako sa nazýva súťažná disciplína v plávaní so štyrmi štýlmi v jednej disciplíne?","Polohové preteky",["Voľný spôsob","Štafeta","Motýlik"]],
+["V ktorom športe sa udeľuje žltý a červený kartón?","Futbal",["Tenis","Plávanie","Atletika"]],
+["Koľko setov musí hráč vyhrať v bežnom mužskom grandslamovom tenisovom zápase?","Tri",["Dva","Štyri","Päť"]],
+["Ktorá atletická disciplína zahŕňa beh, skoky a hody v desiatich disciplínach?","Desaťboj",["Sedemboj","Päťboj","Štafeta"]],
+["V ktorom športe sa používa pojem „scrum“?","Ragby",["Basketbal","Há­dzaná","Volejbal"]],
+["Koľko hráčov má tím v hádzanej na ihrisku vrátane brankára?","Sedem",["Šesť","Osem","Deväť"]],
+["Ako sa volá cyklistické etapové preteky známe žltým dresom?","Tour de France",["Giro d’Italia","Vuelta a España","Paris–Roubaix"]],
+["Ktorá disciplína je súčasťou zimných olympijských hier?","Krasokorčuľovanie",["Skok o žrdi","Vodné pólo","Plážový volejbal"]],
+["Aký povrch je tradične spájaný s tenisovým turnajom Roland-Garros?","Antuka",["Tráva","Tvrdý betón","Drevo"]],
+["V ktorom športe sa súťaží o Stanleyho pohár?","Ľadový hokej",["Basketbal","Baseball","Americký futbal"]]
+],
+"Kultúra a umenie": [
+["Kto namaľoval Monu Lisu?","Leonardo da Vinci",["Vincent van Gogh","Pablo Picasso","Claude Monet"]],
+["Ktorý nástroj má zvyčajne 88 klávesov?","Klavír",["Gitara","Husle","Flauta"]],
+["Kto napísal tragédiu Romeo a Júlia?","William Shakespeare",["Charles Dickens","Molière","Johann W. Goethe"]],
+["V ktorom meste sa nachádza Louvre?","Paríž",["Rím","Madrid","Viedeň"]],
+["Ktorý hudobný skladateľ vytvoril Deviatu symfóniu s Ódou na radosť?","Ludwig van Beethoven",["Wolfgang A. Mozart","Frédéric Chopin","Antonio Vivaldi"]],
+["Ako sa nazýva umenie skladania a písania básní?","Poézia",["Sochárstvo","Architektúra","Grafika"]],
+["Ktorý maliarsky smer je spojený so Salvádorom Dalím?","Surrealizmus",["Kubizmus","Impresionizmus","Realizmus"]],
+["Kto napísal román Don Quijote?","Miguel de Cervantes",["Dante Alighieri","Victor Hugo","Franz Kafka"]],
+["Ktorý slovenský skladateľ je autorom opery Krútňava?","Eugen Suchoň",["Ján Cikker","Alexander Moyzes","Mikuláš Schneider-Trnavský"]],
+["Ako sa nazýva javiskové umenie, v ktorom účinkujú herci?","Divadlo",["Fotografia","Keramika","Dizajn"]],
+["Ktorý maliar vytvoril obraz Hviezdna noc?","Vincent van Gogh",["Edvard Munch","Paul Cézanne","Henri Matisse"]],
+["Ktorá literárna postava žije v Sherwoodskom lese a pomáha chudobným?","Robin Hood",["Don Quijote","Gulliver","Oliver Twist"]],
+["Ktorý hudobný žáner vznikol v afroamerických komunitách a často využíva improvizáciu?","Jazz",["Polka","Opera","Pochod"]],
+["Ako sa nazýva trojrozmerné výtvarné dielo vytvorené napríklad z kameňa?","Socha",["Freska","Koláž","Grafika"]],
+["Ktorý architektonický sloh sa vyznačuje lomeným oblúkom a vysokými katedrálami?","Gotika",["Barok","Románsky sloh","Klasicizmus"]],
+["Kto napísal Malého princa?","Antoine de Saint-Exupéry",["Jules Verne","Albert Camus","Victor Hugo"]],
+["Ktorý filmový žáner sa zameriava na vyvolanie strachu a napätia?","Horor",["Muzikál","Dokument","Komédia"]],
+["Ktorý umelec je známy obrazom Výkrik?","Edvard Munch",["Gustav Klimt","Pablo Picasso","Salvador Dalí"]],
+["Ako sa nazýva skupinové hudobné teleso s dirigentom a viacerými nástrojmi?","Orchester",["Zbor","Trio","Duo"]],
+["Ktoré múzeum v Madride je známe dielami Velázqueza a Goyu?","Museo del Prado",["Louvre","Uffizi","Rijksmuseum"]]
+]
+};
+
+// Tri rôzne formulácie pre každú úroveň. V každej kombinácii kategórie a úrovne
+// vznikne presne 20 otázok. Ťažšie úrovne používajú náročnejšie formulácie.
+const stems = {
+"Ľahká": (q,a)=>q,
+"Stredná": (q,a)=>"Vyber správne tvrdenie: "+q.replace(/\?$/,".") ,
+"Ťažká": (q,a)=>"Ktorá možnosť správne odpovedá na otázku: "+q.replace(/\?$/,"?") 
+};
+const levels=["Ľahká","Stredná","Ťažká"];
+const categories=Object.keys(rawFacts);
+const questions=[];
+categories.forEach(category=>{
+  rawFacts[category].forEach((fact,index)=>{
+    levels.forEach(level=>{
+      const [q,correct,distractors]=fact;
+      const prefix=level==="Ľahká"?"":level==="Stredná"?"(Stredná úroveň) ":"(Náročnejšie) ";
+      questions.push({id:category+"-"+level+"-"+(index+1),category,level,text:prefix+stems[level](q,correct),correct,answers:[correct,...distractors],image:""});
+    });
+  });
+});
+// Databáza má 6 kategórií × 3 úrovne × 20 otázok = 360 položiek.
+console.assert(questions.length===360,"Databáza musí mať 360 otázok.");
+
+// ============================================================
+// 2. NASTAVENIA A STAV HRY
+// ============================================================
+const $=id=>document.getElementById(id);
+let selected={category:"",level:"",count:0};
+let quiz=[],index=0,score=0,seconds=0,timerId=null,answered=false,lastSettings=null;
+let soundOn=localStorage.getItem("syn-sound")!=="false";
+let theme=localStorage.getItem("syn-theme")||"light";
+const categoryIcons={"História":"🏛️","Geografia":"🌍","Príroda a zvieratá":"🌿","Veda a technika":"🔬","Šport":"🏅","Kultúra a umenie":"🎨","Všetky kategórie":"✨"};
+const levelInfo={"Ľahká":"Základné vedomosti","Stredná":"Trochu náročnejšie","Ťažká":"Pre skutočných znalcov"};
+function show(id){["home","game","results","about"].forEach(x=>$(x).classList.toggle("hidden",x!==id));}
+function shuffle(array){const a=[...array];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function playTone(freq=500,duration=.08){if(!soundOn)return;try{const ctx=new(window.AudioContext||window.webkitAudioContext)();const osc=ctx.createOscillator(),gain=ctx.createGain();osc.frequency.value=freq;gain.gain.value=.045;osc.connect(gain);gain.connect(ctx.destination);osc.start();gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+duration);osc.stop(ctx.currentTime+duration);osc.onended=()=>ctx.close();}catch(e){}}
+function saveSettings(){localStorage.setItem("syn-category",selected.category);localStorage.setItem("syn-level",selected.level);localStorage.setItem("syn-count",String(selected.count));}
+function makeCards(){
+  $("categories").innerHTML="";
+  [...categories,"Všetky kategórie"].forEach(c=>{const b=document.createElement("button");b.className="choice";b.innerHTML=`<span class="emoji">${categoryIcons[c]}</span><b>${c}</b>`;b.onclick=()=>{selected.category=c;saveSettings();makeCards();updateAvailability();playTone();};b.classList.toggle("selected",selected.category===c);$("categories").appendChild(b);});
+  $("levels").innerHTML="";
+  levels.forEach(l=>{const b=document.createElement("button");b.className="choice";b.innerHTML=`<b>${l}</b><small>${levelInfo[l]}</small>`;b.onclick=()=>{selected.level=l;saveSettings();makeCards();updateAvailability();playTone();};b.classList.toggle("selected",selected.level===l);$("levels").appendChild(b);});
+  $("counts").innerHTML="";
+  [[5,"Rýchly kvíz"],[10,"Klasický kvíz"],[15,"Výzva"]].forEach(([n,label])=>{const b=document.createElement("button");b.className="choice";b.innerHTML=`<b>${label}</b><small>${n} otázok</small>`;b.onclick=()=>{selected.count=n;saveSettings();makeCards();updateAvailability();playTone();};b.classList.toggle("selected",selected.count===n);$("counts").appendChild(b);});
+}
+function matching(){return questions.filter(q=>(selected.category==="Všetky kategórie"||q.category===selected.category)&&q.level===selected.level);}
+function updateAvailability(){const ready=selected.category&&selected.level&&selected.count;const n=ready?matching().length:0;$("startBtn").disabled=!ready||n===0;$("availability").textContent=!ready?"Vyber všetky tri nastavenia.":n===0?"Pre túto kombináciu zatiaľ nemáme žiadne otázky.":`K dispozícii je ${n} otázok; kvíz bude mať ${Math.min(n,selected.count)} otázok.`;}
+function chooseQuestions(){let pool=matching();if(selected.category==="Všetky kategórie"){const groups={};categories.forEach(c=>groups[c]=shuffle(pool.filter(q=>q.category===c)));const balanced=[];while(categories.some(c=>groups[c].length)){categories.forEach(c=>{if(groups[c].length)balanced.push(groups[c].shift());});}pool=balanced;}return shuffle(pool).slice(0,selected.count);}
+function startQuiz(){quiz=chooseQuestions();if(!quiz.length)return;lastSettings={...selected};index=0;score=0;seconds=0;clearInterval(timerId);$("score").textContent=score;show("game");$("gameCategory").textContent=selected.category;$("gameLevel").textContent=selected.level;$("gameCount").textContent=quiz.length+" otázok";timerId=setInterval(()=>{seconds++;$("timer").textContent=formatTime(seconds);},1000);renderQuestion();playTone(620);}
+function formatTime(s){return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");}
+function renderQuestion(){answered=false;const q=quiz[index];$("questionNumber").textContent=`Otázka ${index+1}/${quiz.length}`;$("questionText").textContent=q.text;$("progressBar").style.width=((index)/quiz.length*100)+"%";$("feedback").textContent="";$("nextBtn").classList.add("hidden");$("answers").innerHTML="";shuffle(q.answers).forEach((answer,i)=>{const b=document.createElement("button");b.className="answer";b.textContent=(i+1)+". "+answer;b.dataset.answer=answer;b.onclick=()=>answerQuestion(b,q);$("answers").appendChild(b);});}
+function answerQuestion(button,q){if(answered)return;answered=true;const buttons=[...$("answers").children];buttons.forEach(b=>{b.disabled=true;if(b.dataset.answer===q.correct)b.classList.add("correct");});if(button.dataset.answer===q.correct){score++;$("score").textContent=score;$("feedback").textContent="✓ Správna odpoveď! Získavaš 1 bod.";$("feedback").style.color="var(--good)";playTone(780,.13);}else{button.classList.add("wrong");$("feedback").textContent="✕ Nesprávna odpoveď. Správne: "+q.correct;$("feedback").style.color="var(--bad)";playTone(220,.16);} $("nextBtn").textContent=index===quiz.length-1?"Zobraziť výsledky":"Ďalšia otázka →";$("nextBtn").classList.remove("hidden");}
+function nextQuestion(){if(!answered)return;index++;if(index>=quiz.length){finishQuiz();return;}renderQuestion();}
+function finishQuiz(){clearInterval(timerId);$("progressBar").style.width="100%";const percent=Math.round(score/quiz.length*100);$("finalScore").textContent=score+"/"+quiz.length;$("percent").textContent=percent+"%";$("ring").style.setProperty("--pct",percent+"%");$("resultTime").textContent="Tvoj čas: "+formatTime(seconds);let message=percent>=90?"Výborný!":percent>=70?"Dobrý výsledok!":percent>=50?"Priemerný výsledok.":"Skús znova, zvládneš to!";if(score===quiz.length)message="Fantastické! Získal si plný počet bodov!";$("resultHeading").textContent=score===quiz.length?"🏆 Neuveriteľné!":"Kvíz je za tebou!";$("resultMessage").textContent=message;show("results");playTone(880,.2);}
+function returnHome(){clearInterval(timerId);show("home");}
+function applyTheme(){document.body.classList.toggle("dark",theme==="dark");$("themeBtn").textContent=theme==="dark"?"☀️ Svetlý režim":"🌙 Tmavý režim";}
+$("themeBtn").onclick=()=>{theme=theme==="dark"?"light":"dark";localStorage.setItem("syn-theme",theme);applyTheme();};
+function updateSound(){ $("soundBtn").textContent=soundOn?"🔊 Zvuk: zapnutý":"🔇 Zvuk: vypnutý"; }
+$("soundBtn").onclick=()=>{soundOn=!soundOn;localStorage.setItem("syn-sound",String(soundOn));updateSound();playTone();};
+$("startBtn").onclick=startQuiz;$("nextBtn").onclick=nextQuestion;$("homeBtn").onclick=()=>$("modal").classList.remove("hidden");$("stayBtn").onclick=()=>$("modal").classList.add("hidden");$("leaveBtn").onclick=()=>{$("modal").classList.add("hidden");returnHome();};
+$("aboutBtn").onclick=()=>show("about");$("backBtn").onclick=()=>show("home");$("replayBtn").onclick=()=>{if(lastSettings){selected={...lastSettings};makeCards();updateAvailability();}show("home");};$("resultHomeBtn").onclick=returnHome;
+document.addEventListener("keydown",e=>{if(!$("game").classList.contains("hidden")){if(["1","2","3","4"].includes(e.key)&&!answered){const b=$("answers").children[Number(e.key)-1];if(b)b.click();}if(e.key==="Enter"&&answered)nextQuestion();}});
+function init(){const c=localStorage.getItem("syn-category"),l=localStorage.getItem("syn-level"),n=Number(localStorage.getItem("syn-count"));if(c&&([...categories,"Všetky kategórie"].includes(c)))selected.category=c;if(levels.includes(l))selected.level=l;if([5,10,15].includes(n))selected.count=n;applyTheme();updateSound();makeCards();updateAvailability();}
+init();
+</script>
 </body>
 </html>

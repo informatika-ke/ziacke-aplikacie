@@ -1,18 +1,498 @@
+
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="galeria-placeholder" content="1">
-  <title>Pripravuje sa</title>
-  <link rel="stylesheet" href="../../../assets/galeria.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeoKvíz – Spoznaj svet!</title>
+
+<style>
+:root {
+  --blue: #2563eb;
+  --purple: #7c3aed;
+  --green: #16a34a;
+  --red: #dc2626;
+  --text: #172554;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  color: var(--text);
+  background: linear-gradient(135deg, #dbeafe, #f5f3ff, #ccfbf1);
+  padding: 24px 14px;
+}
+
+.container {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.logo { font-size: 55px; }
+
+h1 {
+  margin: 5px 0;
+  font-size: clamp(30px, 7vw, 43px);
+  color: var(--blue);
+}
+
+.subtitle { color: #475569; }
+
+.card {
+  background: rgba(255,255,255,.96);
+  border-radius: 24px;
+  padding: clamp(18px, 5vw, 32px);
+  box-shadow: 0 15px 45px #1e3a8a18;
+  border: 1px solid #ffffff;
+}
+
+h2 { margin-top: 0; }
+
+button, select { font: inherit; }
+
+button {
+  cursor: pointer;
+  transition: transform .15s, opacity .15s;
+}
+
+button:hover { transform: translateY(-2px); }
+button:focus-visible, select:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 3px;
+}
+
+.primary {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  border: 0;
+  border-radius: 14px;
+  background: linear-gradient(100deg, var(--blue), var(--purple));
+  color: white;
+  font-weight: bold;
+  font-size: 17px;
+  margin-top: 20px;
+}
+
+select {
+  width: 100%;
+  padding: 13px;
+  margin-top: 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  background: white;
+}
+
+.label {
+  display: block;
+  font-weight: bold;
+  margin-top: 18px;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.pill {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-radius: 30px;
+  padding: 9px 13px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.progress {
+  height: 9px;
+  border-radius: 20px;
+  background: #e2e8f0;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #06b6d4, #2563eb);
+  transition: width .3s;
+}
+
+.illustration {
+  text-align: center;
+  font-size: 76px;
+  padding: 20px 10px;
+  margin: 12px 0 20px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #dbeafe, #ede9fe);
+}
+
+#question {
+  font-size: clamp(20px, 5vw, 26px);
+  line-height: 1.35;
+}
+
+.answers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.answer {
+  padding: 16px 10px;
+  border: 2px solid #dbeafe;
+  border-radius: 14px;
+  background: white;
+  color: #1e293b;
+  font-weight: bold;
+  min-height: 60px;
+  overflow-wrap: anywhere;
+}
+
+.answer:hover:not(:disabled) {
+  border-color: var(--blue);
+  background: #eff6ff;
+}
+
+.answer:disabled { cursor: default; opacity: 1; }
+
+.answer.correct {
+  background: #dcfce7;
+  border-color: var(--green);
+  color: #166534;
+}
+
+.answer.wrong {
+  background: #fee2e2;
+  border-color: var(--red);
+  color: #991b1b;
+}
+
+.feedback {
+  margin-top: 18px;
+  padding: 15px;
+  border-radius: 12px;
+  line-height: 1.5;
+  background: #f1f5f9;
+}
+
+.feedback.good { background: #dcfce7; color: #166534; }
+.feedback.bad { background: #fee2e2; color: #991b1b; }
+
+.hidden { display: none !important; }
+
+.result {
+  text-align: center;
+}
+
+.big-score {
+  font-size: 58px;
+  font-weight: bold;
+  color: var(--blue);
+  margin: 20px 0;
+}
+
+.secondary {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 13px;
+  border: 2px solid #c7d2fe;
+  background: #eef2ff;
+  color: #3730a3;
+  border-radius: 13px;
+  font-weight: bold;
+}
+
+footer {
+  text-align: center;
+  color: #64748b;
+  font-size: 13px;
+  margin-top: 20px;
+}
+
+@media (max-width: 440px) {
+  body { padding: 16px 10px; }
+  .answers { grid-template-columns: 1fr; }
+  .illustration { font-size: 60px; }
+}
+</style>
 </head>
+
 <body>
-  <header>
-    <nav class="crumbs"><a href="../../../">Žiacke aplikácie</a> › <a href="../../">2026-27</a> › <a href="../">2.A</a></nav>
-    <h1>Pripravuje sa</h1>
-    <p>Na aplikácii sa ešte pracuje. Pozrite sa sem neskôr.</p>
-  </header>
+<div class="container">
+
+<header>
+  <div class="logo">🌍</div>
+  <h1>GeoKvíz</h1>
+  <div class="subtitle">Spoznaj svet zábavnou formou!</div>
+</header>
+
+<main class="card">
+
+  <!-- ÚVOD -->
+  <section id="start">
+    <h2>✈️ Vitaj na cestách okolo sveta!</h2>
+    <p>
+      Otestuj svoje vedomosti o krajinách, hlavných mestách
+      a geografických zaujímavostiach.
+    </p>
+
+    <label class="label" for="difficulty">Vyber si obtiažnosť:</label>
+    <select id="difficulty">
+      <option value="lahka">🟢 Ľahká</option>
+      <option value="stredna">🟡 Stredná</option>
+      <option value="tazka">🔴 Ťažká</option>
+    </select>
+
+    <p>📌 10 otázok · 1 bod za správnu odpoveď</p>
+    <button class="primary" id="startBtn">SPUSTIŤ KVÍZ 🚀</button>
+  </section>
+
+  <!-- HRA -->
+  <section id="game" class="hidden">
+    <div class="stats">
+      <span class="pill" id="questionCount">Otázka 1/10</span>
+      <span class="pill" id="score">⭐ Skóre: 0</span>
+    </div>
+
+    <div class="progress">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="illustration" id="illustration">🌎</div>
+    <h2 id="question">Otázka</h2>
+    <div class="answers" id="answers"></div>
+    <div id="feedback" class="feedback hidden" aria-live="polite"></div>
+    <button class="primary hidden" id="nextBtn">ĎALŠIA OTÁZKA ➜</button>
+  </section>
+
+  <!-- VÝSLEDOK -->
+  <section id="result" class="hidden result">
+    <div class="logo" id="resultEmoji">🏆</div>
+    <h2 id="resultTitle">Výborne!</h2>
+    <p>Tvoj výsledok:</p>
+    <div class="big-score" id="finalScore">0/10</div>
+    <p id="resultMessage"></p>
+    <button class="primary" id="againBtn">HRAŤ ZNOVA 🔄</button>
+    <button class="secondary" id="homeBtn">SPÄŤ NA ÚVOD</button>
+  </section>
+
+</main>
+
+<footer>🌐 GeoKvíz · Uč sa, objavuj a spoznávaj svet!</footer>
+</div>
+
+<script>
+// MOZOG APLIKÁCIE: OTÁZKY A SPRÁVNE ODPOVEDE
+// Každá otázka má text, možnosti, správnu odpoveď,
+// obrázkový symbol a krátke vysvetlenie.
+
+const questions = {
+  lahka: [
+    {q:"Aké je hlavné mesto Slovenska?",a:["Košice","Bratislava","Žilina","Nitra"],c:1,e:"Bratislava je hlavné mesto Slovenska.",i:"🏰"},
+    {q:"V ktorej krajine sa nachádza Eiffelova veža?",a:["Taliansko","Španielsko","Francúzsko","Grécko"],c:2,e:"Eiffelova veža je známa pamiatka v Paríži.",i:"🗼"},
+    {q:"Ktorý svetadiel je najväčší?",a:["Európa","Ázia","Afrika","Austrália"],c:1,e:"Ázia je najväčší svetadiel podľa rozlohy.",i:"🌏"},
+    {q:"Aké je hlavné mesto Talianska?",a:["Miláno","Benátky","Rím","Neapol"],c:2,e:"Rím je hlavné mesto Talianska.",i:"🏛️"},
+    {q:"Ktorý oceán je najväčší?",a:["Atlantický","Indický","Severný ľadový","Tichý"],c:3,e:"Tichý oceán je najväčší oceán na Zemi.",i:"🌊"},
+    {q:"V ktorej krajine nájdeš pyramídy v Gíze?",a:["Egypt","Mexiko","India","Peru"],c:0,e:"Slávne pyramídy v Gíze sa nachádzajú v Egypte.",i:"🔺"},
+    {q:"Aké je hlavné mesto Česka?",a:["Brno","Praha","Ostrava","Plzeň"],c:1,e:"Praha je hlavné mesto Českej republiky.",i:"🏙️"},
+    {q:"Na ktorom svetadiele sa nachádza Brazília?",a:["Afrika","Ázia","Južná Amerika","Európa"],c:2,e:"Brazília sa nachádza v Južnej Amerike.",i:"🌴"},
+    {q:"Ktorá krajina má tvar čižmy?",a:["Portugalsko","Taliansko","Nórsko","Poľsko"],c:1,e:"Taliansko na mape pripomína čižmu.",i:"👢"},
+    {q:"Aké je hlavné mesto Rakúska?",a:["Salzburg","Graz","Viedeň","Innsbruck"],c:2,e:"Viedeň je hlavné mesto Rakúska.",i:"🎻"}
+  ],
+
+  stredna: [
+    {q:"Aké je hlavné mesto Kanady?",a:["Toronto","Vancouver","Ottawa","Montreal"],c:2,e:"Hlavným mestom Kanady je Ottawa.",i:"🍁"},
+    {q:"Ktorá rieka preteká cez Budapešť?",a:["Rýn","Dunaj","Seina","Temža"],c:1,e:"Dunaj preteká cez Budapešť a rozdeľuje mesto na historické časti Budu a Pešť.",i:"🏞️"},
+    {q:"V ktorej krajine sa nachádza mesto Marrákeš?",a:["Maroko","Tunisko","Turecko","Jordánsko"],c:0,e:"Marrákeš je významné mesto v Maroku.",i:"🕌"},
+    {q:"Aké je hlavné mesto Japonska?",a:["Kjóto","Osaka","Hirošima","Tokio"],c:3,e:"Tokio je hlavné mesto Japonska.",i:"🗾"},
+    {q:"Ktoré pohorie oddeľuje Európu od Ázie v tradičnom geografickom členení?",a:["Alpy","Karpaty","Ural","Pyreneje"],c:2,e:"Pohorie Ural sa tradične považuje za časť hranice medzi Európou a Áziou.",i:"⛰️"},
+    {q:"Ktorá krajina má hlavné mesto Oslo?",a:["Švédsko","Nórsko","Fínsko","Dánsko"],c:1,e:"Oslo je hlavné mesto Nórska.",i:"❄️"},
+    {q:"V ktorej krajine sa nachádza Machu Picchu?",a:["Čile","Peru","Bolívia","Ekvádor"],c:1,e:"Machu Picchu je známe archeologické miesto v Peru.",i:"🗿"},
+    {q:"Aké je hlavné mesto Portugalska?",a:["Porto","Faro","Lisabon","Coimbra"],c:2,e:"Lisabon je hlavné mesto Portugalska.",i:"🚋"},
+    {q:"Ktorý štát obklopuje mesto Rím zo všetkých strán?",a:["Monako","San Maríno","Vatikán","Malta"],c:2,e:"Vatikán je samostatný štát nachádzajúci sa vo vnútri Ríma.",i:"⛪"},
+    {q:"Na ktorom svetadiele leží púšť Sahara?",a:["Ázia","Afrika","Austrália","Južná Amerika"],c:1,e:"Sahara sa nachádza v severnej Afrike.",i:"🐪"}
+  ],
+
+  tazka: [
+    {q:"Aké je hlavné mesto Kazachstanu?",a:["Taškent","Biškek","Ašchabad","Astana"],c:3,e:"Hlavným mestom Kazachstanu je Astana.",i:"🏙️"},
+    {q:"Ktorá rieka preteká cez Bagdad?",a:["Eufrat","Tigris","Jordán","Níl"],c:1,e:"Bagdad leží na rieke Tigris v Iraku.",i:"🌊"},
+    {q:"Aké je hlavné mesto Etiópie?",a:["Nairobi","Asmara","Addis Abeba","Kampala"],c:2,e:"Addis Abeba je hlavné mesto Etiópie.",i:"🌍"},
+    {q:"Ktorý prieliv oddeľuje Španielsko od Maroka?",a:["Bospor","Gibraltársky prieliv","Dardanely","La Manche"],c:1,e:"Gibraltársky prieliv oddeľuje Európu od Afriky v tejto oblasti.",i:"⛵"},
+    {q:"Aké je hlavné mesto Mongolska?",a:["Ulanbátar","Astana","Dušanbe","Baku"],c:0,e:"Ulanbátar je hlavné mesto Mongolska.",i:"🐎"},
+    {q:"V ktorej krajine sa nachádza mesto Samarkand?",a:["Uzbekistan","Arménsko","Gruzínsko","Azerbajdžan"],c:0,e:"Samarkand je historické mesto v Uzbekistane na starej Hodvábnej ceste.",i:"🕌"},
+    {q:"Ktoré jazero je najhlbšie na svete?",a:["Tanganika","Bajkal","Horné jazero","Viktóriino jazero"],c:1,e:"Jazero Bajkal na Sibíri je najhlbšie jazero sveta.",i:"💧"},
+    {q:"Aké je hlavné mesto Uruguaja?",a:["Asunción","Santiago","Montevideo","La Paz"],c:2,e:"Montevideo je hlavné mesto Uruguaja.",i:"🌎"},
+    {q:"Ktorá krajina má hlavné mesto Reykjavík?",a:["Nórsko","Island","Fínsko","Dánsko"],c:1,e:"Reykjavík je hlavné mesto Islandu.",i:"🌋"},
+    {q:"Ktorá rieka preteká cez Paríž?",a:["Loira","Rhôna","Seina","Garonna"],c:2,e:"Parížom preteká rieka Seina.",i:"🗼"}
+  ]
+};
+
+// PREMENNÉ, KTORÉ SI APLIKÁCIA PAMÄTÁ POČAS HRY
+let quiz = [];
+let current = 0;
+let points = 0;
+let answered = false;
+
+const $ = id => document.getElementById(id);
+
+function showScreen(screen) {
+  ["start", "game", "result"].forEach(id => {
+    $(id).classList.toggle("hidden", id !== screen);
+  });
+}
+
+// SPUSTENIE NOVEJ HRY
+function startGame() {
+  const level = $("difficulty").value;
+
+  // Zamiešanie otázok, aby nebol každý kvíz rovnaký.
+  quiz = [...questions[level]]
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 10);
+
+  current = 0;
+  points = 0;
+  answered = false;
+
+  showScreen("game");
+  renderQuestion();
+}
+
+// ZOBRAZENIE OTÁZKY A MOŽNOSTÍ
+function renderQuestion() {
+  answered = false;
+  const item = quiz[current];
+
+  $("questionCount").textContent =
+    `Otázka ${current + 1}/${quiz.length}`;
+
+  $("score").textContent = `⭐ Skóre: ${points}`;
+  $("progressBar").style.width =
+    `${(current / quiz.length) * 100}%`;
+
+  $("illustration").textContent = item.i;
+  $("question").textContent = item.q;
+  $("feedback").className = "feedback hidden";
+  $("feedback").textContent = "";
+  $("nextBtn").classList.add("hidden");
+
+  const area = $("answers");
+  area.replaceChildren();
+
+  item.a.forEach((answer, index) => {
+    const button = document.createElement("button");
+    button.className = "answer";
+    button.textContent = answer;
+    button.addEventListener("click", () => checkAnswer(index));
+    area.appendChild(button);
+  });
+}
+
+// KONTROLA ODPOVEDE – HLAVNÝ MOZOG HRY
+function checkAnswer(selected) {
+  if (answered) return;
+  answered = true;
+
+  const item = quiz[current];
+  const buttons = [...$("answers").children];
+  const feedback = $("feedback");
+
+  buttons.forEach(button => button.disabled = true);
+
+  // Zvýraznenie správnej odpovede.
+  buttons[item.c].classList.add("correct");
+
+  if (selected === item.c) {
+    points++;
+    feedback.textContent = "✅ Správne! " + item.e;
+    feedback.className = "feedback good";
+  } else {
+    buttons[selected].classList.add("wrong");
+    feedback.textContent =
+      "❌ Nesprávna odpoveď. Správne je: " +
+      item.a[item.c] + ". " + item.e;
+    feedback.className = "feedback bad";
+  }
+
+  $("score").textContent = `⭐ Skóre: ${points}`;
+  $("progressBar").style.width =
+    `${((current + 1) / quiz.length) * 100}%`;
+
+  $("nextBtn").textContent =
+    current === quiz.length - 1
+      ? "ZOBRAZIŤ VÝSLEDOK 🏆"
+      : "ĎALŠIA OTÁZKA ➜";
+
+  $("nextBtn").classList.remove("hidden");
+}
+
+// PRECHOD NA ĎALŠIU OTÁZKU ALEBO VÝSLEDOK
+function nextQuestion() {
+  if (!answered) return;
+
+  current++;
+
+  if (current < quiz.length) {
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+// VYHODNOTENIE KVÍZU
+function showResult() {
+  showScreen("result");
+  $("finalScore").textContent = `${points}/${quiz.length}`;
+
+  const percent = points / quiz.length;
+  let title, emoji, message;
+
+  if (percent === 1) {
+    title = "Fantasticky!"; 
+    emoji = "🏆";
+    message = "Všetky odpovede máš správne. Si geografický expert!";
+  } else if (percent >= 0.7) {
+    title = "Výborne!";
+    emoji = "🌟";
+    message = "Svet poznáš veľmi dobre. Len tak ďalej!";
+  } else if (percent >= 0.4) {
+    title = "Dobrý pokus!";
+    emoji = "🌍";
+    message = "Niečo už vieš. Skús si kvíz zopakovať a naučiť sa viac.";
+  } else {
+    title = "Čas objavovať!";
+    emoji = "🧭";
+    message = "Nevadí! Každá hra ťa naučí niečo nové.";
+  }
+
+  $("resultTitle").textContent = title;
+  $("resultEmoji").textContent = emoji;
+  $("resultMessage").textContent = message;
+}
+
+// TLAČIDLÁ APLIKÁCIE
+$("startBtn").addEventListener("click", startGame);
+$("nextBtn").addEventListener("click", nextQuestion);
+$("againBtn").addEventListener("click", startGame);
+
+$("homeBtn").addEventListener("click", () => {
+  showScreen("start");
+});
+</script>
 </body>
 </html>

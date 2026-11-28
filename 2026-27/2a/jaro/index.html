@@ -1,18 +1,146 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="galeria-placeholder" content="1">
-  <title>Pripravuje sa</title>
-  <link rel="stylesheet" href="../../../assets/galeria.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Malá násobilka</title>
+<style>
+:root{
+  --bg1:#ffd86b;--bg2:#ff8fb1;--card:#ffffff;--text:#2b2a4c;--muted:#6b6a8a;
+  --accent:#6c5ce7;--accent-text:#fff;--ok:#1fb86a;--bad:#ff5b5b;--field:#f3f1ff;--border:#d9d4ff;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg1:#2a1f5c;--bg2:#5a1f4f;--card:#1f1d3a;--text:#f4f3ff;--muted:#b3b1d6;--accent:#8b7dff;--accent-text:#12102a;--field:#2b2950;--border:#4a4780;color-scheme:dark}
+}
+:root[data-theme="dark"]{--bg1:#2a1f5c;--bg2:#5a1f4f;--card:#1f1d3a;--text:#f4f3ff;--muted:#b3b1d6;--accent:#8b7dff;--accent-text:#12102a;--field:#2b2950;--border:#4a4780;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{font-family:"Trebuchet MS","Segoe UI",Verdana,sans-serif;color:var(--text);background:linear-gradient(135deg,var(--bg1),var(--bg2)) fixed;display:flex;justify-content:center;align-items:center;padding:16px;min-height:100vh}
+.card{background:var(--card);width:100%;max-width:480px;border-radius:28px;padding:24px 20px;box-shadow:0 12px 40px rgba(0,0,0,.2);text-align:center}
+h1{margin:0 0 12px;font-size:1.5rem}
+.top{display:flex;justify-content:space-between;align-items:center;font-weight:700;margin-bottom:10px}
+.pill{background:var(--field);border:2px solid var(--border);padding:6px 14px;border-radius:999px}
+.bar{height:12px;background:var(--field);border-radius:999px;overflow:hidden;margin-bottom:22px}
+.bar>div{height:100%;width:0;background:linear-gradient(90deg,#ff8fb1,#ffb347,#1fb86a);border-radius:999px;transition:width .35s}
+.q{font-size:clamp(3rem,16vw,5rem);font-weight:900;margin:8px 0 18px;color:var(--accent);letter-spacing:2px}
+input{width:100%;font:inherit;font-size:2.4rem;font-weight:800;text-align:center;padding:12px;border-radius:18px;border:3px solid var(--border);background:var(--field);color:var(--text);outline:none}
+input:focus{border-color:var(--accent)}
+button{font:inherit;font-weight:800;font-size:1.3rem;border:0;border-radius:18px;padding:14px 28px;cursor:pointer;background:var(--accent);color:var(--accent-text);margin-top:16px;width:100%;box-shadow:0 5px 0 rgba(0,0,0,.2);transition:transform .1s}
+button:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.2)}
+.hidden{display:none!important}
+.score{font-size:clamp(3.5rem,18vw,5.5rem);font-weight:900;color:var(--accent);margin:6px 0}
+.stars{font-size:2.2rem;margin:4px 0 8px}
+.msg{font-size:1.2rem;color:var(--muted);margin:0 0 6px}
+.overlay{position:fixed;inset:0;background:rgba(20,15,50,.6);display:flex;align-items:center;justify-content:center;padding:20px;z-index:10}
+.popup{background:var(--card);border-radius:28px;padding:28px 22px;width:100%;max-width:360px;text-align:center;animation:pop .25s ease-out;border:6px solid var(--ok)}
+.popup.bad{border-color:var(--bad)}
+.popup .emoji{font-size:3.5rem}
+.popup h2{margin:6px 0;font-size:2rem;color:var(--ok)}
+.popup.bad h2{color:var(--bad)}
+.popup p{margin:0;font-size:1.2rem;color:var(--muted)}
+@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+</style>
 </head>
 <body>
-  <header>
-    <nav class="crumbs"><a href="../../../">Žiacke aplikácie</a> › <a href="../../">2026-27</a> › <a href="../">2.A</a></nav>
-    <h1>Pripravuje sa</h1>
-    <p>Na aplikácii sa ešte pracuje. Pozrite sa sem neskôr.</p>
-  </header>
+<main class="card">
+  <h1>✨ Malá násobilka ✨</h1>
+
+  <section id="quiz">
+    <div class="top"><span class="pill" id="counter">1/10</span><span class="pill">⭐ <span id="pts">0</span></span></div>
+    <div class="bar"><div id="fill"></div></div>
+    <div class="q" id="question">3 × 4</div>
+    <input id="answer" type="number" inputmode="numeric" pattern="[0-9]*" placeholder="?" autocomplete="off" aria-label="Tvoja odpoveď">
+    <button id="check">Skontrolovať</button>
+  </section>
+
+  <section id="result" class="hidden">
+    <p class="msg">Tvoje skóre</p>
+    <div class="score"><span id="final">0</span>/10</div>
+    <div class="stars" id="stars"></div>
+    <p class="msg" id="finalMsg"></p>
+    <button id="again">Hrať znova</button>
+  </section>
+</main>
+
+<div class="overlay hidden" id="overlay">
+  <div class="popup" id="popup">
+    <div class="emoji" id="emoji"></div>
+    <h2 id="popTitle"></h2>
+    <p id="popText"></p>
+    <button id="next">Ďalej</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var TOTAL=10, qs=[], idx=0, score=0, lastCorrect=false;
+  var $=function(id){return document.getElementById(id)};
+  var answer=$("answer");
+
+  function newTest(){
+    qs=[];var seen={};
+    while(qs.length<TOTAL){
+      var a=1+Math.floor(Math.random()*10), b=1+Math.floor(Math.random()*10);
+      var k=Math.min(a,b)+"x"+Math.max(a,b);
+      if(seen[k])continue;
+      seen[k]=1;qs.push({a:a,b:b});
+    }
+    idx=0;score=0;
+    $("result").classList.add("hidden");
+    $("quiz").classList.remove("hidden");
+    show();
+  }
+
+  function show(){
+    var q=qs[idx];
+    $("question").textContent=q.a+" × "+q.b;
+    $("counter").textContent=(idx+1)+"/"+TOTAL;
+    $("pts").textContent=score;
+    $("fill").style.width=(idx/TOTAL*100)+"%";
+    answer.value="";
+    answer.focus();
+  }
+
+  function check(){
+    if(answer.value.trim()===""){answer.focus();return;}
+    var q=qs[idx], val=parseInt(answer.value,10), right=q.a*q.b;
+    lastCorrect=(val===right);
+    if(lastCorrect)score++;
+    var p=$("popup");
+    p.classList.toggle("bad",!lastCorrect);
+    $("emoji").textContent=lastCorrect?"🎉":"😕";
+    $("popTitle").textContent=lastCorrect?"SPRÁVNE!":"NESPRÁVNE!";
+    $("popText").textContent=lastCorrect?"+1 bod":q.a+" × "+q.b+" = "+right;
+    $("overlay").classList.remove("hidden");
+    $("next").focus();
+  }
+
+  function next(){
+    $("overlay").classList.add("hidden");
+    idx++;
+    if(idx>=TOTAL){finish();}else{show();}
+  }
+
+  function finish(){
+    $("quiz").classList.add("hidden");
+    $("result").classList.remove("hidden");
+    $("final").textContent=score;
+    var n=score>=9?3:score>=6?2:score>=3?1:0, s="";
+    for(var i=0;i<3;i++)s+=i<n?"⭐":"☆";
+    $("stars").textContent=s;
+    $("finalMsg").textContent=score===10?"Úžasné! Si majster násobilky! 🏆":score>=7?"Skvelá práca! 👏":score>=4?"Dobre! Ešte trochu potrénuj. 💪":"Nevadí, skús to znova! 🌈";
+  }
+
+  $("check").addEventListener("click",check);
+  $("next").addEventListener("click",next);
+  $("again").addEventListener("click",newTest);
+  answer.addEventListener("keydown",function(e){if(e.key==="Enter")check();});
+  document.addEventListener("keydown",function(e){
+    if(e.key==="Enter"&&!$("overlay").classList.contains("hidden")){e.preventDefault();next();}
+  });
+  newTest();
+})();
+</script>
 </body>
 </html>

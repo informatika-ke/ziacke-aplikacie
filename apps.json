@@ -30,9 +30,9 @@
       "rok": "2026-27",
       "trieda": "2.A",
       "priecinok": "2026-27/2a/kovo",
-      "nazov": "",
+      "nazov": "Matematický kvíz",
       "autor": "Kovo",
-      "typ": ""
+      "typ": "kvíz"
     },
     {
       "rok": "2026-27",
@@ -118,9 +118,9 @@
       "rok": "2026-27",
       "trieda": "2.A",
       "priecinok": "2026-27/2a/peron",
-      "nazov": "",
+      "nazov": "GeoMaster – geografický kvíz",
       "autor": "Peron",
-      "typ": ""
+      "typ": "kvíz"
     },
     {
       "rok": "2026-27",
@@ -142,9 +142,9 @@
       "rok": "2026-27",
       "trieda": "2.A",
       "priecinok": "2026-27/2a/jaro",
-      "nazov": "",
+      "nazov": "Malá násobilka",
       "autor": "Jaro",
-      "typ": ""
+      "typ": "počítanie"
     },
     {
       "rok": "2026-27",
@@ -166,17 +166,17 @@
       "rok": "2026-27",
       "trieda": "2.A",
       "priecinok": "2026-27/2a/teron",
-      "nazov": "",
+      "nazov": "AutoKvíz",
       "autor": "Teron",
-      "typ": ""
+      "typ": "kvíz"
     },
     {
       "rok": "2026-27",
       "trieda": "2.A",
       "priecinok": "2026-27/2a/jexo",
-      "nazov": "",
+      "nazov": "GeoKvíz – Spoznaj svet",
       "autor": "Jexo",
-      "typ": ""
+      "typ": "kvíz"
     },
     {
       "rok": "2026-27",
@@ -190,9 +190,9 @@
       "rok": "2026-27",
       "trieda": "2.A",
       "priecinok": "2026-27/2a/krix",
-      "nazov": "",
+      "nazov": "Pexeso",
       "autor": "Krix",
-      "typ": ""
+      "typ": "pexeso"
     },
     {
       "rok": "2026-27",
@@ -206,9 +206,9 @@
       "rok": "2026-27",
       "trieda": "2.B",
       "priecinok": "2026-27/2b/rexo",
-      "nazov": "",
+      "nazov": "Dovolenkové destinácie",
       "autor": "Rexo",
-      "typ": ""
+      "typ": "kvíz"
     },
     {
       "rok": "2026-27",
@@ -230,9 +230,9 @@
       "rok": "2026-27",
       "trieda": "2.B",
       "priecinok": "2026-27/2b/aero",
-      "nazov": "",
+      "nazov": "Pink Closet",
       "autor": "Aero",
-      "typ": ""
+      "typ": "hra"
     },
     {
       "rok": "2026-27",
@@ -262,9 +262,9 @@
       "rok": "2026-27",
       "trieda": "2.B",
       "priecinok": "2026-27/2b/milo",
-      "nazov": "",
+      "nazov": "Synesthesia – vedomostný kvíz",
       "autor": "Milo",
-      "typ": ""
+      "typ": "kvíz"
     },
     {
       "rok": "2026-27",
@@ -278,9 +278,9 @@
       "rok": "2026-27",
       "trieda": "2.B",
       "priecinok": "2026-27/2b/keron",
-      "nazov": "",
+      "nazov": "Vesmírna poznávačka",
       "autor": "Keron",
-      "typ": ""
+      "typ": "kvíz"
     },
     {
       "rok": "2026-27",
@@ -350,17 +350,17 @@
       "rok": "2026-27",
       "trieda": "2.B",
       "priecinok": "2026-27/2b/meno",
-      "nazov": "",
+      "nazov": "Memory Rush",
       "autor": "Meno",
-      "typ": ""
+      "typ": "pexeso"
     },
     {
       "rok": "2026-27",
       "trieda": "2.B",
       "priecinok": "2026-27/2b/jeron",
-      "nazov": "",
+      "nazov": "KARTY – učebné kartičky",
       "autor": "Jeron",
-      "typ": ""
+      "typ": "kartičky"
     },
     {
       "rok": "2026-27",

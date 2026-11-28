@@ -1,0 +1,22 @@
+/* Zdieľanie odkazov a QR kódov (assets/zdielat.js) */
+li.ma-qr { position: relative; }
+.qr-btn {
+  font: inherit; font-size: .8rem; font-weight: 700; cursor: pointer;
+  border: 2px solid var(--ak, var(--accent, #3b5bdb)); color: var(--ak, var(--accent, #3b5bdb));
+  background: var(--card, #fff); border-radius: 999px; padding: 3px 11px;
+}
+.qr-btn:hover, .qr-btn:focus-visible { background: var(--ak, var(--accent, #3b5bdb)); color: #fff; outline: none; }
+li.ma-qr > .qr-btn { position: absolute; right: 12px; bottom: 12px; z-index: 2; }
+.qr-btn.qr-hlava { margin-top: 8px; }
+#qr-okno { border: 0; border-radius: 16px; padding: 22px; width: min(92vw, 380px); background: var(--card, #fff); color: var(--text, #1f2430); box-shadow: 0 20px 60px rgba(0,0,0,.4); text-align: center; }
+#qr-okno::backdrop { background: rgba(10,14,30,.6); }
+#qr-okno h2 { margin: 0 0 12px; font-size: 1.1rem; }
+#qr-okno .qr-kod { background: #fff; padding: 12px; border-radius: 12px; display: inline-block; line-height: 0; }
+#qr-okno .qr-kod svg { width: min(70vw, 260px); height: auto; display: block; }
+#qr-okno .qr-adresa { margin: 12px 0 4px; font-size: .78rem; word-break: break-all; color: var(--muted, #5d6578); }
+#qr-okno .qr-hlaska { min-height: 1.3em; margin: 4px 0 8px; font-size: .85rem; font-weight: 600; }
+#qr-okno .qr-akcie { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+#qr-okno .qr-akcie button { font: inherit; font-size: .9rem; font-weight: 700; cursor: pointer; border: 0; border-radius: 10px; padding: 9px 14px; background: var(--accent, #3b5bdb); color: #fff; }
+#qr-okno .qr-akcie button.qr-zavriet { background: transparent; color: inherit; border: 1px solid var(--border, #ccc); }
+.adv-hlava .qr-btn { --ak: #fff; background: rgba(255,255,255,.14); color: #fff; border-color: rgba(255,255,255,.85); }
+.adv-hlava .qr-btn:hover, .adv-hlava .qr-btn:focus-visible { background: #fff; color: #1b2f52; }

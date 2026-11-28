@@ -240,8 +240,9 @@ function stranaRozcestnik(cfg) {
   <meta name="robots" content="noindex, nofollow">
   <title>${esc(cfg.nazov || 'Adventné kalendáre 2026')} – Žiacke aplikácie</title>
   <link rel="stylesheet" href="../../assets/galeria.css">
+  <link rel="stylesheet" href="../../assets/zdielat.css">
 </head>
-<body>
+<body data-qr="karty">
   <header>
     <nav class="crumbs"><a href="../../">Žiacke aplikácie</a></nav>
     <h1>🎄 ${esc(cfg.nazov || 'Adventné kalendáre 2026')}</h1>
@@ -254,6 +255,8 @@ ${karty}
     <p class="advent-lead">Robíš vlastnú aktivitu? <a href="dielna/">Adventná AI dielňa (generátor promptov)</a> · <a href="odovzdat/">Odovzdať aktivitu</a></p>
   </main>
   <footer>Automaticky vygenerované – neupravujte ručne (zdroj: advent.json).</footer>
+  <script src="../../assets/qrcode.js"></script>
+  <script src="../../assets/zdielat.js"></script>
 </body>
 </html>
 `;
@@ -277,7 +280,7 @@ function stranaKalendara(cfg, t) {
       `<button type="button" class="dv" data-den="${n}" data-stav="zamknute" aria-label="Okienko ${n}">` +
       `<span class="dv-vnutro" data-den="${n}" aria-hidden="true"></span><span class="dv-listy" aria-hidden="true"><b>${n}</b></span><span class="dv-zamok" aria-hidden="true">🔒</span></button></li>\n`;
   }
-  return `${hlavicka(`Adventný kalendár ${t.nazov} – ${cfg.nazov}`, 3)}
+  return `${hlavicka(`Adventný kalendár ${t.nazov} – ${cfg.nazov}`, 3).replace('</head>', '  <link rel="stylesheet" href="../../../assets/zdielat.css">\n</head>')}
 <body style="${stylMotivu(m)}">
   <header class="adv-hlava">
     <nav class="crumbs"><a href="../../../">Žiacke aplikácie</a> › <a href="../">Adventné kalendáre</a></nav>
@@ -285,6 +288,7 @@ function stranaKalendara(cfg, t) {
     <p id="odpocet" class="adv-odpocet">Načítavam…</p>
     <p id="hlaska" class="adv-hlaska" role="status" aria-live="polite"></p>
     <p id="ucitel-pas" class="adv-ucitel" hidden></p>
+    <button type="button" class="qr-btn qr-hlava" data-qr-tlacidlo="Adventný kalendár ${esc(t.nazov)}">📱 QR a odkaz na kalendár</button>
   </header>
   <main data-kalendar data-trieda="${t.kluc}" data-nazov="${esc(t.nazov)}">
     <div class="scena${obraz ? ' scena-obraz' : ''}">
@@ -304,6 +308,8 @@ ${dvierka}      </ol>
     <iframe id="okno-iframe" title="Aktivita adventného okienka" sandbox="allow-scripts allow-modals allow-pointer-lock" allow="fullscreen" allowfullscreen referrerpolicy="no-referrer"></iframe>
   </dialog>
   <footer class="adv-pata">Okienká sa otvárajú automaticky o polnoci (čas Europe/Bratislava). Stránka je vygenerovaná z advent.json.</footer>
+  <script src="../../../assets/qrcode.js"></script>
+  <script src="../../../assets/zdielat.js"></script>
   <script type="module" src="../../../assets/advent.js"></script>
 </body>
 </html>

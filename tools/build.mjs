@@ -170,7 +170,7 @@ if (errors.length) {
 }
 
 // ---------- generovanie stránok ----------
-function page({ depth, title, crumbs, heading, lead, body, pozadie = '', odbor = '' }) {
+function page({ depth, title, crumbs, heading, lead, body, pozadie = '', odbor = '', qr = false }) {
   const up = '../'.repeat(depth);
   const nav = crumbs.length
     ? `<nav class="crumbs">${crumbs.map((c) => `<a href="${c.href}">${esc(c.text)}</a>`).join(' › ')}</nav>`
@@ -182,9 +182,9 @@ function page({ depth, title, crumbs, heading, lead, body, pozadie = '', odbor =
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>${esc(title)}</title>
-  <link rel="stylesheet" href="${up}assets/galeria.css">
+  <link rel="stylesheet" href="${up}assets/galeria.css">${qr ? `\n  <link rel="stylesheet" href="${up}assets/zdielat.css">` : ''}
 </head>
-<body${pozadie ? ` class="s-pozadie${odbor && /^[a-z0-9-]+$/.test(odbor) ? " odbor-" + odbor : ""}" style="--pozadie:url('${pozadie}')"` : ''}>
+<body${qr ? ' data-qr="karty"' : ''}${pozadie ? ` class="s-pozadie${odbor && /^[a-z0-9-]+$/.test(odbor) ? " odbor-" + odbor : ""}" style="--pozadie:url('${pozadie}')"` : ''}>
   <header>
     ${nav}
     <h1>${esc(heading)}</h1>
@@ -193,7 +193,7 @@ function page({ depth, title, crumbs, heading, lead, body, pozadie = '', odbor =
   <main>
 ${body}
   </main>
-  <footer>Automaticky vygenerované – neupravujte ručne (zdroj: apps.json).</footer>
+  <footer>Automaticky vygenerované – neupravujte ručne (zdroj: apps.json).</footer>${qr ? `\n  <script src="${up}assets/qrcode.js"></script>\n  <script src="${up}assets/zdielat.js"></script>` : ''}
 </body>
 </html>
 `;
@@ -245,6 +245,7 @@ write(
     crumbs: [],
     heading: titul,
     lead: podtitul,
+    pozadie: years.length && existsSync(join(ROOT, 'assets', `rok-${years[0]}.jpg`)) ? `assets/rok-${years[0]}.jpg` : '',
     body: (valid.length
       ? `    <h2>Školské roky</h2>\n    <ul class="grid">\n${years
           .map((y) => rokKarta(y, `${[...byYear.get(y).keys()].length} tried`))
@@ -270,7 +271,7 @@ for (const y of years) {
       lead: '',
       pozadie: existsSync(join(ROOT, 'assets', `rok-${y}.jpg`)) ? `../assets/rok-${y}.jpg` : '',
       body: `    <h2>Triedy</h2>\n    <ul class="grid">\n${keys
-        .map((k) => card(`${k}/`, classes.get(k).label, countText(classes.get(k).apps), ''))
+        .map((k) => card(`${k}/`, classes.get(k).label, countText(classes.get(k).apps), '', pozadiaTried[k] && /^[a-z0-9-]+$/.test(pozadiaTried[k]) ? 'odbor-' + pozadiaTried[k] : ''))
         .join('\n')}\n    </ul>`,
     })
   );
@@ -292,6 +293,7 @@ for (const y of years) {
         lead: `Školský rok ${y} · ${countText(list)}`,
         pozadie: pozadieTriedy(k, '../../assets/', y),
         odbor: pozadiaTried[k] || '',
+        qr: true,
         body: `    <ul class="grid">\n${list.map(appCard).join('\n')}\n    </ul>`,
       })
     );

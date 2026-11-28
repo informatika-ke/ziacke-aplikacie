@@ -6,6 +6,7 @@
   <meta name="robots" content="noindex, nofollow">
   <title>Adventný kalendár 1.G – Adventné kalendáre 2026</title>
   <link rel="stylesheet" href="../../../assets/advent.css">
+  <link rel="stylesheet" href="../../../assets/zdielat.css">
 </head>
 <body style="--obloha1:#150a33;--obloha2:#4c1d95;--kopec:#3b2a78;--sneh:#f3eeff;--dom:#4a3a8a;--strecha:#2a1f5a;--strom:#14455a;--akcent:#b79bff;--akcent2:#7c3aed">
   <header class="adv-hlava">
@@ -14,6 +15,7 @@
     <p id="odpocet" class="adv-odpocet">Načítavam…</p>
     <p id="hlaska" class="adv-hlaska" role="status" aria-live="polite"></p>
     <p id="ucitel-pas" class="adv-ucitel" hidden></p>
+    <button type="button" class="qr-btn qr-hlava" data-qr-tlacidlo="Adventný kalendár 1.G">📱 QR a odkaz na kalendár</button>
   </header>
   <main data-kalendar data-trieda="1g" data-nazov="1.G">
     <div class="scena scena-obraz">
@@ -57,6 +59,8 @@
     <iframe id="okno-iframe" title="Aktivita adventného okienka" sandbox="allow-scripts allow-modals allow-pointer-lock" allow="fullscreen" allowfullscreen referrerpolicy="no-referrer"></iframe>
   </dialog>
   <footer class="adv-pata">Okienká sa otvárajú automaticky o polnoci (čas Europe/Bratislava). Stránka je vygenerovaná z advent.json.</footer>
+  <script src="../../../assets/qrcode.js"></script>
+  <script src="../../../assets/zdielat.js"></script>
   <script type="module" src="../../../assets/advent.js"></script>
 </body>
 </html>

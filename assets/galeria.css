@@ -109,29 +109,30 @@ body.s-pozadie::after { background: linear-gradient(var(--zavoj-hore), var(--zav
 @media (prefers-color-scheme: dark) {
   body.s-pozadie { --pozadie-jas: 1.2; --zavoj-hore: rgba(20,23,31,.6); --zavoj-dole: rgba(20,23,31,.84); }
 }
-/* karty na stránkach s fotkou na pozadí: farebný okraj, tieň a výraznejšie „pripravuje sa“; farba podľa odboru */
-body.s-pozadie { --ak: var(--accent); }
-body.odbor-stavbari { --ak: #e8890c; }
-body.odbor-architekti { --ak: #3b6fd8; }
-body.odbor-geodeti { --ak: #2e9d6a; }
-body.s-pozadie .card {
+/* karty na stránkach s fotkou na pozadí: farebný okraj, tieň a výraznejšie „pripravuje sa“; farba podľa odboru (.odbor-<odbor> na body alebo na karte) */
+.s-pozadie { --ak: var(--accent); }
+.odbor-stavbari { --ak: #e8890c; }
+.odbor-architekti { --ak: #3b6fd8; }
+.odbor-geodeti { --ak: #2e9d6a; }
+.s-pozadie .card:not(.advent-banner) {
   background: linear-gradient(180deg, color-mix(in srgb, var(--ak) 10%, var(--card)), var(--card) 70%);
   border: 2px solid color-mix(in srgb, var(--ak) 55%, var(--card));
   border-top: 6px solid var(--ak);
   box-shadow: 0 6px 18px rgba(0,0,0,.14);
   transition: transform .15s, box-shadow .15s;
 }
-body.s-pozadie .card:hover, body.s-pozadie .card:focus-visible { border-color: var(--ak); border-top-color: var(--ak); transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,.22); }
-body.s-pozadie .card strong { color: color-mix(in srgb, var(--ak) 35%, var(--text)); }
-body.s-pozadie .tag { background: color-mix(in srgb, var(--ak) 16%, var(--card)); border-color: color-mix(in srgb, var(--ak) 55%, var(--card)); color: var(--text); font-weight: 600; }
-body.s-pozadie .card.placeholder {
+.s-pozadie .card:not(.advent-banner):hover, .s-pozadie .card:not(.advent-banner):focus-visible { border-color: var(--ak); transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,.22); }
+.s-pozadie .card:not(.advent-banner) strong { color: color-mix(in srgb, var(--ak) 35%, var(--text)); }
+.s-pozadie .tag { background: color-mix(in srgb, var(--ak) 16%, var(--card)); border-color: color-mix(in srgb, var(--ak) 55%, var(--card)); color: var(--text); font-weight: 600; }
+.s-pozadie .card.placeholder {
   background: color-mix(in srgb, var(--card) 78%, transparent);
   border: 2px dashed color-mix(in srgb, var(--ak) 45%, var(--card));
-  border-top: 2px dashed color-mix(in srgb, var(--ak) 45%, var(--card));
   box-shadow: none;
   opacity: 1;
   backdrop-filter: blur(2px);
 }
-body.s-pozadie .card.placeholder strong { color: var(--text); }
-body.s-pozadie .card.placeholder:hover, body.s-pozadie .card.placeholder:focus-visible { border-style: solid; border-color: var(--ak); }
-body.s-pozadie header h1, body.s-pozadie main > h2 { text-shadow: 0 1px 8px color-mix(in srgb, var(--bg) 90%, transparent); }
+.s-pozadie .card.placeholder strong { color: var(--text); }
+.s-pozadie .card.placeholder:hover, .s-pozadie .card.placeholder:focus-visible { border-style: solid; border-color: var(--ak); transform: none; }
+.s-pozadie header h1, .s-pozadie main > h2 { text-shadow: 0 1px 8px color-mix(in srgb, var(--bg) 90%, transparent); }
+.s-pozadie .advent-banner { border: 3px solid rgba(255,255,255,.85); box-shadow: 0 8px 22px rgba(0,0,0,.28); transition: transform .15s, box-shadow .15s; }
+.s-pozadie .advent-banner:hover, .s-pozadie .advent-banner:focus-visible { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(0,0,0,.35); }
